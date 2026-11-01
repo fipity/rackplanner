@@ -1,0 +1,29 @@
+{
+  "name": "rackplanner",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Self-hosted visual home-lab rack designer",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,magenta \"npm run dev -w @rackplanner/server\" \"npm run dev -w @rackplanner/web\"",
+    "build": "npm run validate:catalog && npm run build -w @rackplanner/web && npm run build -w @rackplanner/server",
+    "start": "node apps/server/dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p packages/shared --noEmit && tsc -p apps/server --noEmit && tsc -p apps/web --noEmit",
+    "validate:catalog": "tsx scripts/validate-catalog.ts",
+    "catalog:schema": "tsx scripts/gen-catalog-schema.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "concurrently": "^9.1.2",
+    "tsx": "^4.19.4",
+    "typescript": "~5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
