@@ -7,7 +7,7 @@ A self-hosted visual designer for home-lab server racks. Pick a 19″ or 10″ r
 ## Run it (Docker)
 
 ```bash
-git clone https://github.com/<you>/rackplanner.git
+git clone https://github.com/fipity/rackplanner.git
 cd rackplanner
 cp .env.example .env        # optional: change RACKPLANNER_PORT, enable basic auth
 docker compose up -d --build
