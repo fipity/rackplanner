@@ -1,0 +1,79 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "Power: UPS & PDU",
+  "parts": [
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_c13": 4
+      },
+      "tags": [
+        "ups",
+        "power"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "apc-smt1500rmi2u",
+      "brand": "APC",
+      "model": "SMT1500RMI2U",
+      "name": "APC Smart-UPS 1500 RM 2U",
+      "category": "power",
+      "subcategory": "ups",
+      "heightU": 2,
+      "depthMm": null,
+      "ups": {
+        "capacityW": 1000,
+        "capacityVA": 1500
+      },
+      "render": {
+        "style": "ups",
+        "body": "black",
+        "accent": "#00a651"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "rear",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_c13": 8
+      },
+      "tags": [
+        "power"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-pdu-1u-8-19",
+      "brand": "Generic",
+      "model": "PDU-8-1U",
+      "name": "1U PDU 8-outlet",
+      "category": "power",
+      "subcategory": "pdu",
+      "heightU": 1,
+      "depthMm": 50,
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      }
+    }
+  ]
+}

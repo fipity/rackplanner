@@ -1,0 +1,210 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "10-inch mini-rack",
+  "parts": [
+    {
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 12
+      },
+      "tags": [
+        "passive",
+        "10in"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-patch-12-cat6-10in",
+      "brand": "Generic",
+      "model": "PP-12-C6-10",
+      "name": "10\" 12-port Cat6 patch panel",
+      "category": "patch-panel",
+      "heightU": 1,
+      "depthMm": 40,
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "tags": [
+        "passive",
+        "10in"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-blank-1u-10in",
+      "brand": "Generic",
+      "model": "BLANK-1U-10",
+      "name": "10\" blank panel 1U",
+      "category": "blank",
+      "heightU": 1,
+      "depthMm": 5,
+      "render": {
+        "style": "blank",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "tags": [
+        "shelf",
+        "10in"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-shelf-1u-10in",
+      "brand": "Generic",
+      "model": "SHELF-1U-10",
+      "name": "10\" shelf 1U",
+      "category": "shelf",
+      "heightU": 1,
+      "depthMm": 200,
+      "shelf": {
+        "usableWidthMm": 210,
+        "usableDepthMm": 200
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in",
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "tags": [
+        "10in",
+        "raspberry-pi"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-pi-mount-1u-10in",
+      "brand": "Generic",
+      "model": "PI-1U-4",
+      "name": "10\" Raspberry Pi mount (4\u00d7 Pi) 1U",
+      "category": "mount",
+      "heightU": 1,
+      "depthMm": 100,
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#c51a4a"
+      },
+      "notes": "Also fits a 19\" rack as a partial-width panel (with adapter ears)."
+    },
+    {
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in",
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 8
+      },
+      "tags": [
+        "10in"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-switch-8p-10in",
+      "brand": "Generic",
+      "model": "SW-8-10",
+      "name": "10\" 8-port gigabit switch 1U",
+      "category": "switch",
+      "heightU": 1,
+      "depthMm": 120,
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#22c55e"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "rear",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_c13": 4
+      },
+      "tags": [
+        "10in",
+        "power"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-pdu-10in-4",
+      "brand": "Generic",
+      "model": "PDU-10-4",
+      "name": "10\" PDU 4-outlet 1U",
+      "category": "power",
+      "subcategory": "pdu",
+      "heightU": 1,
+      "depthMm": 50,
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      }
+    }
+  ]
+}

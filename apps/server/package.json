@@ -1,0 +1,19 @@
+{
+  "name": "@rackplanner/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@fastify/static": "^8.2.0",
+    "@rackplanner/shared": "0.1.0",
+    "fastify": "^5.4.0",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.5"
+  }
+}

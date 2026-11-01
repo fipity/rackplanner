@@ -1,0 +1,164 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "Ubiquiti UniFi",
+  "description": "Starter subset. Full researched lineup lands in Phase 2.",
+  "parts": [
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 9,
+        "sfp_plus": 2
+      },
+      "tags": [
+        "unifi",
+        "gateway",
+        "protect"
+      ],
+      "sourceUrl": "https://techspecs.ui.com/unifi/cloud-gateways/udm-pro",
+      "verified": false,
+      "id": "ubiquiti-udm-pro",
+      "brand": "Ubiquiti",
+      "model": "UDM-Pro",
+      "name": "UniFi Dream Machine Pro",
+      "category": "gateway",
+      "subcategory": "cloud-gateway",
+      "heightU": 1,
+      "depthMm": 285,
+      "driveBays": [
+        {
+          "count": 1,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "gateway",
+        "body": "silver",
+        "accent": "#006fff"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 16,
+        "rj45_2_5g": 8,
+        "sfp_plus": 2
+      },
+      "tags": [
+        "unifi",
+        "poe",
+        "layer3"
+      ],
+      "sourceUrl": "https://techspecs.ui.com/unifi/switching/usw-pro-max-24-poe",
+      "verified": false,
+      "id": "ubiquiti-usw-pro-max-24-poe",
+      "brand": "Ubiquiti",
+      "model": "USW-Pro-Max-24-PoE",
+      "name": "UniFi Switch Pro Max 24 PoE",
+      "category": "switch",
+      "subcategory": "poe",
+      "heightU": 1,
+      "depthMm": null,
+      "poeBudgetW": null,
+      "render": {
+        "style": "switch",
+        "body": "silver",
+        "accent": "#006fff"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp": 2
+      },
+      "tags": [
+        "unifi"
+      ],
+      "sourceUrl": "https://techspecs.ui.com/unifi/switching/usw-24",
+      "verified": false,
+      "id": "ubiquiti-usw-24",
+      "brand": "Ubiquiti",
+      "model": "USW-24",
+      "name": "UniFi Switch 24",
+      "category": "switch",
+      "heightU": 1,
+      "depthMm": null,
+      "render": {
+        "style": "switch",
+        "body": "silver",
+        "accent": "#006fff"
+      }
+    },
+    {
+      "formFactor": "desktop",
+      "width": {
+        "mm": 107
+      },
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 5
+      },
+      "tags": [
+        "unifi",
+        "desktop",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://techspecs.ui.com/unifi/switching/usw-flex-mini",
+      "verified": false,
+      "id": "ubiquiti-usw-flex-mini",
+      "brand": "Ubiquiti",
+      "model": "USW-Flex-Mini",
+      "name": "UniFi Flex Mini",
+      "category": "switch",
+      "subcategory": "desktop",
+      "heightU": 1,
+      "heightMm": 21,
+      "depthMm": 70,
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#006fff"
+      }
+    }
+  ]
+}

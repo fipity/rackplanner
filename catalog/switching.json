@@ -1,0 +1,41 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "Other switching & routing",
+  "parts": [
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp_plus": 2
+      },
+      "tags": [
+        "mikrotik"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "mikrotik-crs326-24g-2s-plus-rm",
+      "brand": "MikroTik",
+      "model": "CRS326-24G-2S+RM",
+      "name": "MikroTik CRS326-24G-2S+RM",
+      "category": "switch",
+      "heightU": 1,
+      "depthMm": null,
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      }
+    }
+  ]
+}

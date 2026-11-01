@@ -1,0 +1,389 @@
+{
+  "title": "RackPlanner catalog file",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 3,
+            "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+          },
+          "source": {
+            "default": "seed",
+            "type": "string",
+            "enum": [
+              "seed",
+              "custom"
+            ]
+          },
+          "brand": {
+            "type": "string",
+            "minLength": 1
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1
+          },
+          "subcategory": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formFactor": {
+            "default": "rack",
+            "type": "string",
+            "enum": [
+              "rack",
+              "desktop"
+            ]
+          },
+          "heightU": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 32
+          },
+          "heightMm": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "19in",
+                  "10in",
+                  "half-19in"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "mm": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 450
+                  }
+                },
+                "required": [
+                  "mm"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "depthMm": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mounting": {
+            "type": "string",
+            "enum": [
+              "front",
+              "rear",
+              "full-depth"
+            ]
+          },
+          "rackWidths": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "19in",
+                "10in"
+              ]
+            }
+          },
+          "power": {
+            "type": "object",
+            "properties": {
+              "typicalW": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "maxW": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "typicalW",
+              "maxW"
+            ],
+            "additionalProperties": false
+          },
+          "poeBudgetW": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "weightKg": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ports": {
+            "default": {},
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "enum": [
+                "rj45_100m",
+                "rj45_1g",
+                "rj45_2_5g",
+                "rj45_5g",
+                "rj45_10g",
+                "sfp",
+                "sfp_plus",
+                "sfp28",
+                "qsfp_plus",
+                "qsfp28",
+                "keystone",
+                "lc_duplex",
+                "usb",
+                "console",
+                "outlet_c13",
+                "outlet_c19",
+                "outlet_nema",
+                "outlet_schuko",
+                "outlet_au",
+                "outlet_uk"
+              ]
+            },
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "driveBays": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "size": {
+                  "type": "string",
+                  "enum": [
+                    "2.5",
+                    "3.5",
+                    "m2",
+                    "e1s",
+                    "u2"
+                  ]
+                }
+              },
+              "required": [
+                "count",
+                "size"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "shelf": {
+            "type": "object",
+            "properties": {
+              "usableWidthMm": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "usableDepthMm": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "required": [
+              "usableWidthMm",
+              "usableDepthMm"
+            ],
+            "additionalProperties": false
+          },
+          "ups": {
+            "type": "object",
+            "properties": {
+              "capacityW": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "capacityVA": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "capacityW",
+              "capacityVA"
+            ],
+            "additionalProperties": false
+          },
+          "render": {
+            "type": "object",
+            "properties": {
+              "style": {
+                "type": "string",
+                "enum": [
+                  "switch",
+                  "gateway",
+                  "server",
+                  "nas",
+                  "patch-panel",
+                  "blank",
+                  "vented",
+                  "brush",
+                  "shelf",
+                  "ups",
+                  "pdu",
+                  "cable-manager",
+                  "drawer",
+                  "fan",
+                  "desktop"
+                ]
+              },
+              "body": {
+                "type": "string",
+                "enum": [
+                  "black",
+                  "silver",
+                  "white",
+                  "grey"
+                ]
+              },
+              "accent": {
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$"
+              }
+            },
+            "required": [
+              "style"
+            ],
+            "additionalProperties": false
+          },
+          "tags": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "legacy": {
+            "type": "boolean"
+          },
+          "sourceUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "brand",
+          "model",
+          "name",
+          "category",
+          "heightU",
+          "width",
+          "depthMm",
+          "mounting",
+          "rackWidths",
+          "power",
+          "weightKg",
+          "render",
+          "sourceUrl",
+          "verified"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "version",
+    "title",
+    "parts"
+  ],
+  "additionalProperties": false
+}

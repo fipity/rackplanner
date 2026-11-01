@@ -1,0 +1,128 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "Servers & storage",
+  "parts": [
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "tags": [
+        "server",
+        "legacy"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "dell-poweredge-r630",
+      "brand": "Dell",
+      "model": "PowerEdge R630",
+      "name": "Dell PowerEdge R630",
+      "category": "server",
+      "heightU": 1,
+      "depthMm": null,
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "legacy": true
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "tags": [
+        "server",
+        "legacy"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "dell-poweredge-r730",
+      "brand": "Dell",
+      "model": "PowerEdge R730",
+      "name": "Dell PowerEdge R730 (8\u00d7 3.5\")",
+      "category": "server",
+      "heightU": 2,
+      "depthMm": null,
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "legacy": true
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 2
+      },
+      "tags": [
+        "nas"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "synology-rs422-plus",
+      "brand": "Synology",
+      "model": "RS422+",
+      "name": "Synology RackStation RS422+",
+      "category": "nas",
+      "heightU": 1,
+      "depthMm": null,
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      }
+    }
+  ]
+}

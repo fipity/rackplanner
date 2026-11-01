@@ -1,0 +1,266 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "Patch panels, blanks & passive",
+  "parts": [
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 24
+      },
+      "tags": [
+        "passive",
+        "cat6"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-patch-24-cat6-keystone-1u",
+      "brand": "Generic",
+      "model": "PP-24-C6-KS",
+      "name": "24-port Cat6 keystone patch panel",
+      "category": "patch-panel",
+      "subcategory": "keystone",
+      "heightU": 1,
+      "depthMm": 40,
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 48
+      },
+      "tags": [
+        "passive",
+        "cat6"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-patch-48-cat6-2u",
+      "brand": "Generic",
+      "model": "PP-48-C6",
+      "name": "48-port Cat6 patch panel 2U",
+      "category": "patch-panel",
+      "subcategory": "punch-down",
+      "heightU": 2,
+      "depthMm": 100,
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 24
+      },
+      "tags": [
+        "passive",
+        "cat6",
+        "0.5u"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-patch-24-cat6-half-u",
+      "brand": "Generic",
+      "model": "PP-24-C6-05U",
+      "name": "24-port Cat6 patch panel 0.5U",
+      "category": "patch-panel",
+      "subcategory": "keystone",
+      "heightU": 0.5,
+      "depthMm": 40,
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "tags": [
+        "passive"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-blank-1u-19",
+      "brand": "Generic",
+      "model": "BLANK-1U",
+      "name": "Blank panel 1U",
+      "category": "blank",
+      "heightU": 1,
+      "depthMm": 5,
+      "render": {
+        "style": "blank",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "tags": [
+        "passive",
+        "vented"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-vented-blank-2u-19",
+      "brand": "Generic",
+      "model": "VENT-2U",
+      "name": "Vented blank panel 2U",
+      "category": "blank",
+      "heightU": 2,
+      "depthMm": 5,
+      "render": {
+        "style": "vented",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "tags": [
+        "passive"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-brush-1u-19",
+      "brand": "Generic",
+      "model": "BRUSH-1U",
+      "name": "Brush panel 1U",
+      "category": "cable-management",
+      "subcategory": "brush",
+      "heightU": 1,
+      "depthMm": 30,
+      "render": {
+        "style": "brush",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "tags": [
+        "passive"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-cable-manager-1u-19",
+      "brand": "Generic",
+      "model": "CM-1U-DRING",
+      "name": "Horizontal cable manager 1U (D-ring)",
+      "category": "cable-management",
+      "heightU": 1,
+      "depthMm": 60,
+      "render": {
+        "style": "cable-manager",
+        "body": "black"
+      }
+    },
+    {
+      "formFactor": "rack",
+      "width": "19in",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "tags": [
+        "shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "id": "generic-shelf-1u-vented-19",
+      "brand": "Generic",
+      "model": "SHELF-1U-250",
+      "name": "Vented cantilever shelf 1U (250 mm)",
+      "category": "shelf",
+      "heightU": 1,
+      "depthMm": 250,
+      "shelf": {
+        "usableWidthMm": 430,
+        "usableDepthMm": 250
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      }
+    }
+  ]
+}
