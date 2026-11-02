@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+  alignedX,
   applyRackChange,
+  canAlign,
   checkPlacement,
   findFreeSlot,
   occupancyOf,
@@ -289,5 +291,54 @@ describe('rack resize validation', () => {
     const r = applyRackChange({ rack: rack19, placements }, { ...rack19, heightU: 24 }, catalog);
     expect(r.removed).toEqual([]);
     expect(r.placements).toEqual(placements);
+  });
+});
+
+describe('shelf drops', () => {
+  const shelf = pp({ id: 'shelf', partId: 'shelf-1u', bottomU: 3 });
+  const design = { rack: rack19, placements: [shelf] };
+
+  it('puts desktop gear dropped just above a shelf onto it', () => {
+    const r = resolveDrop(design, catalog, { partId: 'mini-pc', rawBottomU: 4.3, rawXMm: 40, mounting: 'front', view: 'front' });
+    expect(r?.candidate.parentId).toBe('shelf');
+    expect(r?.candidate.bottomU).toBe(4);
+    expect(r?.candidate.xMm).toBe(0); // snapped to the left edge of the usable area
+    expect(r?.check.ok).toBe(true);
+  });
+
+  it('places a second item flush beside the first', () => {
+    const withOne = { rack: rack19, placements: [shelf, pp({ id: 'pc1', partId: 'mini-pc', parentId: 'shelf', bottomU: 4, xMm: 0 })] };
+    const r = resolveDrop(withOne, catalog, { partId: 'mini-pc', rawBottomU: 4, rawXMm: 60, mounting: 'front', view: 'front' });
+    expect(r?.candidate.parentId).toBe('shelf');
+    expect(r?.candidate.xMm).toBe(180);
+    expect(r?.check.ok).toBe(true);
+  });
+
+  it('places desktop gear loose when not near a shelf', () => {
+    const r = resolveDrop(design, catalog, { partId: 'mini-pc', rawBottomU: 9, rawXMm: 40, mounting: 'front', view: 'front' });
+    expect(r?.candidate.parentId).toBeUndefined();
+  });
+
+  it('ignores shelves on the other face', () => {
+    const rear = { rack: rack19, placements: [{ ...shelf, mounting: 'rear' as const }] };
+    const r = resolveDrop(rear, catalog, { partId: 'mini-pc', rawBottomU: 4, rawXMm: 40, mounting: 'front', view: 'front' });
+    expect(r?.candidate.parentId).toBeUndefined();
+  });
+
+  it('moves an item off its shelf when dragged away', () => {
+    const d = { rack: rack19, placements: [shelf, pp({ id: 'pc1', partId: 'mini-pc', parentId: 'shelf', bottomU: 4 })] };
+    const r = resolveDrop(d, catalog, { partId: 'mini-pc', placementId: 'pc1', rawBottomU: 9, rawXMm: 0, mounting: 'front', view: 'front' });
+    expect(r?.candidate.parentId).toBeUndefined();
+    expect(r?.candidate.bottomU).toBe(9);
+  });
+
+  it('computes left / centre / right alignment in the rack and on shelves', () => {
+    const mini = pp({ id: 'm', partId: 'mini-10', bottomU: 1 });
+    expect(alignedX({ rack: rack19, placements: [mini] }, mini, catalog, 'right')).toBe(228);
+    expect(alignedX({ rack: rack19, placements: [mini] }, mini, catalog, 'centre')).toBe(114);
+    const child = pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', bottomU: 4 });
+    expect(alignedX({ rack: rack19, placements: [shelf, child] }, child, catalog, 'right')).toBe(250);
+    const full = pp({ id: 'f', partId: 'sw-1u' });
+    expect(canAlign({ rack: rack19, placements: [full] }, full, catalog)).toBe(false);
   });
 });

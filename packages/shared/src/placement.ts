@@ -377,6 +377,8 @@ export interface DropRequest {
   rawBottomU: number;
   rawXMm: number;
   mounting: Mounting;
+  /** View being dropped into; only shelves visible in it are drop targets. */
+  view?: Face;
 }
 
 export interface DropResolution {
@@ -398,8 +400,28 @@ export function resolveDrop(
   const part = catalog.get(req.partId);
   if (!part) return null;
   const existing = req.placementId ? design.placements.find((p) => p.id === req.placementId) : undefined;
-  const bottomU = snapBottomU(part, req.rawBottomU, design.rack);
   const ignore = existing ? [existing.id, ...descendantsOf(design.placements, existing.id)] : [];
+
+  // Desktop gear dropped onto a shelf sits on it.
+  const shelf = findShelfTarget(design, catalog, part, req.rawBottomU, req.rawXMm, req.view, ignore);
+  if (shelf) {
+    const relX = req.rawXMm - shelf.x0;
+    const sxs = shelfXCandidates(design.placements, shelf, part, catalog, ignore).sort((a, b) => Math.abs(a - relX) - Math.abs(b - relX));
+    const mounting: Mounting = shelf.faces.includes('front') ? 'front' : 'rear';
+    const shelfBase: PlacedPart = existing
+      ? { ...existing, parentId: shelf.shelf.id, bottomU: shelf.topU, xMm: sxs[0] ?? 0, mounting }
+      : { id: newId, partId: part.id, parentId: shelf.shelf.id, bottomU: shelf.topU, xMm: sxs[0] ?? 0, mounting };
+    let firstOnShelf: DropResolution | null = null;
+    for (const xMm of sxs) {
+      const candidate = { ...shelfBase, xMm };
+      const check = checkPlacement(design, candidate, catalog);
+      if (check.ok) return { candidate, check };
+      firstOnShelf ??= { candidate, check };
+    }
+    if (firstOnShelf) return firstOnShelf;
+  }
+
+  const bottomU = snapBottomU(part, req.rawBottomU, design.rack);
   const xs = xCandidates(design, part, bottomU, catalog, ignore).sort(
     (a, b) => Math.abs(a - req.rawXMm) - Math.abs(b - req.rawXMm),
   );
@@ -447,6 +469,120 @@ export function findFreeSlot(
     }
   }
   return null;
+}
+
+
+// ---------------------------------------------------------------------------
+// Shelves
+// ---------------------------------------------------------------------------
+
+export interface ShelfGeometry {
+  shelf: PlacedPart;
+  shelfPart: Part;
+  /** Rack-space x (front view) of the left edge of the usable area. */
+  x0: number;
+  usableWidthMm: number;
+  usableDepthMm: number;
+  /** U where items on the shelf start (top of the shelf). */
+  topU: number;
+  faces: readonly Face[];
+}
+
+export function shelfGeometry(placements: readonly PlacedPart[], shelf: PlacedPart, catalog: Catalog): ShelfGeometry | null {
+  const shelfPart = catalog.get(shelf.partId);
+  if (!shelfPart?.shelf) return null;
+  const occ = occupancyOf(placements, shelf, catalog);
+  if (!occ) return null;
+  const inset = Math.max(0, (occ.x1 - occ.x0 - shelfPart.shelf.usableWidthMm) / 2);
+  return {
+    shelf,
+    shelfPart,
+    x0: occ.x0 + inset,
+    usableWidthMm: shelfPart.shelf.usableWidthMm,
+    usableDepthMm: shelfPart.shelf.usableDepthMm,
+    topU: occ.u1,
+    faces: occ.faces,
+  };
+}
+
+/** Horizontal positions (relative to the shelf's usable area) for an item on a shelf. */
+export function shelfXCandidates(
+  placements: readonly PlacedPart[],
+  geo: ShelfGeometry,
+  part: Part,
+  catalog: Catalog,
+  ignoreIds: readonly string[] = [],
+): number[] {
+  const w = partWidthMm(part);
+  const maxX = geo.usableWidthMm - w;
+  if (maxX < -EPS) return [];
+  const set = new Set<number>([0, Math.max(0, maxX / 2), Math.max(0, maxX)]);
+  for (const p of placements) {
+    if (p.parentId !== geo.shelf.id || ignoreIds.includes(p.id)) continue;
+    const sp = catalog.get(p.partId);
+    if (!sp) continue;
+    const right = p.xMm + partWidthMm(sp);
+    if (right <= maxX + EPS) set.add(right);
+    if (p.xMm - w >= -EPS) set.add(Math.max(0, p.xMm - w));
+  }
+  return [...set].sort((a, b) => a - b);
+}
+
+/**
+ * Find a shelf a desktop part is being dropped onto: the part's bottom must
+ * be near the shelf's top surface and its centre over the shelf.
+ */
+export function findShelfTarget(
+  design: Pick<Design, 'rack' | 'placements'>,
+  catalog: Catalog,
+  part: Part,
+  rawBottomU: number,
+  rawXMm: number,
+  view: Face | undefined,
+  ignoreIds: readonly string[] = [],
+): ShelfGeometry | null {
+  if (part.formFactor !== 'desktop') return null;
+  const w = partWidthMm(part);
+  const centre = rawXMm + w / 2;
+  let best: { geo: ShelfGeometry; dist: number } | null = null;
+  for (const p of design.placements) {
+    if (ignoreIds.includes(p.id) || p.parentId !== undefined) continue;
+    const geo = shelfGeometry(design.placements, p, catalog);
+    if (!geo || w > geo.usableWidthMm + EPS) continue;
+    if (view && !geo.faces.includes(view)) continue;
+    const shelfOcc = occupancyOf(design.placements, p, catalog)!;
+    if (rawBottomU < shelfOcc.u0 - 0.5 || rawBottomU > geo.topU + 0.75) continue;
+    if (centre < shelfOcc.x0 || centre > shelfOcc.x1) continue;
+    const dist = Math.abs(rawBottomU - geo.topU);
+    if (!best || dist < best.dist) best = { geo, dist };
+  }
+  return best?.geo ?? null;
+}
+
+export type Alignment = 'left' | 'centre' | 'right';
+
+/** xMm that aligns a placement left / centre / right in the rack or on its shelf. */
+export function alignedX(design: Pick<Design, 'rack' | 'placements'>, placement: PlacedPart, catalog: Catalog, align: Alignment): number | null {
+  const part = catalog.get(placement.partId);
+  if (!part) return null;
+  const w = partWidthMm(part);
+  let span: number;
+  if (placement.parentId !== undefined) {
+    const shelf = design.placements.find((p) => p.id === placement.parentId);
+    const geo = shelf && shelfGeometry(design.placements, shelf, catalog);
+    if (!geo) return null;
+    span = geo.usableWidthMm;
+  } else {
+    span = openingMm(design.rack.width);
+  }
+  const maxX = Math.max(0, span - w);
+  return align === 'left' ? 0 : align === 'right' ? maxX : maxX / 2;
+}
+
+/** Whether a placement can move horizontally at all. */
+export function canAlign(design: Pick<Design, 'rack' | 'placements'>, placement: PlacedPart, catalog: Catalog): boolean {
+  const right = alignedX(design, placement, catalog, 'right');
+  return right !== null && right > EPS;
 }
 
 // ---------------------------------------------------------------------------
