@@ -2,14 +2,14 @@
 
 A self-hosted visual designer for home-lab server racks. Pick a 19″ or 10″ rack (1–32U), drag hardware from a parts catalog into it, and move things around. Placement snaps to whole U and collisions are blocked, with an explanation.
 
-> **Status: Phase 1 of 4.** Rack rendering, drag and drop with collision detection, front/rear views, undo/redo, and a small starter catalog. Coming next: the researched catalog with filters and a custom part builder (Phase 2), saved designs with a stats panel (Phase 3), and shelves, partial-width UI and exports (Phase 4). **Designs are not saved yet in Phase 1.**
+> **Status: Phase 2 of 4.** Rack editor with drag and drop and collision detection, a researched catalog of ~300 parts with search and filters, and a custom part builder. Coming next: saved designs and the stats panel (Phase 3), then shelves, exports and final packaging (Phase 4). **Designs are not saved yet**; custom parts are.
 
 ## Run it (Docker)
 
 ```bash
 git clone https://github.com/fipity/rackplanner.git
 cd rackplanner
-cp .env.example .env        # optional: change RACKPLANNER_PORT, enable basic auth
+cp .env.example .env        # optional: change RACKPLANNER_PORT, PUID/PGID, enable basic auth
 docker compose up -d --build
 ```
 
@@ -32,14 +32,45 @@ Changing the rack width, height or depth so that some parts no longer fit asks f
 
 ## Catalog
 
-Parts live in versioned JSON files in [`catalog/`](catalog/). They're validated against a shared zod schema on every server start and every build:
+~300 parts in versioned JSON files under [`catalog/`](catalog/):
+
+| File | Contents |
+|---|---|
+| `unifi.json` | Full rack-relevant UniFi lineup: gateways, switches, UNAS/UNVR/ENVR, UPS/PDU/RPS, OCD panels, shelves, rack-mount kits, plus desktop gear for shelves |
+| `mikrotik.json` | CRS/CSS switches, CCR/RB routers, RDS storage |
+| `switching.json` | TP-Link Omada, Netgear, Cisco, legacy Ubiquiti EdgeMax/UISP |
+| `storage.json` | Synology RackStation |
+| `servers.json` | Dell PowerEdge, HPE ProLiant, Supermicro chassis, generic DIY cases |
+| `power.json` | APC, CyberPower, Eaton UPS units and generic PDUs |
+| `patch-panels.json` | Generic 19" patch panels, blanks, brush panels, cable managers, shelves, drawers |
+| `mini-rack.json` | 10" ecosystem: DeskPi RackMate shelves/panels, Pi and mini-PC mounts, 10" PDUs |
+| `desktop.json` | Mini PCs, SBCs, modems/ONTs that sit on shelves |
+
+**What `verified` means:** `true` means every number in the part comes from the manufacturer's own spec page or datasheet, linked in `sourceUrl`. `false` means the figures come from resellers, rack-vendor guides or typical values for generic items. Unknown values are `null`, never guessed. [`catalog/UNVERIFIED.md`](catalog/UNVERIFIED.md) lists every unverified part and every missing value.
+
+On first start the catalog is loaded into the SQLite database in `./data`. When a file's contents change, it's re-applied on the next start. Parts removed from a file are retired: hidden from the catalog but kept, so existing designs still render.
+
+### Adding or editing catalog parts
+
+1. Edit or add a JSON file in `catalog/`. Your editor can autocomplete against `catalog/schema.json`. Bump the file's `version`.
+2. Validate it: `npm run validate:catalog` (or `./dev.sh run validate:catalog`). This lists every problem and exits non-zero, and the Docker build runs it too.
+3. Deploy: `docker compose up -d --build`. To skip rebuilding, uncomment the `./catalog` volume in `docker-compose.yml`, then run `curl -X POST http://localhost:8085/api/catalog/reload` after editing.
+
+### Custom parts
+
+Use the **+** button in the catalog to build your own device, with a live faceplate preview. The **copy** icon on any catalog part (or *Customise a copy* in the inspector) starts from an existing part. Custom parts are stored in the database, appear under *My custom parts*, and are never overwritten by catalog updates.
+
+### Regenerating the researched catalog
+
+`scripts/research/` has the scripts that built the catalog. They cache spec pages in `~/.cache/rackplanner-research`:
 
 ```bash
-npm run validate:catalog     # fails loudly, listing every problem
-npm run catalog:schema       # regenerate catalog/schema.json (editor autocompletion)
+python3 scripts/research/fetch_unifi.py      # techspecs.ui.com (UniFi + EdgeMax/UISP)
+python3 scripts/research/build_unifi.py      # -> catalog/unifi.json
+python3 scripts/research/fetch_mikrotik.py && python3 scripts/research/build_mikrotik.py
+python3 scripts/research/build_misc.py       # servers, storage, switching, power, passive, 10", desktop
+python3 scripts/research/gen_unverified.py   # -> catalog/UNVERIFIED.md
 ```
-
-Unknown specs are `null` rather than guessed, and parts that haven't been checked against a manufacturer spec sheet have `"verified": false` (see [`catalog/UNVERIFIED.md`](catalog/UNVERIFIED.md)).
 
 ## Development
 
