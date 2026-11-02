@@ -26,7 +26,15 @@
 - Web: history router (/ and /d/:id), home screen with live thumbnails (rename/duplicate/delete), new design dialog, debounced autosave with retry/backoff, keepalive save on unload, conflict dialog, editor header (back, inline name, save status), tabbed right panel with Stats, measured power input, tablet stats overlay.
 - Tests: 89 (stats engine, designs API).
 
-### Notes for later phases
+## Phase 4 — shelves, partial width, exports, packaging ✅ (2026-11-02)
+- Shared: shelf drop targeting (desktop gear near a shelf top snaps onto it, flush with siblings), alignment helpers, export/import format carrying custom parts, BOM + CSV (escaping, formula-injection guard).
+- Web: drag onto shelves (shelf moves keep children in sync), Left/Centre/Right alignment, Export menu (PNG/SVG front/rear/both, PDF views + parts list + summary, CSV, JSON), printable view (/d/:id/print), JSON import and backup download on home.
+- Server: /api/backup (SQLite online backup), imported custom-* ids preserved, cache headers (index no-cache, hashed assets immutable), fast shutdown.
+- Docker: alpine runtime, server bundled with esbuild (only better-sqlite3 external), npm removed from runtime: 409 MB -> 264 MB (node binary is 124 MB of that). su-exec entrypoint with PUID/PGID. better-sqlite3 musl arm64 prebuild confirmed; toolchain fallback in deps stage. Not cross-built on this host (no binfmt/QEMU installed).
+- README: Ubuntu install, config, updating, backup/restore, ARM, editor, designs, stats, exports, catalog, API.
+- Tests: 106 unit/API tests; Playwright flows for every phase pass against the production image.
+
+### Possible follow-ups
 - QNAP rack NAS not yet in the catalog (their spec pages need a browser); add in Phase 4 or via custom parts.
 - Placement-level power override would help servers whose draw is config-dependent (catalog power is null).
 - Static files: @fastify/static with wildcard:false indexes files at startup (fine in Docker); add cache headers in Phase 4.

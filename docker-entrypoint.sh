@@ -11,6 +11,6 @@ if [ "$(id -u)" = "0" ]; then
   if [ "$(stat -c '%u:%g' "$DATA_DIR")" != "$PUID:$PGID" ]; then
     chown -R "$PUID:$PGID" "$DATA_DIR" || echo "warning: could not chown $DATA_DIR; it must be writable by $PUID:$PGID" >&2
   fi
-  exec setpriv --reuid="$PUID" --regid="$PGID" --clear-groups "$@"
+  exec su-exec "$PUID:$PGID" "$@"
 fi
 exec "$@"
