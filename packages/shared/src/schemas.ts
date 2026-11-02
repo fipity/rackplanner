@@ -183,7 +183,7 @@ export const PartSchema = z
       ctx.addIssue({ code: 'custom', message: '19in-wide parts must list 19in in rackWidths', path: ['rackWidths'] });
     }
     if (p.power.typicalW !== null && p.power.maxW !== null && p.power.typicalW > p.power.maxW) {
-      ctx.addIssue({ code: 'custom', message: 'typicalW cannot exceed maxW', path: ['power'] });
+      ctx.addIssue({ code: 'custom', message: 'Typical power cannot exceed max power', path: ['power'] });
     }
   });
 

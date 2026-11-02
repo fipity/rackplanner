@@ -1,6 +1,9 @@
+import path from 'node:path';
 import { buildApp } from './app.js';
 import { loadCatalogDir } from './catalog.js';
+import { seedCatalog } from './catalogRepo.js';
 import { loadConfig } from './config.js';
+import { openDb } from './db/index.js';
 
 const config = loadConfig();
 const catalog = loadCatalogDir(config.catalogDir);
@@ -9,24 +12,21 @@ if (catalog.errors.length) {
   process.exit(1);
 }
 
-const app = await buildApp({
-  config,
-  parts: catalog.parts,
-  catalogFiles: catalog.files.map((f) => ({
-    file: f.file,
-    title: f.data.title,
-    version: f.data.version,
-    count: f.data.parts.length,
-  })),
-});
+const db = openDb(path.join(config.dataDir, 'rackplanner.db'));
+const reports = seedCatalog(db, catalog);
+const app = await buildApp({ config, db });
+for (const r of reports.filter((r) => r.action === 'seeded')) {
+  app.log.info(`Seeded ${r.file}: ${r.parts} parts${r.retired ? `, retired ${r.retired}` : ''}`);
+}
 
 const shutdown = async (signal: string) => {
   app.log.info(`${signal} received, shutting down`);
   await app.close();
+  db.$client.close();
   process.exit(0);
 };
 process.on('SIGTERM', () => void shutdown('SIGTERM'));
 process.on('SIGINT', () => void shutdown('SIGINT'));
 
 await app.listen({ port: config.port, host: config.host });
-app.log.info(`RackPlanner listening on http://${config.host}:${config.port} with ${catalog.parts.length} catalog parts`);
+app.log.info(`RackPlanner listening on http://${config.host}:${config.port} (data: ${config.dataDir})`);
