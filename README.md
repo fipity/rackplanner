@@ -8,7 +8,8 @@ Runs as a single Docker container with a SQLite database. No accounts and no clo
 
 - **Rack editor:** 19″ / 10″, 1–32U, optional depth, U numbers bottom-up or top-down, front and rear views.
 - **Placement:** drag and drop with whole-U snapping. Collisions are blocked, with an explanation. Front, rear and full-depth mounting are supported, and front + rear devices too deep for the rack are blocked.
-- **Partial width and shelves:** 10″ and half-width gear placed left / centre / right, and desktop gear (mini PCs, NAS, Flex switches, Raspberry Pis) dropped onto shelves.
+- **Partial width and shelves:** 10″ and half-width gear placed left / centre / right, and desktop gear (mini PCs, NAS, Flex switches, Raspberry Pis) standing on shelves.
+- **Cables:** connect ports (or whole devices) with colour-coded patch cables, with types, labels and suggested lengths. Cables appear in the stats, the CSV shopping list and the exports.
 - **Faceplates:** generated from catalog data (ports, SFP cages, drive bays, displays, outlets), with no brand artwork.
 - **Catalog:** full UniFi lineup plus MikroTik, Synology, QNAP, UGREEN, TP-Link, Netgear, Cisco, Dell, HPE, Supermicro, APC, CyberPower, Eaton, DeskPi, Raspberry Pi and generic passive gear. Includes search, filters and a **custom part builder**.
 - **Designs:** multiple designs with autosave, thumbnails, rename / duplicate / delete, undo / redo.
@@ -85,7 +86,10 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <registry>/rackplanner
 |---|---|
 | Add a part | Drag it from the catalog into the rack, or click it to drop it in the first free slot |
 | Move | Drag a placed part (red = blocked, with the reason shown next to the cursor) |
-| Put desktop gear on a shelf | Drag it onto (just above) a shelf part; it snaps beside items already there |
+| Put desktop gear on a shelf | Drag it onto a shelf, or just click it in the catalog: it goes onto a shelf with room. It stands on the tray and snaps beside items already there |
+| Select a shelf that has gear on it | Click its ears or tray, or the shelf name in an item's details |
+| Draw cables | Press <kbd>C</kbd> (or **Cables** in the toolbar), click a port or device, then the other end. <kbd>Esc</kbd> finishes |
+| Edit / delete a cable | Click it to edit type, colour, ports, length, label; <kbd>Del</kbd> removes it |
 | Partial-width position | Select a 10″ / half-width part (or a shelf item), choose **Left / Centre / Right** |
 | Move by 1U | <kbd>↑</kbd> / <kbd>↓</kbd> (shelves take their contents with them) |
 | Delete / duplicate | <kbd>Del</kbd> / <kbd>Ctrl</kbd>+<kbd>D</kbd> |
@@ -95,6 +99,12 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <registry>/rackplanner
 | Export / print | **Export** menu in the header |
 
 Changing the rack width, height or depth so that some parts no longer fit asks for confirmation and lists what would be removed. You can undo afterwards.
+
+## Cables
+
+Turn on **Cables** mode (<kbd>C</kbd>) and every drawn port becomes clickable. Click one end, then the other, to add a cable. You can connect two ports, or a port to a whole device when the port isn't drawn (e.g. the NIC on a desktop NAS). The cable type is guessed from the ports (copper, DAC, fibre or power) and can be changed. Select a cable to set its colour, change either end's port, add a label, or set a length. **Use … m** suggests a standard patch-lead length from the distance between the ends, plus slack.
+
+Cables between the front and the rear (or to a device on the other face) are drawn dashed. The eye button hides them all. Deleting a device removes its cables, and undo brings everything back. Warnings flag two cables on one port, ports that don't exist on a device, and cables to deleted devices. The CSV, PDF and printable parts lists include a cable shopping list grouped by type and length.
 
 ## Designs
 
@@ -110,7 +120,8 @@ The **Stats** tab, next to the device details, updates live:
 - **Power:** typical and max draw. A device's **measured power** (e.g. from a smart plug or PDU reading) replaces catalog figures. When a part only publishes one figure, it's used for both. Catalog max power excludes PoE output, so the **expected PoE load** you enter is added on top before comparing against total **UPS capacity**.
 - **PoE:** total PoE budget of the switches and gateways in the rack, compared with your expected PoE load.
 - **Weight** and **port counts** by type.
-- **Warnings:** devices deeper than the rack, gear deeper than its shelf, desktop gear not on a shelf, collisions or bad widths (e.g. after an import), parts missing from the catalog, UPS or PoE overload, and devices with no power data. Click a warning to select the device.
+- **Cables:** count by type and total length.
+- **Warnings:** devices deeper than the rack, gear deeper than its shelf, desktop gear not on a shelf, collisions or bad widths (e.g. after an import), parts missing from the catalog, UPS or PoE overload, cable problems, and devices with no power data. Click a warning to select the device.
 
 ## Exports
 
@@ -118,7 +129,7 @@ The **Stats** tab, next to the device details, updates live:
 |---|---|
 | PNG / SVG | Front, rear, or both side by side, with title. SVG is fully vector |
 | PDF | Page 1: front + rear views (landscape for short racks). Page 2: parts list, summary and warnings |
-| CSV | Bill of materials: brand, model, quantity, U, power, weight, labels, spec URL |
+| CSV | Bill of materials: brand, model, quantity, U, power, weight, labels, spec URL, plus cables by type and length |
 | JSON | Full design plus the custom parts it uses (re-importable) |
 | Printable view | Light layout with both views, stats and the parts list. Print from the browser |
 

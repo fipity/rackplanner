@@ -34,6 +34,11 @@
 - README: Ubuntu install, config, updating, backup/restore, ARM, editor, designs, stats, exports, catalog, API.
 - Tests: 106 unit/API tests; Playwright flows for every phase pass against the production image.
 
+## Post-phase: cables + shelf fix (2026-11-02)
+- Shelves: items now stand on the shelf's tray (they start in the shelf's own U, drawn lifted by the tray thickness) instead of floating one U above it; a shelf never collides with its own contents. Click-to-add and duplicate put desktop gear onto a shelf with room. Saved designs are re-synced on load.
+- Cables: Design.cables (backward compatible, defaults to []), port-to-port or port-to-device, type/colour/label/length, suggested standard lengths. Faceplate port layout refactored into a pure portPositions() so cable ends land on drawn ports. Cable mode (C), cable inspector, per-device cable list, stats, warnings (shared ports, missing ports/devices), BOM shopping-list lines, exports/print/thumbnails.
+- Tests: 114.
+
 ### Possible follow-ups
 - QNAP rack NAS added after Phase 4: 14 models from qnap.com spec pages (TS-h1886XU-RP R2 page wouldn't load, so it's not included).
 - Placement-level power override would help servers whose draw is config-dependent (catalog power is null).
