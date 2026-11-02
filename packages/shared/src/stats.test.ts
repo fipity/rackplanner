@@ -112,7 +112,7 @@ describe('computeStats', () => {
   it('warns about desktop gear not on a shelf and items deeper than their shelf', () => {
     const loose = computeStats(design([pp('m', 'mini', 1)]), catalog);
     expect(loose.warnings.map((w) => w.code)).toContain('desktop-not-on-shelf');
-    const onShelf = computeStats(design([pp('sh', 'shelf', 1), pp('m', 'mini', 2, { parentId: 'sh' })]), catalog);
+    const onShelf = computeStats(design([pp('sh', 'shelf', 1), pp('m', 'mini', 1, { parentId: 'sh' })]), catalog);
     expect(onShelf.warnings.map((w) => w.code)).not.toContain('desktop-not-on-shelf');
     expect(onShelf.warnings.find((w) => w.code === 'shelf-too-shallow')?.placementIds).toEqual(['m']);
   });

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   alignedX,
+  findShelfSlot,
   applyRackChange,
   canAlign,
   checkPlacement,
@@ -188,18 +189,19 @@ describe('shelves', () => {
   const shelf = pp({ id: 'shelf', partId: 'shelf-1u', bottomU: 3 });
 
   it('places a desktop item on top of a shelf', () => {
-    const child = pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', xMm: 0, bottomU: 4 });
+    const child = pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', xMm: 0, bottomU: 3 });
     const occ = occupancyOf([shelf, child], child, catalog)!;
-    expect(occ.u0).toBe(4);
-    expect(occ.u1).toBe(6);
+    expect(occ.u0).toBe(3); // stands on the tray, inside the shelf's own U
+    expect(occ.u1).toBe(5);
     expect(occ.x0).toBe(10); // (450 - 430) / 2 inset
     expect(checkPlacement({ rack: rack19, placements: [shelf] }, child, catalog).ok).toBe(true);
   });
 
-  it('shelf items block rack space above the shelf', () => {
-    const child = pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', xMm: 0, bottomU: 4 });
-    const r = checkPlacement({ rack: rack19, placements: [shelf, child] }, pp({ id: 'sw', partId: 'sw-1u', bottomU: 5 }), catalog);
+  it('shelf items block rack space above the shelf, but not the shelf itself', () => {
+    const child = pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', xMm: 0, bottomU: 3 });
+    const r = checkPlacement({ rack: rack19, placements: [shelf, child] }, pp({ id: 'sw', partId: 'sw-1u', bottomU: 4 }), catalog);
     expect(r.ok).toBe(false);
+    expect(checkPlacement({ rack: rack19, placements: [shelf, child] }, pp({ id: 'sw', partId: 'sw-1u', bottomU: 5 }), catalog).ok).toBe(true);
   });
 
   it('rejects items wider than the shelf space left', () => {
@@ -208,8 +210,8 @@ describe('shelves', () => {
   });
 
   it('checks shelf children when the shelf moves', () => {
-    const child = pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', xMm: 0, bottomU: 4 });
-    const blocker = pp({ id: 'sw', partId: 'sw-1u', bottomU: 9 });
+    const child = pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', xMm: 0, bottomU: 3 });
+    const blocker = pp({ id: 'sw', partId: 'sw-1u', bottomU: 8 });
     const r = checkPlacement({ rack: rack19, placements: [shelf, child, blocker] }, { ...shelf, bottomU: 7 }, catalog);
     expect(r.ok).toBe(false);
     expect(r.collisions[0]?.placementId).toBe('sw');
@@ -270,7 +272,7 @@ describe('rack resize validation', () => {
   it('removes shelf children with their shelf', () => {
     const placements = [
       pp({ id: 'shelf', partId: 'shelf-1u', bottomU: 10 }),
-      pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', bottomU: 11 }),
+      pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', bottomU: 10 }),
     ];
     const r = applyRackChange({ rack: rack19, placements }, { ...rack19, heightU: 8 }, catalog);
     expect(r.placements).toEqual([]);
@@ -298,17 +300,17 @@ describe('shelf drops', () => {
   const shelf = pp({ id: 'shelf', partId: 'shelf-1u', bottomU: 3 });
   const design = { rack: rack19, placements: [shelf] };
 
-  it('puts desktop gear dropped just above a shelf onto it', () => {
-    const r = resolveDrop(design, catalog, { partId: 'mini-pc', rawBottomU: 4.3, rawXMm: 40, mounting: 'front', view: 'front' });
+  it('puts desktop gear dropped onto a shelf onto its tray', () => {
+    const r = resolveDrop(design, catalog, { partId: 'mini-pc', rawBottomU: 3.4, rawXMm: 40, mounting: 'front', view: 'front' });
     expect(r?.candidate.parentId).toBe('shelf');
-    expect(r?.candidate.bottomU).toBe(4);
+    expect(r?.candidate.bottomU).toBe(3);
     expect(r?.candidate.xMm).toBe(0); // snapped to the left edge of the usable area
     expect(r?.check.ok).toBe(true);
   });
 
   it('places a second item flush beside the first', () => {
-    const withOne = { rack: rack19, placements: [shelf, pp({ id: 'pc1', partId: 'mini-pc', parentId: 'shelf', bottomU: 4, xMm: 0 })] };
-    const r = resolveDrop(withOne, catalog, { partId: 'mini-pc', rawBottomU: 4, rawXMm: 60, mounting: 'front', view: 'front' });
+    const withOne = { rack: rack19, placements: [shelf, pp({ id: 'pc1', partId: 'mini-pc', parentId: 'shelf', bottomU: 3, xMm: 0 })] };
+    const r = resolveDrop(withOne, catalog, { partId: 'mini-pc', rawBottomU: 3, rawXMm: 60, mounting: 'front', view: 'front' });
     expect(r?.candidate.parentId).toBe('shelf');
     expect(r?.candidate.xMm).toBe(180);
     expect(r?.check.ok).toBe(true);
@@ -321,12 +323,12 @@ describe('shelf drops', () => {
 
   it('ignores shelves on the other face', () => {
     const rear = { rack: rack19, placements: [{ ...shelf, mounting: 'rear' as const }] };
-    const r = resolveDrop(rear, catalog, { partId: 'mini-pc', rawBottomU: 4, rawXMm: 40, mounting: 'front', view: 'front' });
+    const r = resolveDrop(rear, catalog, { partId: 'mini-pc', rawBottomU: 3, rawXMm: 40, mounting: 'front', view: 'front' });
     expect(r?.candidate.parentId).toBeUndefined();
   });
 
   it('moves an item off its shelf when dragged away', () => {
-    const d = { rack: rack19, placements: [shelf, pp({ id: 'pc1', partId: 'mini-pc', parentId: 'shelf', bottomU: 4 })] };
+    const d = { rack: rack19, placements: [shelf, pp({ id: 'pc1', partId: 'mini-pc', parentId: 'shelf', bottomU: 3 })] };
     const r = resolveDrop(d, catalog, { partId: 'mini-pc', placementId: 'pc1', rawBottomU: 9, rawXMm: 0, mounting: 'front', view: 'front' });
     expect(r?.candidate.parentId).toBeUndefined();
     expect(r?.candidate.bottomU).toBe(9);
@@ -336,9 +338,25 @@ describe('shelf drops', () => {
     const mini = pp({ id: 'm', partId: 'mini-10', bottomU: 1 });
     expect(alignedX({ rack: rack19, placements: [mini] }, mini, catalog, 'right')).toBe(228);
     expect(alignedX({ rack: rack19, placements: [mini] }, mini, catalog, 'centre')).toBe(114);
-    const child = pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', bottomU: 4 });
+    const child = pp({ id: 'pc', partId: 'mini-pc', parentId: 'shelf', bottomU: 3 });
     expect(alignedX({ rack: rack19, placements: [shelf, child] }, child, catalog, 'right')).toBe(250);
     const full = pp({ id: 'f', partId: 'sw-1u' });
     expect(canAlign({ rack: rack19, placements: [full] }, full, catalog)).toBe(false);
+  });
+});
+
+describe('findShelfSlot', () => {
+  it('finds room on a shelf for desktop gear, beside items already there', () => {
+    const shelf = pp({ id: 'shelf', partId: 'shelf-1u', bottomU: 3 });
+    const d = { rack: rack19, placements: [shelf, pp({ id: 'a', partId: 'mini-pc', parentId: 'shelf', bottomU: 3, xMm: 0 })] };
+    const slot = findShelfSlot(d, catalog, 'mini-pc');
+    expect(slot).toMatchObject({ parentId: 'shelf', bottomU: 3, xMm: 180 });
+  });
+
+  it('returns null when shelves are full or the part is not desktop gear', () => {
+    const shelf = pp({ id: 'shelf', partId: 'shelf-1u', bottomU: 3 });
+    const full = { rack: rack19, placements: [shelf, pp({ id: 'a', partId: 'mini-pc', parentId: 'shelf', bottomU: 3, xMm: 0 }), pp({ id: 'b', partId: 'mini-pc', parentId: 'shelf', bottomU: 3, xMm: 180 })] };
+    expect(findShelfSlot(full, catalog, 'mini-pc')).toBeNull();
+    expect(findShelfSlot({ rack: rack19, placements: [shelf] }, catalog, 'sw-1u')).toBeNull();
   });
 });

@@ -236,6 +236,32 @@ export const PlacedPartSchema = z
   .strict();
 export type PlacedPart = z.infer<typeof PlacedPartSchema>;
 
+export const CABLE_TYPES = ['copper', 'fiber', 'dac', 'power', 'other'] as const;
+export const CableTypeSchema = z.enum(CABLE_TYPES);
+export type CableType = z.infer<typeof CableTypeSchema>;
+
+export const CableEndSchema = z
+  .object({
+    placementId: z.string().min(1),
+    /** Specific port; omitted for a device-level connection. */
+    port: z.object({ type: PortTypeSchema, index: z.number().int().positive() }).strict().optional(),
+  })
+  .strict();
+export type CableEnd = z.infer<typeof CableEndSchema>;
+
+export const CableSchema = z
+  .object({
+    id: z.string().min(1),
+    a: CableEndSchema,
+    b: CableEndSchema,
+    type: CableTypeSchema.default('copper'),
+    color: HexColorSchema,
+    label: z.string().max(120).optional(),
+    lengthM: z.number().positive().max(1000).optional(),
+  })
+  .strict();
+export type Cable = z.infer<typeof CableSchema>;
+
 export const DesignSchema = z
   .object({
     schemaVersion: z.literal(1),
@@ -244,6 +270,7 @@ export const DesignSchema = z
     rack: RackSchema,
     expectedPoeLoadW: z.number().nonnegative().nullable().default(null),
     placements: z.array(PlacedPartSchema),
+    cables: z.array(CableSchema).default([]),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
   })

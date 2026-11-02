@@ -18,6 +18,7 @@ export function createDesign(input: NewDesignInput = {}, now = new Date()): Desi
     rack: { ...DEFAULT_RACK, ...input.rack },
     expectedPoeLoadW: null,
     placements: [],
+    cables: [],
     createdAt: ts,
     updatedAt: ts,
   });

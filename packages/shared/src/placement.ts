@@ -9,9 +9,10 @@
  *  - Depth: each placement occupies a set of faces. front → {front},
  *    rear → {rear}, full-depth → {front, rear}. A front and a rear part can
  *    share the same U/x space only if their depths fit within the rack depth.
- *  - Shelf children (parentId set) sit on top of their shelf: they occupy the
- *    U space directly above it, inherit its faces, and their xMm is relative
- *    to the shelf's usable area.
+ *  - Shelf children (parentId set) stand on their shelf's tray: they occupy
+ *    U space starting at the shelf's bottom U (overlapping the shelf itself,
+ *    which never collides with its own contents), inherit its faces, and their
+ *    xMm is relative to the shelf's usable area.
  */
 import type { Design, Mounting, Part, PlacedPart, Rack } from './schemas.js';
 import { EPS, RACK_OPENING_MM, type RackWidth } from './units.js';
@@ -166,10 +167,12 @@ export function occupancyOf(
     if (!parentOcc) return null;
     const inset = Math.max(0, (parentOcc.x1 - parentOcc.x0 - parentPart.shelf.usableWidthMm) / 2);
     const x0 = parentOcc.x0 + inset + placement.xMm;
+    // Items stand on the shelf's tray, which sits at the bottom of the shelf's
+    // own U, so they start in that U rather than above it.
     return {
       placementId: placement.id,
-      u0: parentOcc.u1,
-      u1: parentOcc.u1 + part.heightU,
+      u0: parentOcc.u0,
+      u1: parentOcc.u0 + part.heightU,
       x0,
       x1: x0 + width,
       faces: parentOcc.faces,
@@ -198,6 +201,18 @@ export function collides(a: Occupancy, b: Occupancy, rack: Rack): CollisionReaso
     if (a.depthMm + b.depthMm > rack.depthMm + EPS) return 'depth';
   }
   return null;
+}
+
+/** Placement ids of every ancestor (the shelf a part sits on, recursively). */
+export function ancestorsOf(placements: readonly PlacedPart[], id: string): string[] {
+  const out: string[] = [];
+  let cur = placements.find((p) => p.id === id);
+  while (cur?.parentId !== undefined && !out.includes(cur.parentId)) {
+    out.push(cur.parentId);
+    const parentId: string = cur.parentId;
+    cur = placements.find((p) => p.id === parentId);
+  }
+  return out;
 }
 
 /** Placement ids of every descendant (shelf children, recursively). */
@@ -290,7 +305,9 @@ export function checkPlacement(
         problems.push({ code: 'out-of-bounds', message: 'Outside the rack opening' });
       }
     }
+    const ancestors = ancestorsOf(placements, id);
     for (const o of others) {
+      if (ancestors.includes(o.p.id)) continue; // a shelf never collides with what stands on it
       const reason = collides(occ, o.occ, rack);
       if (reason && !collisions.some((c) => c.placementId === o.p.id)) {
         collisions.push({
@@ -409,8 +426,8 @@ export function resolveDrop(
     const sxs = shelfXCandidates(design.placements, shelf, part, catalog, ignore).sort((a, b) => Math.abs(a - relX) - Math.abs(b - relX));
     const mounting: Mounting = shelf.faces.includes('front') ? 'front' : 'rear';
     const shelfBase: PlacedPart = existing
-      ? { ...existing, parentId: shelf.shelf.id, bottomU: shelf.topU, xMm: sxs[0] ?? 0, mounting }
-      : { id: newId, partId: part.id, parentId: shelf.shelf.id, bottomU: shelf.topU, xMm: sxs[0] ?? 0, mounting };
+      ? { ...existing, parentId: shelf.shelf.id, bottomU: shelf.baseU, xMm: sxs[0] ?? 0, mounting }
+      : { id: newId, partId: part.id, parentId: shelf.shelf.id, bottomU: shelf.baseU, xMm: sxs[0] ?? 0, mounting };
     let firstOnShelf: DropResolution | null = null;
     for (const xMm of sxs) {
       const candidate = { ...shelfBase, xMm };
@@ -483,8 +500,8 @@ export interface ShelfGeometry {
   x0: number;
   usableWidthMm: number;
   usableDepthMm: number;
-  /** U where items on the shelf start (top of the shelf). */
-  topU: number;
+  /** U where items on the shelf start (the shelf's own bottom U: they stand on its tray). */
+  baseU: number;
   faces: readonly Face[];
 }
 
@@ -500,7 +517,7 @@ export function shelfGeometry(placements: readonly PlacedPart[], shelf: PlacedPa
     x0: occ.x0 + inset,
     usableWidthMm: shelfPart.shelf.usableWidthMm,
     usableDepthMm: shelfPart.shelf.usableDepthMm,
-    topU: occ.u1,
+    baseU: occ.u0,
     faces: occ.faces,
   };
 }
@@ -551,12 +568,38 @@ export function findShelfTarget(
     if (!geo || w > geo.usableWidthMm + EPS) continue;
     if (view && !geo.faces.includes(view)) continue;
     const shelfOcc = occupancyOf(design.placements, p, catalog)!;
-    if (rawBottomU < shelfOcc.u0 - 0.5 || rawBottomU > geo.topU + 0.75) continue;
+    // The dragged part's bottom must be near the tray (the shelf's bottom U).
+    if (rawBottomU < geo.baseU - 0.75 || rawBottomU > shelfOcc.u1 + 0.5) continue;
     if (centre < shelfOcc.x0 || centre > shelfOcc.x1) continue;
-    const dist = Math.abs(rawBottomU - geo.topU);
+    const dist = Math.abs(rawBottomU - geo.baseU);
     if (!best || dist < best.dist) best = { geo, dist };
   }
   return best?.geo ?? null;
+}
+
+/** First free spot on any shelf for a desktop part (preferring `preferShelfId`). */
+export function findShelfSlot(
+  design: Pick<Design, 'rack' | 'placements'>,
+  catalog: Catalog,
+  partId: string,
+  preferShelfId?: string,
+  newId = '__candidate__',
+): PlacedPart | null {
+  const part = catalog.get(partId);
+  if (!part || part.formFactor !== 'desktop') return null;
+  const shelves = design.placements
+    .filter((p) => p.parentId === undefined && catalog.get(p.partId)?.shelf)
+    .sort((a, b) => Number(b.id === preferShelfId) - Number(a.id === preferShelfId) || b.bottomU - a.bottomU);
+  for (const shelf of shelves) {
+    const geo = shelfGeometry(design.placements, shelf, catalog);
+    if (!geo) continue;
+    const mounting: Mounting = geo.faces.includes('front') ? 'front' : 'rear';
+    for (const xMm of shelfXCandidates(design.placements, geo, part, catalog)) {
+      const candidate: PlacedPart = { id: newId, partId, parentId: shelf.id, bottomU: geo.baseU, xMm, mounting };
+      if (checkPlacement(design, candidate, catalog).ok) return candidate;
+    }
+  }
+  return null;
 }
 
 export type Alignment = 'left' | 'centre' | 'right';

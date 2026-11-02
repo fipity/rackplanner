@@ -19,7 +19,8 @@ import {
   occupancyOf,
   type Catalog,
 } from './placement.js';
-import type { Design, Part, PlacedPart, PortType } from './schemas.js';
+import { cableProblems } from './cables.js';
+import type { CableType, Design, Part, PlacedPart, PortType } from './schemas.js';
 import { EPS } from './units.js';
 
 export const PASSIVE_CATEGORIES: ReadonlySet<string> = new Set([
@@ -41,7 +42,8 @@ export type WarningCode =
   | 'ups-max-overload'
   | 'poe-overload'
   | 'no-poe-source'
-  | 'unknown-power';
+  | 'unknown-power'
+  | 'cable';
 
 export interface StatsWarning {
   code: WarningCode;
@@ -71,6 +73,7 @@ export interface DesignStats {
   poe: { budgetW: number; expectedLoadW: number | null; sourceCount: number };
   weight: { totalKg: number; unknownIds: string[] };
   ports: Partial<Record<PortType, number>>;
+  cables: { count: number; byType: Partial<Record<CableType, number>>; totalLengthM: number; withoutLength: number };
   warnings: StatsWarning[];
 }
 
@@ -97,7 +100,10 @@ export function placementPower(p: PlacedPart, part: Part): { typicalW: number; m
 
 const round = (n: number, dp = 1) => Math.round(n * 10 ** dp) / 10 ** dp;
 
-export function computeStats(design: Pick<Design, 'rack' | 'placements' | 'expectedPoeLoadW'>, catalog: Catalog): DesignStats {
+export function computeStats(
+  design: Pick<Design, 'rack' | 'placements' | 'expectedPoeLoadW'> & { cables?: Design['cables'] },
+  catalog: Catalog,
+): DesignStats {
   const { rack, placements } = design;
   const warnings: StatsWarning[] = [];
   const occupied = new Set<number>();
@@ -265,6 +271,20 @@ export function computeStats(design: Pick<Design, 'rack' | 'placements' | 'expec
     });
   }
 
+  const cables = design.cables ?? [];
+  const byType: Partial<Record<CableType, number>> = {};
+  let totalLengthM = 0;
+  let withoutLength = 0;
+  for (const c of cables) {
+    byType[c.type] = (byType[c.type] ?? 0) + 1;
+    if (c.lengthM !== undefined) totalLengthM += c.lengthM;
+    else withoutLength++;
+  }
+  for (const pr of cableProblems({ placements, cables }, catalog)) {
+    const c = cables.find((x) => x.id === pr.cableId)!;
+    warnings.push({ code: 'cable', severity: 'warning', message: pr.message, placementIds: [c.a.placementId, c.b.placementId].filter((id) => placements.some((p) => p.id === id)) });
+  }
+
   const usedU = occupied.size / 2;
   return {
     rackU: rack.heightU,
@@ -286,6 +306,7 @@ export function computeStats(design: Pick<Design, 'rack' | 'placements' | 'expec
     poe: { budgetW: round(poeBudget), expectedLoadW: expected, sourceCount: poeSources },
     weight: { totalKg: round(weightKg, 2), unknownIds: unknownWeight },
     ports,
+    cables: { count: cables.length, byType, totalLengthM: round(totalLengthM, 2), withoutLength },
     warnings,
   };
 }

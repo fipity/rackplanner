@@ -5,6 +5,7 @@
 import { z } from 'zod';
 import type { Catalog } from './placement.js';
 import { DesignSchema, PartSchema, type Design, type Part } from './schemas.js';
+import { CABLE_TYPE_LABELS } from './cables.js';
 import { placementPower } from './stats.js';
 
 export const EXPORT_FORMAT = 'rackplanner-design';
@@ -74,7 +75,7 @@ export interface BomRow {
   missing: boolean;
 }
 
-export function buildBom(design: Pick<Design, 'placements'>, catalog: Catalog): BomRow[] {
+export function buildBom(design: Pick<Design, 'placements'> & { cables?: Design['cables'] }, catalog: Catalog): BomRow[] {
   const rows = new Map<string, BomRow>();
   for (const p of design.placements) {
     const part = catalog.get(p.partId);
@@ -107,7 +108,25 @@ export function buildBom(design: Pick<Design, 'placements'>, catalog: Catalog): 
       if (pw?.measured) row.measuredW = (row.measuredW ?? 0) + pw.typicalW;
     }
   }
-  return [...rows.values()].sort((a, b) => a.category.localeCompare(b.category) || a.brand.localeCompare(b.brand) || a.model.localeCompare(b.model));
+  const devices = [...rows.values()].sort((a, b) => a.category.localeCompare(b.category) || a.brand.localeCompare(b.brand) || a.model.localeCompare(b.model));
+
+  // Cables: one line per type + length, so it reads as a shopping list.
+  const cableRows = new Map<string, BomRow>();
+  for (const c of design.cables ?? []) {
+    const len = c.lengthM !== undefined ? `${c.lengthM} m` : 'length not set';
+    const key = `${c.type}|${len}`;
+    let row = cableRows.get(key);
+    if (!row) {
+      row = {
+        partId: `cable:${key}`, brand: 'Cable', model: `${CABLE_TYPE_LABELS[c.type]} ${len}`, name: `${CABLE_TYPE_LABELS[c.type]} patch cable, ${len}`,
+        category: 'cable', qty: 0, heightU: 0, totalU: 0, typicalW: null, maxW: null, measuredW: null, weightKg: null, labels: [], sourceUrl: null, missing: false,
+      };
+      cableRows.set(key, row);
+    }
+    row.qty++;
+    if (c.label) row.labels.push(c.label);
+  }
+  return [...devices, ...[...cableRows.values()].sort((a, b) => a.model.localeCompare(b.model, undefined, { numeric: true }))];
 }
 
 const BOM_COLUMNS: [string, (r: BomRow) => string | number | null][] = [
