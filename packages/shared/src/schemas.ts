@@ -228,6 +228,8 @@ export const PlacedPartSchema = z
     /** Set when this part sits on a shelf placement. */
     parentId: z.string().min(1).optional(),
     label: z.string().max(120).optional(),
+    /** Your own measured power draw (W). Overrides catalog typical/max in the stats. */
+    measuredW: z.number().nonnegative().max(100000).optional(),
     notes: z.string().max(4000).optional(),
     color: HexColorSchema.optional(),
   })
