@@ -19,7 +19,7 @@ export const RACK_PANEL_MM: Record<RackWidth, number> = {
 export const MIN_RACK_U = 1;
 export const MAX_RACK_U = 32;
 export const RACK_HEIGHT_PRESETS = [4, 6, 8, 9, 12, 15, 18, 22, 24, 27, 32] as const;
-export const RACK_DEPTH_PRESETS = [300, 450, 600, 800, 1000] as const;
+export const RACK_DEPTH_PRESETS = [200, 300, 450, 600, 800, 1000] as const;
 
 /** Floating point tolerance used for U / mm comparisons. */
 export const EPS = 1e-6;
