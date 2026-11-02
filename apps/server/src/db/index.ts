@@ -29,6 +29,15 @@ const MIGRATIONS: string[] = [
      part_count INTEGER NOT NULL,
      seeded_at TEXT NOT NULL
    );`,
+  `CREATE TABLE designs (
+     id TEXT PRIMARY KEY,
+     name TEXT NOT NULL,
+     data TEXT NOT NULL,
+     revision INTEGER NOT NULL DEFAULT 1,
+     created_at TEXT NOT NULL,
+     updated_at TEXT NOT NULL
+   );
+   CREATE INDEX designs_updated_idx ON designs (updated_at);`,
 ];
 
 export function migrate(sqlite: Database.Database): number {

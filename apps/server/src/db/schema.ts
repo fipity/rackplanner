@@ -1,4 +1,4 @@
-import type { Part } from '@rackplanner/shared';
+import type { Design, Part } from '@rackplanner/shared';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const parts = sqliteTable('parts', {
@@ -20,4 +20,14 @@ export const catalogFiles = sqliteTable('catalog_files', {
   hash: text('hash').notNull(),
   partCount: integer('part_count').notNull(),
   seededAt: text('seeded_at').notNull(),
+});
+
+export const designs = sqliteTable('designs', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  data: text('data', { mode: 'json' }).$type<Design>().notNull(),
+  /** Incremented on every save; used to detect concurrent edits. */
+  revision: integer('revision').notNull().default(1),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
 });
