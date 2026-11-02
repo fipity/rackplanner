@@ -408,10 +408,43 @@ def desktop_gear():
     DK('apple-mac-mini-m2', 'Apple', 'Mac mini (M2)', 'Mac mini (M2, 2023)', 'mini-pc', 197, 197, 35.8, kg=1.18, ports={'rj45_1g': 1, 'usb': 4}, body='silver')
     DK('raspberry-pi-5-case', 'Raspberry Pi', 'Raspberry Pi 5 (official case)', 'Raspberry Pi 5 in official case', 'sbc', 95, 63, 30, ports={'rj45_1g': 1, 'usb': 4},
        accent='#c51a4a', body='white', notes='Board is 85 × 56 mm; case size approximate.')
+    pi = 'https://datasheets.raspberrypi.com/rpi4/raspberry-pi-4-product-brief.pdf'
+    DK('raspberry-pi-4-model-b', 'Raspberry Pi', 'Raspberry Pi 4 Model B', 'Raspberry Pi 4 Model B (bare board)', 'sbc', 85, 56, 20, url=pi,
+       ports={'rj45_1g': 1, 'usb': 4}, mx=15.0, accent='#c51a4a', body='black',
+       notes='Ports and 5 V / 3 A supply from the official product brief; max W is the supply rating, not measured draw. 85 × 56 mm board, height approximate. Use measured power for real figures.')
+    DK('raspberry-pi-4-case', 'Raspberry Pi', 'Raspberry Pi 4 Model B (official case)', 'Raspberry Pi 4 Model B in official case', 'sbc', 90, 60, 30, url=pi,
+       ports={'rj45_1g': 1, 'usb': 4}, mx=15.0, accent='#c51a4a', body='white',
+       notes='Case size 90 × 60 × 30 mm per retailers (some list 97 × 70 × 25 mm). Max W is the 5 V / 3 A supply rating.')
     DK('generic-fibre-ont', 'Generic', 'ONT', 'Fibre ONT / NTD', 'modem', 150, 110, 35, ports={'rj45_1g': 1}, body='white', notes='Generic ISP fibre terminal; typical size.')
     DK('generic-cable-modem', 'Generic', 'MODEM', 'Cable / DSL modem', 'modem', 180, 180, 45, ports={'rj45_1g': 1}, body='white', notes='Generic ISP modem; typical size.')
     DK('generic-desktop-switch-8', 'Generic', 'DSW-8', 'Unmanaged 8-port desktop switch', 'switch', 160, 100, 27, ports={'rj45_1g': 8}, notes='Generic desktop switch; typical size.')
     DK('generic-2-5-inch-ssd', 'Generic', 'USB-SSD', 'External USB drive', 'storage', 80, 120, 20, notes='Generic external drive; typical size.')
+    return S
+
+
+def ugreen():
+    S = []
+    UG = '#2b7de9'
+    def UGN(slug, model, w, d, h, bays, ports, url, notes, kg=None, typ=None):
+        p = desktop(f'ugreen-{slug}', 'UGREEN', model, f'UGREEN NASync {model}', 'nas', w, d, h, kg=kg, typ=typ, bays=bays, ports=ports,
+                    accent=UG, body='grey', url=url, sub='nasync', notes=notes)
+        p['tags'].append('nasync')
+        S.append(p)
+    b = lambda n, size='3.5': [{'count': n, 'size': size}]
+    UGN('dxp2800', 'DXP2800', 109, 237, 177, b(2), {'rj45_2_5g': 1}, 'https://www.alza.hu/EN/ugreen-us-dxp2800-d12923173.htm',
+        'Dimensions from a retailer; 2× M.2 slots not drawn. Ships with a 12 V / 5 A adapter. Weight not confirmed.')
+    UGN('dxp4800-plus', 'DXP4800 Plus', 178, 258, 178, b(4), {'rj45_10g': 1, 'rj45_2_5g': 1}, 'https://www.canadacomputers.com/en/281270/ugreen-dxp4800-plus-4-bay-nas-diskless-dxp4800-plus.html',
+        'Retailer figures. Typical power is the ~42 W "access" figure quoted by retailers; 150 W external adapter. Weight quoted 6–7.9 kg, so left blank.', typ=42.4)
+    UGN('dxp6800-pro', 'DXP6800 Pro', 258, 293, 200, b(6), {'rj45_10g': 2}, 'https://uk.ugreen.com/products/ugreen-6-bay-nas-storage-160tb',
+        'Dimensions from UGREEN UK store (11.54 × 10.16 × 7.87 in); orientation assumed (6 bays across the front).')
+    UGN('dxp8800-plus', 'DXP8800 Plus', 258, 360, 200, b(8), {'rj45_10g': 2}, 'https://www.multitronic.fi/en/products/4583351',
+        'Retailer figures (another lists 365 × 258 × 189 mm). Typical power is a retailer-quoted 70 W.', kg=7.42, typ=70.4)
+    UGN('dxp480t-plus', 'DXP480T Plus', 142, 178, 52, b(4, 'm2'), {'rj45_10g': 1}, 'https://www.ocinside.de/review/ugreen_dxp480t_plus/2/',
+        'All-flash: 4× M.2 NVMe. Weight is ~0.9 kg with SSDs (review figure).', kg=0.9)
+    UGN('dh4300-plus', 'DH4300 Plus', 155, 155, 215.7, b(4), {}, 'https://www.alza.de/EN/ugreen-nas-dh4300-plus-d13172549.htm',
+        'Dimensions from a retailer; port layout not confirmed.')
+    UGN('dh2300', 'DH2300', 98, 151, 213.7, b(2), {}, 'https://www.alza.hu/EN/ugreen-us-dh2300-d13172548.htm',
+        'Dimensions from retailers; port layout not confirmed.')
     return S
 
 
@@ -428,7 +461,7 @@ def main():
     write('power.json', 'Power: UPS & PDU', 'Rack UPS units from APC, CyberPower and Eaton, plus generic rack PDUs and power strips.', power(), 2)
     write('patch-panels.json', 'Patch panels, blanks & passive 19"', 'Generic passive rack gear with typical dimensions.', passive(), 2)
     write('mini-rack.json', '10-inch mini-rack', 'DeskPi RackMate accessories and generic 10" panels, shelves, mounts and PDUs.', mini_rack(), 2)
-    write('desktop.json', 'Desktop gear (shelf-mounted)', 'Mini PCs, SBCs, modems and other desktop devices that sit on a rack shelf.', desktop_gear(), 1)
+    write('desktop.json', 'Desktop gear (shelf-mounted)', 'Mini PCs, SBCs, desktop NAS (UGREEN NASync), modems and other devices that sit on a rack shelf.', desktop_gear() + ugreen(), 2)
 
 
 if __name__ == '__main__':

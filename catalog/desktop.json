@@ -1,8 +1,8 @@
 {
   "$schema": "./schema.json",
-  "version": 1,
+  "version": 2,
   "title": "Desktop gear (shelf-mounted)",
-  "description": "Mini PCs, SBCs, modems and other desktop devices that sit on a rack shelf.",
+  "description": "Mini PCs, SBCs, desktop NAS (UGREEN NASync), modems and other devices that sit on a rack shelf.",
   "parts": [
     {
       "id": "apple-mac-mini-m2",
@@ -401,6 +401,419 @@
       "sourceUrl": null,
       "verified": false,
       "notes": "Generic ISP fibre terminal; typical size."
+    },
+    {
+      "id": "ugreen-dh2300",
+      "brand": "UGREEN",
+      "model": "DH2300",
+      "name": "UGREEN NASync DH2300",
+      "category": "nas",
+      "subcategory": "nasync",
+      "formFactor": "desktop",
+      "heightU": 5,
+      "heightMm": 213.7,
+      "width": {
+        "mm": 98
+      },
+      "depthMm": 151,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "driveBays": [
+        {
+          "count": 2,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "desktop",
+        "body": "grey",
+        "accent": "#2b7de9"
+      },
+      "tags": [
+        "ugreen",
+        "nas",
+        "needs-shelf",
+        "nasync"
+      ],
+      "sourceUrl": "https://www.alza.hu/EN/ugreen-us-dh2300-d13172548.htm",
+      "verified": false,
+      "notes": "Dimensions from retailers; port layout not confirmed."
+    },
+    {
+      "id": "ugreen-dh4300-plus",
+      "brand": "UGREEN",
+      "model": "DH4300 Plus",
+      "name": "UGREEN NASync DH4300 Plus",
+      "category": "nas",
+      "subcategory": "nasync",
+      "formFactor": "desktop",
+      "heightU": 5,
+      "heightMm": 215.7,
+      "width": {
+        "mm": 155
+      },
+      "depthMm": 155,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "desktop",
+        "body": "grey",
+        "accent": "#2b7de9"
+      },
+      "tags": [
+        "ugreen",
+        "nas",
+        "needs-shelf",
+        "nasync"
+      ],
+      "sourceUrl": "https://www.alza.de/EN/ugreen-nas-dh4300-plus-d13172549.htm",
+      "verified": false,
+      "notes": "Dimensions from a retailer; port layout not confirmed."
+    },
+    {
+      "id": "ugreen-dxp2800",
+      "brand": "UGREEN",
+      "model": "DXP2800",
+      "name": "UGREEN NASync DXP2800",
+      "category": "nas",
+      "subcategory": "nasync",
+      "formFactor": "desktop",
+      "heightU": 4,
+      "heightMm": 177,
+      "width": {
+        "mm": 109
+      },
+      "depthMm": 237,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_2_5g": 1
+      },
+      "driveBays": [
+        {
+          "count": 2,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "desktop",
+        "body": "grey",
+        "accent": "#2b7de9"
+      },
+      "tags": [
+        "ugreen",
+        "nas",
+        "needs-shelf",
+        "nasync"
+      ],
+      "sourceUrl": "https://www.alza.hu/EN/ugreen-us-dxp2800-d12923173.htm",
+      "verified": false,
+      "notes": "Dimensions from a retailer; 2× M.2 slots not drawn. Ships with a 12 V / 5 A adapter. Weight not confirmed."
+    },
+    {
+      "id": "ugreen-dxp4800-plus",
+      "brand": "UGREEN",
+      "model": "DXP4800 Plus",
+      "name": "UGREEN NASync DXP4800 Plus",
+      "category": "nas",
+      "subcategory": "nasync",
+      "formFactor": "desktop",
+      "heightU": 4,
+      "heightMm": 178,
+      "width": {
+        "mm": 178
+      },
+      "depthMm": 258,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": 42.4,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_10g": 1,
+        "rj45_2_5g": 1
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "desktop",
+        "body": "grey",
+        "accent": "#2b7de9"
+      },
+      "tags": [
+        "ugreen",
+        "nas",
+        "needs-shelf",
+        "nasync"
+      ],
+      "sourceUrl": "https://www.canadacomputers.com/en/281270/ugreen-dxp4800-plus-4-bay-nas-diskless-dxp4800-plus.html",
+      "verified": false,
+      "notes": "Retailer figures. Typical power is the ~42 W \"access\" figure quoted by retailers; 150 W external adapter. Weight quoted 6–7.9 kg, so left blank."
+    },
+    {
+      "id": "ugreen-dxp480t-plus",
+      "brand": "UGREEN",
+      "model": "DXP480T Plus",
+      "name": "UGREEN NASync DXP480T Plus",
+      "category": "nas",
+      "subcategory": "nasync",
+      "formFactor": "desktop",
+      "heightU": 2,
+      "heightMm": 52,
+      "width": {
+        "mm": 142
+      },
+      "depthMm": 178,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 0.9,
+      "ports": {
+        "rj45_10g": 1
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "m2"
+        }
+      ],
+      "render": {
+        "style": "desktop",
+        "body": "grey",
+        "accent": "#2b7de9"
+      },
+      "tags": [
+        "ugreen",
+        "nas",
+        "needs-shelf",
+        "nasync"
+      ],
+      "sourceUrl": "https://www.ocinside.de/review/ugreen_dxp480t_plus/2/",
+      "verified": false,
+      "notes": "All-flash: 4× M.2 NVMe. Weight is ~0.9 kg with SSDs (review figure)."
+    },
+    {
+      "id": "ugreen-dxp6800-pro",
+      "brand": "UGREEN",
+      "model": "DXP6800 Pro",
+      "name": "UGREEN NASync DXP6800 Pro",
+      "category": "nas",
+      "subcategory": "nasync",
+      "formFactor": "desktop",
+      "heightU": 5,
+      "heightMm": 200,
+      "width": {
+        "mm": 258
+      },
+      "depthMm": 293,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_10g": 2
+      },
+      "driveBays": [
+        {
+          "count": 6,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "desktop",
+        "body": "grey",
+        "accent": "#2b7de9"
+      },
+      "tags": [
+        "ugreen",
+        "nas",
+        "needs-shelf",
+        "nasync"
+      ],
+      "sourceUrl": "https://uk.ugreen.com/products/ugreen-6-bay-nas-storage-160tb",
+      "verified": false,
+      "notes": "Dimensions from UGREEN UK store (11.54 × 10.16 × 7.87 in); orientation assumed (6 bays across the front)."
+    },
+    {
+      "id": "ugreen-dxp8800-plus",
+      "brand": "UGREEN",
+      "model": "DXP8800 Plus",
+      "name": "UGREEN NASync DXP8800 Plus",
+      "category": "nas",
+      "subcategory": "nasync",
+      "formFactor": "desktop",
+      "heightU": 5,
+      "heightMm": 200,
+      "width": {
+        "mm": 258
+      },
+      "depthMm": 360,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 70.4,
+        "maxW": null
+      },
+      "weightKg": 7.42,
+      "ports": {
+        "rj45_10g": 2
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "desktop",
+        "body": "grey",
+        "accent": "#2b7de9"
+      },
+      "tags": [
+        "ugreen",
+        "nas",
+        "needs-shelf",
+        "nasync"
+      ],
+      "sourceUrl": "https://www.multitronic.fi/en/products/4583351",
+      "verified": false,
+      "notes": "Retailer figures (another lists 365 × 258 × 189 mm). Typical power is a retailer-quoted 70 W."
+    },
+    {
+      "id": "raspberry-pi-4-case",
+      "brand": "Raspberry Pi",
+      "model": "Raspberry Pi 4 Model B (official case)",
+      "name": "Raspberry Pi 4 Model B in official case",
+      "category": "sbc",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 30,
+      "width": {
+        "mm": 90
+      },
+      "depthMm": 60,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 15.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "usb": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#c51a4a"
+      },
+      "tags": [
+        "raspberry-pi",
+        "sbc",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://datasheets.raspberrypi.com/rpi4/raspberry-pi-4-product-brief.pdf",
+      "verified": false,
+      "notes": "Case size 90 × 60 × 30 mm per retailers (some list 97 × 70 × 25 mm). Max W is the 5 V / 3 A supply rating."
+    },
+    {
+      "id": "raspberry-pi-4-model-b",
+      "brand": "Raspberry Pi",
+      "model": "Raspberry Pi 4 Model B",
+      "name": "Raspberry Pi 4 Model B (bare board)",
+      "category": "sbc",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 20,
+      "width": {
+        "mm": 85
+      },
+      "depthMm": 56,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 15.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "usb": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black",
+        "accent": "#c51a4a"
+      },
+      "tags": [
+        "raspberry-pi",
+        "sbc",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://datasheets.raspberrypi.com/rpi4/raspberry-pi-4-product-brief.pdf",
+      "verified": false,
+      "notes": "Ports and 5 V / 3 A supply from the official product brief; max W is the supply rating, not measured draw. 85 × 56 mm board, height approximate. Use measured power for real figures."
     },
     {
       "id": "raspberry-pi-5-case",
