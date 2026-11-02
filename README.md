@@ -2,7 +2,7 @@
 
 A self-hosted visual designer for home-lab server racks. Pick a 19″ or 10″ rack (1–32U), drag hardware from a parts catalog into it, and move things around. Placement snaps to whole U and collisions are blocked, with an explanation.
 
-> **Status: Phase 2 of 4.** Rack editor with drag and drop and collision detection, a researched catalog of ~300 parts with search and filters, and a custom part builder. Coming next: saved designs and the stats panel (Phase 3), then shelves, exports and final packaging (Phase 4). **Designs are not saved yet**; custom parts are.
+> **Status: Phase 3 of 4.** Multiple saved designs with autosave, a live stats panel with warnings, measured power per device, a researched catalog of ~300 parts, and a custom part builder. Coming next in Phase 4: placing gear on shelves, partial-width placement UI, exports (PNG/SVG/PDF/CSV/JSON), import and final packaging.
 
 ## Run it (Docker)
 
@@ -17,6 +17,20 @@ Open `http://<server-ip>:8085`. Health check: `GET /api/health`.
 
 Update: `git pull && docker compose up -d --build`.
 
+## Designs
+
+The home screen lists your designs with live thumbnails. Create a new one by picking a width, a height preset and an optional depth. Rename, duplicate or delete designs from each card's menu. Changes save automatically as you work. The header shows *Saved*, *Saving…* or *Offline, retrying*. If the same design is saved from another tab or device, you're asked whether to keep your version or load the latest one.
+
+## Stats & warnings
+
+The **Stats** tab, next to the device details, updates live:
+
+- **Space:** U used and free (a U counts as used if anything occupies it, front or rear), plus device and passive counts.
+- **Power:** typical and max draw. A device's **measured power** (set in the inspector, e.g. from a smart plug or PDU reading) replaces catalog figures. When a part only publishes one figure, it's used for both. Catalog max power excludes PoE output, so the **expected PoE load** you enter is added on top before comparing against total **UPS capacity**.
+- **PoE:** total PoE budget of the switches and gateways in the rack, compared with your expected PoE load.
+- **Weight** and **port counts** by type.
+- **Warnings:** devices deeper than the rack, gear deeper than its shelf, desktop gear not on a shelf, collisions or bad widths (e.g. after an import), parts missing from the catalog, UPS or PoE overload, and devices with no power data. Click a warning to select the device.
+
 ## Using the editor
 
 | Action | How |
@@ -27,6 +41,7 @@ Update: `git pull && docker compose up -d --build`.
 | Delete / duplicate | <kbd>Del</kbd> / <kbd>Ctrl</kbd>+<kbd>D</kbd> |
 | Undo / redo | <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> |
 | Zoom | <kbd>+</kbd> / <kbd>-</kbd>, <kbd>0</kbd> to fit, or <kbd>Ctrl</kbd>+scroll |
+| Measured power | Select a device, enter watts in *Measured power* |
 
 Changing the rack width, height or depth so that some parts no longer fit asks for confirmation and lists what would be removed. You can undo afterwards.
 
@@ -71,6 +86,18 @@ python3 scripts/research/fetch_mikrotik.py && python3 scripts/research/build_mik
 python3 scripts/research/build_misc.py       # servers, storage, switching, power, passive, 10", desktop
 python3 scripts/research/gen_unverified.py   # -> catalog/UNVERIFIED.md
 ```
+
+## API
+
+| Method | Path | |
+|---|---|---|
+| GET | `/api/health` | Health check (used by Docker) |
+| GET | `/api/catalog` | All parts, retired ids, catalog files |
+| POST | `/api/catalog/reload` | Re-read `catalog/*.json` |
+| POST / PUT / DELETE | `/api/parts[/:id]` | Custom parts |
+| GET / POST | `/api/designs` | List / create (`{name, rack}` or import `{design}`) |
+| GET / PUT / DELETE | `/api/designs/:id` | Load / save (`{design, revision, force?}`, 409 on conflict) / delete |
+| POST | `/api/designs/:id/duplicate` | Copy a design |
 
 ## Development
 

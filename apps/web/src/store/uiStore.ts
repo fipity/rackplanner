@@ -38,6 +38,10 @@ interface UiState {
   fitScale: number;
   theme: Theme;
   showIncompatible: boolean;
+  /** Right panel tab. */
+  rightTab: 'details' | 'stats';
+  /** On narrow screens the right panel is an overlay; this opens it without a selection. */
+  panelOpen: boolean;
   filters: CatalogFilters;
   builder: BuilderState;
   select: (id: string | null) => void;
@@ -47,6 +51,8 @@ interface UiState {
   zoomBy: (factor: number) => void;
   setTheme: (t: Theme) => void;
   setShowIncompatible: (v: boolean) => void;
+  setRightTab: (t: 'details' | 'stats') => void;
+  setPanelOpen: (v: boolean) => void;
   setFilters: (patch: Partial<CatalogFilters>) => void;
   resetFilters: () => void;
   openBuilder: (b: BuilderState) => void;
@@ -68,9 +74,11 @@ export const useUiStore = create<UiState>()((set, get) => ({
   fitScale: 1,
   theme: savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'system',
   showIncompatible: false,
+  rightTab: 'stats',
+  panelOpen: false,
   filters: DEFAULT_FILTERS,
   builder: null,
-  select: (selectedId) => set({ selectedId }),
+  select: (selectedId) => set(selectedId ? { selectedId, rightTab: 'details' } : { selectedId }),
   setView: (view) => set({ view }),
   setZoom: (zoom) => set({ zoom }),
   setFitScale: (fitScale) => set({ fitScale }),
@@ -85,6 +93,8 @@ export const useUiStore = create<UiState>()((set, get) => ({
     set({ theme });
   },
   setShowIncompatible: (showIncompatible) => set({ showIncompatible }),
+  setRightTab: (rightTab) => set({ rightTab }),
+  setPanelOpen: (panelOpen) => set({ panelOpen }),
   setFilters: (patch) => set({ filters: { ...get().filters, ...patch } }),
   resetFilters: () => set({ filters: DEFAULT_FILTERS }),
   openBuilder: (builder) => set({ builder }),

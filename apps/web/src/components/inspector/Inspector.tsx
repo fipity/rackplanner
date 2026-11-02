@@ -120,6 +120,45 @@ function Specs({ part }: { part: Part }) {
   );
 }
 
+/** Per-placement measured draw; overrides catalog figures in the stats. */
+function MeasuredPower({ placement, part }: { placement: PlacedPart; part: Part }) {
+  const updatePlacement = useDesignStore((s) => s.updatePlacement);
+  const value = placement.measuredW;
+  const [draft, setDraft] = useState(value === undefined ? '' : String(value));
+  useEffect(() => setDraft(value === undefined ? '' : String(value)), [value]);
+  const commit = () => {
+    const n = draft.trim() === '' ? undefined : Number(draft);
+    if (n !== undefined && (!Number.isFinite(n) || n < 0 || n > 100000)) {
+      toast('Measured power must be a positive number of watts', 'error');
+      setDraft(value === undefined ? '' : String(value));
+      return;
+    }
+    if (n !== value) updatePlacement(placement.id, { measuredW: n });
+  };
+  const catalogW = part.power.typicalW ?? part.power.maxW;
+  return (
+    <Field label="Measured power">
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          min={0}
+          step="any"
+          inputMode="decimal"
+          aria-label="Measured power in watts"
+          className={cx(inputClass, 'flex-1')}
+          value={draft}
+          placeholder={catalogW !== null ? `catalog: ${catalogW} W` : 'unknown — enter your reading'}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={commit}
+          onKeyDown={(e) => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
+        />
+        <span className="text-xs text-zinc-500">W</span>
+      </div>
+      <p className="text-[11px] text-zinc-500 dark:text-zinc-400">From a smart plug, UPS or PDU reading. Used instead of catalog figures in the stats.</p>
+    </Field>
+  );
+}
+
 function PlacementInspector({ placement, part }: { placement: PlacedPart; part: Part }) {
   const design = useDesignStore((s) => s.design);
   const updatePlacement = useDesignStore((s) => s.updatePlacement);
@@ -201,6 +240,8 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
         </Field>
       )}
 
+      <MeasuredPower placement={placement} part={part} />
+
       <Field label="Notes">
         <CommitText
           label="Notes"
@@ -244,12 +285,8 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
 
 function RackSummary() {
   const design = useDesignStore((s) => s.design);
-  const setName = useDesignStore((s) => s.setName);
   return (
     <div className="space-y-4">
-      <Field label="Design name">
-        <CommitText label="Design name" value={design.name} onCommit={(v) => v.trim() && setName(v.trim())} />
-      </Field>
       <p className="text-sm text-zinc-600 dark:text-zinc-400">
         {design.placements.length} device{design.placements.length === 1 ? '' : 's'} in a {design.rack.heightU}U{' '}
         {design.rack.width === '19in' ? '19″' : '10″'} rack. Select a device to edit it.
@@ -279,9 +316,5 @@ export function Inspector() {
   const selectedId = useUiStore((s) => s.selectedId);
   const placement = useDesignStore((s) => s.design.placements.find((p) => p.id === selectedId));
   const part = useCatalogStore((s) => (placement ? s.catalog.get(placement.partId) : undefined));
-  return (
-    <div className="h-full overflow-y-auto p-4">
-      {placement && part ? <PlacementInspector key={placement.id} placement={placement} part={part} /> : <RackSummary />}
-    </div>
-  );
+  return placement && part ? <PlacementInspector key={placement.id} placement={placement} part={part} /> : <RackSummary />;
 }

@@ -28,6 +28,8 @@ interface DesignState {
   updatePlacement: (id: string, patch: PlacementPatch) => void;
   /** Removes the placement and anything sitting on it. */
   removePlacement: (id: string) => void;
+  setExpectedPoe: (w: number | null) => void;
+  /** Replace the whole design (opening a design) and reset undo history. */
   loadDesign: (d: Design) => void;
 }
 
@@ -48,7 +50,7 @@ export const useDesignStore = create<DesignState>()(
               if (p.id !== id) return p;
               const next: PlacedPart = { ...p, ...patch };
               // Optional fields set to undefined are removed so the design stays schema-clean.
-              for (const k of ['label', 'notes', 'color', 'parentId'] as const) {
+              for (const k of ['label', 'notes', 'color', 'parentId', 'measuredW'] as const) {
                 if (k in patch && patch[k] === undefined) delete next[k];
               }
               return next;
@@ -70,7 +72,11 @@ export const useDesignStore = create<DesignState>()(
           }
           return { design: touch({ ...s.design, placements: s.design.placements.filter((p) => !doomed.has(p.id)) }) };
         }),
-      loadDesign: (d) => set({ design: d }),
+      setExpectedPoe: (w) => set((s) => ({ design: touch({ ...s.design, expectedPoeLoadW: w }) })),
+      loadDesign: (d) => {
+        set({ design: d });
+        useDesignStore.temporal.getState().clear();
+      },
     }),
     {
       limit: 200,

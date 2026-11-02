@@ -19,6 +19,13 @@
 - Docker: entrypoint fixes ./data ownership via PUID/PGID then drops to that user (setpriv).
 - Tests: 73 (placement, schema, catalog files, catalog filter, server API with in-memory SQLite).
 
+## Phase 3 — persistence, designs, stats ✅ (2026-11-02)
+- Catalog: + UGREEN NASync (DXP2800, DXP4800 Plus, DXP6800 Pro, DXP8800 Plus, DXP480T Plus, DH4300 Plus, DH2300) and Raspberry Pi 4 (bare / official case); all verified: false (UGREEN spec tables are client-rendered and rate-limited). 307 parts.
+- Shared: PlacedPart.measuredW, createDesign(), computeStats() (U used, power typical/max/measured/estimated/unknown, UPS capacity, PoE budget vs expected load, weight, ports, warnings).
+- Server: designs table (migration 2), CRUD + duplicate + import, revision-based optimistic concurrency (409 + force).
+- Web: history router (/ and /d/:id), home screen with live thumbnails (rename/duplicate/delete), new design dialog, debounced autosave with retry/backoff, keepalive save on unload, conflict dialog, editor header (back, inline name, save status), tabbed right panel with Stats, measured power input, tablet stats overlay.
+- Tests: 89 (stats engine, designs API).
+
 ### Notes for later phases
 - QNAP rack NAS not yet in the catalog (their spec pages need a browser); add in Phase 4 or via custom parts.
 - Placement-level power override would help servers whose draw is config-dependent (catalog power is null).
