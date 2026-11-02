@@ -1,52 +1,19 @@
 {
   "$schema": "./schema.json",
-  "version": 1,
-  "title": "Servers & storage",
+  "version": 2,
+  "title": "Servers & chassis",
+  "description": "Dell PowerEdge, HPE ProLiant, Supermicro chassis and generic DIY cases. Figures from rack-vendor guides and resellers (Dell/HPE spec pages for these older models are hard to reach), so all are verified: false. Server power is left blank because it depends on configuration.",
   "parts": [
     {
-      "formFactor": "rack",
-      "width": "19in",
-      "mounting": "full-depth",
-      "rackWidths": [
-        "19in"
-      ],
-      "power": {
-        "typicalW": null,
-        "maxW": null
-      },
-      "weightKg": null,
-      "ports": {
-        "rj45_1g": 4
-      },
-      "tags": [
-        "server",
-        "legacy"
-      ],
-      "sourceUrl": null,
-      "verified": false,
-      "id": "dell-poweredge-r630",
+      "id": "dell-poweredge-r220",
       "brand": "Dell",
-      "model": "PowerEdge R630",
-      "name": "Dell PowerEdge R630",
+      "model": "PowerEdge R220",
+      "name": "Dell PowerEdge R220",
       "category": "server",
+      "formFactor": "rack",
       "heightU": 1,
-      "depthMm": null,
-      "driveBays": [
-        {
-          "count": 8,
-          "size": "2.5"
-        }
-      ],
-      "render": {
-        "style": "server",
-        "body": "black",
-        "accent": "#0076ce"
-      },
-      "legacy": true
-    },
-    {
-      "formFactor": "rack",
       "width": "19in",
+      "depthMm": 394,
       "mounting": "full-depth",
       "rackWidths": [
         "19in"
@@ -55,26 +22,13 @@
         "typicalW": null,
         "maxW": null
       },
-      "weightKg": null,
+      "weightKg": 8.06,
       "ports": {
-        "rj45_1g": 4
+        "rj45_1g": 2
       },
-      "tags": [
-        "server",
-        "legacy"
-      ],
-      "sourceUrl": null,
-      "verified": false,
-      "id": "dell-poweredge-r730",
-      "brand": "Dell",
-      "model": "PowerEdge R730",
-      "name": "Dell PowerEdge R730 (8\u00d7 3.5\")",
-      "category": "server",
-      "heightU": 2,
-      "depthMm": null,
       "driveBays": [
         {
-          "count": 8,
+          "count": 2,
           "size": "3.5"
         }
       ],
@@ -83,11 +37,115 @@
         "body": "black",
         "accent": "#0076ce"
       },
-      "legacy": true
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://www.racksolutions.com/news/blog/dell-poweredge-r220-specs-and-rack-compatibility/",
+      "verified": false,
+      "notes": "Depth 394.3 mm (one source says 429 mm). Single 250 W PSU. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
     },
     {
+      "id": "dell-poweredge-r230",
+      "brand": "Dell",
+      "model": "PowerEdge R230",
+      "name": "Dell PowerEdge R230",
+      "category": "server",
       "formFactor": "rack",
+      "heightU": 1,
       "width": "19in",
+      "depthMm": 495,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 10.6,
+      "ports": {
+        "rj45_1g": 2
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://www.racksolutions.com/news/blog/dell-poweredge-r230-specs-and-rack-compatibility/",
+      "verified": false,
+      "notes": "Single 250 W cabled PSU. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r240",
+      "brand": "Dell",
+      "model": "PowerEdge R240",
+      "name": "Dell PowerEdge R240",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 596,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 12.2,
+      "ports": {
+        "rj45_1g": 2
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://quickserv.co.th/server/DELL/Rack-1U-:-Single-Socket/detail/Dell-PowerEdge-R240/SNSR240D.html",
+      "verified": false,
+      "notes": "Depth for the 3.5\" configuration, excluding bezel. 250 W PSU. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r340",
+      "brand": "Dell",
+      "model": "PowerEdge R340",
+      "name": "Dell PowerEdge R340",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
       "mounting": "full-depth",
       "rackWidths": [
         "19in"
@@ -100,18 +158,6 @@
       "ports": {
         "rj45_1g": 2
       },
-      "tags": [
-        "nas"
-      ],
-      "sourceUrl": null,
-      "verified": false,
-      "id": "synology-rs422-plus",
-      "brand": "Synology",
-      "model": "RS422+",
-      "name": "Synology RackStation RS422+",
-      "category": "nas",
-      "heightU": 1,
-      "depthMm": null,
       "driveBays": [
         {
           "count": 4,
@@ -119,10 +165,1136 @@
         }
       ],
       "render": {
-        "style": "nas",
+        "style": "server",
         "body": "black",
-        "accent": "#b5b5b6"
-      }
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Depth and weight not found from a reliable source. Bay layout is the common 4× 3.5\" configuration. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r620",
+      "brand": "Dell",
+      "model": "PowerEdge R620 (8× 2.5\")",
+      "name": "Dell PowerEdge R620 (8× 2.5\")",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 703,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 19.76,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://www.racksolutions.com/news/blog/dell-poweredge-r620-specs-and-rack-compatibility/",
+      "verified": false,
+      "notes": "Max weight (10-bay chassis 43.56 lb). PSU options 495/750/1100 W. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r630",
+      "brand": "Dell",
+      "model": "PowerEdge R630 (8× 2.5\")",
+      "name": "Dell PowerEdge R630 (8× 2.5\")",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 769,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 17.4,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://www.racksolutions.com/news/blog/dell-poweredge-r630-specs-and-rack-compatibility/",
+      "verified": false,
+      "notes": "Sources give 755–769 mm depth; the larger value is used. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r640",
+      "brand": "Dell",
+      "model": "PowerEdge R640 (8× 2.5\")",
+      "name": "Dell PowerEdge R640 (8× 2.5\")",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 758,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge"
+      ],
+      "sourceUrl": "https://www.stikc.com/pages/refurbished-dell-servers/poweredge-r640",
+      "verified": false,
+      "notes": "Depth for the 8× 2.5\" configuration (808.5 mm for 4× 3.5\" / 10× 2.5\"). Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r720",
+      "brand": "Dell",
+      "model": "PowerEdge R720 (8× 3.5\")",
+      "name": "Dell PowerEdge R720 (8× 3.5\")",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 756,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 30.9,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://www.racksolutions.com/news/blog/dell-poweredge-r720-specs-and-rack-compatibility/",
+      "verified": false,
+      "notes": "Max weight for 3.5\" systems. PSU options 495/750/1100 W. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r720xd",
+      "brand": "Dell",
+      "model": "PowerEdge R720xd (12× 3.5\")",
+      "name": "Dell PowerEdge R720xd (12× 3.5\")",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 723,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 32.5,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 12,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://help.racksolutions.com/hc/en-us/articles/11659948072084-Dell-PowerEdge-R720xd-Specs-and-Rack-Compatibility",
+      "verified": false,
+      "notes": "Plus 2 optional rear 2.5\" bays. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r730",
+      "brand": "Dell",
+      "model": "PowerEdge R730 (8× 3.5\")",
+      "name": "Dell PowerEdge R730 (8× 3.5\")",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Depth/weight not found from a reliable source (shares the R730xd chassis length of ~684 mm per rack vendors). Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r730xd",
+      "brand": "Dell",
+      "model": "PowerEdge R730xd (12× 3.5\")",
+      "name": "Dell PowerEdge R730xd (12× 3.5\")",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 684,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 32.5,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 12,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://www.racksolutions.com/news/blog/dell-poweredge-r730xd-specs-and-rack-compatibility/",
+      "verified": false,
+      "notes": "Max weight for the 3.5\" chassis. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r740",
+      "brand": "Dell",
+      "model": "PowerEdge R740 (8× 3.5\")",
+      "name": "Dell PowerEdge R740 (8× 3.5\")",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 33.1,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge"
+      ],
+      "sourceUrl": "https://pcserverandparts.com/content/Spec%20Sheets/Servers/Dell/Dell%20PowerEdge%20R740/Dell%20EMC%20PowerEdge%20R740%20Technical%20Specifications.pdf",
+      "verified": false,
+      "notes": "Max weight for 3.5\" systems; depth not found. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "dell-poweredge-r740xd",
+      "brand": "Dell",
+      "model": "PowerEdge R740xd (12× 3.5\")",
+      "name": "Dell PowerEdge R740xd (12× 3.5\")",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 716,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 33.1,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 12,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#0076ce"
+      },
+      "tags": [
+        "dell",
+        "server",
+        "poweredge"
+      ],
+      "sourceUrl": "https://pcserverandparts.com/content/Spec%20Sheets/Servers/Dell/Dell%20PowerEdge%20R740XD/Dell%20EMC%20PowerEdge%20R740XD%20Technical%20Specifications.pdf",
+      "verified": false,
+      "notes": "Depth 715.5 mm per Dell spec copy (rack vendors quote 737.5 mm). Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "hpe-proliant-dl20-gen10-plus",
+      "brand": "HPE",
+      "model": "ProLiant DL20 Gen10 Plus",
+      "name": "HPE ProLiant DL20 Gen10 Plus",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 382,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 10.0,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#01a982"
+      },
+      "tags": [
+        "hpe",
+        "server",
+        "proliant"
+      ],
+      "sourceUrl": "https://www.uk.shi.com/product/44512609/HPE-ProLiant-DL20-Gen10-Plus-Performance",
+      "verified": false,
+      "notes": "290 W or 500 W redundant PSU options. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "hpe-proliant-dl20-gen9",
+      "brand": "HPE",
+      "model": "ProLiant DL20 Gen9 (2× LFF)",
+      "name": "HPE ProLiant DL20 Gen9 (2× LFF)",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 382,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 7.9,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 2,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#01a982"
+      },
+      "tags": [
+        "hpe",
+        "server",
+        "proliant",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://racksolutions.com/news/blog/hpe-proliant-dl20-gen9-specs-and-rack-compatibility",
+      "verified": false,
+      "notes": "290 W non-redundant PSU standard. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "hpe-proliant-dl360-gen10",
+      "brand": "HPE",
+      "model": "ProLiant DL360 Gen10 (8× SFF)",
+      "name": "HPE ProLiant DL360 Gen10 (8× SFF)",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 707,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 16.3,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#01a982"
+      },
+      "tags": [
+        "hpe",
+        "server",
+        "proliant"
+      ],
+      "sourceUrl": "https://www.racksolutions.com/news/blog/hpe-proliant-dl360-how-to-mount/",
+      "verified": false,
+      "notes": "Max weight 35.86 lb. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "hpe-proliant-dl360-gen8",
+      "brand": "HPE",
+      "model": "ProLiant DL360 Gen8 (8× SFF)",
+      "name": "HPE ProLiant DL360 Gen8 (8× SFF)",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#01a982"
+      },
+      "tags": [
+        "hpe",
+        "server",
+        "proliant",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions not found from a reliable source. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "hpe-proliant-dl360-gen9",
+      "brand": "HPE",
+      "model": "ProLiant DL360 Gen9 (8× SFF)",
+      "name": "HPE ProLiant DL360 Gen9 (8× SFF)",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 699,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 15.31,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#01a982"
+      },
+      "tags": [
+        "hpe",
+        "server",
+        "proliant",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://www.racksolutions.com/news/blog/hpe-proliant-dl360-gen9-how-to-mount/",
+      "verified": false,
+      "notes": "27.5\" depth for 8/10 SFF (29.5\" for 4 LFF). Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "hpe-proliant-dl380-gen10",
+      "brand": "HPE",
+      "model": "ProLiant DL380 Gen10 (8× SFF)",
+      "name": "HPE ProLiant DL380 Gen10 (8× SFF)",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 679,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#01a982"
+      },
+      "tags": [
+        "hpe",
+        "server",
+        "proliant"
+      ],
+      "sourceUrl": "https://help.racksolutions.com/hc/en-us/articles/11756372936596-HPE-ProLiant-DL380-Gen10-Specs-and-Rack-Compatibility",
+      "verified": false,
+      "notes": "679 mm for SFF, 730 mm for LFF models. Weight figures conflict (14.8–17.1 kg). Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "hpe-proliant-dl380-gen8",
+      "brand": "HPE",
+      "model": "ProLiant DL380 Gen8 (8× SFF)",
+      "name": "HPE ProLiant DL380 Gen8 (8× SFF)",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#01a982"
+      },
+      "tags": [
+        "hpe",
+        "server",
+        "proliant",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions not found from a reliable source. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "hpe-proliant-dl380-gen9",
+      "brand": "HPE",
+      "model": "ProLiant DL380 Gen9 (8× SFF)",
+      "name": "HPE ProLiant DL380 Gen9 (8× SFF)",
+      "category": "server",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 679,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 23.6,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#01a982"
+      },
+      "tags": [
+        "hpe",
+        "server",
+        "proliant",
+        "legacy"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://www.racksolutions.com/news/blog/hpe-proliant-dl380-how-to-mount/",
+      "verified": false,
+      "notes": "Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+    },
+    {
+      "id": "generic-atx-case-1u",
+      "brand": "Generic",
+      "model": "ATX-1U",
+      "name": "Generic 1U ATX server case",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "server",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "server",
+        "chassis",
+        "diy"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic DIY chassis (Rosewill/Sliger style). Depth varies widely by model; set it via a custom part if it matters."
+    },
+    {
+      "id": "generic-atx-case-2u",
+      "brand": "Generic",
+      "model": "ATX-2U",
+      "name": "Generic 2U ATX server case",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "server",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "server",
+        "chassis",
+        "diy"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic DIY chassis (Rosewill/Sliger style). Depth varies widely by model; set it via a custom part if it matters."
+    },
+    {
+      "id": "generic-atx-case-3u",
+      "brand": "Generic",
+      "model": "ATX-3U",
+      "name": "Generic 3U ATX server case",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 3,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "server",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "server",
+        "chassis",
+        "diy"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic DIY chassis (Rosewill/Sliger style). Depth varies widely by model; set it via a custom part if it matters."
+    },
+    {
+      "id": "generic-atx-case-4u",
+      "brand": "Generic",
+      "model": "ATX-4U",
+      "name": "Generic 4U ATX server case",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 4,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "server",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "server",
+        "chassis",
+        "diy"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic DIY chassis (Rosewill/Sliger style). Depth varies widely by model; set it via a custom part if it matters."
+    },
+    {
+      "id": "rosewill-rsv-l4500u",
+      "brand": "Rosewill",
+      "model": "RSV-L4500U",
+      "name": "Rosewill RSV-L4500U 4U case (15× 3.5\")",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 4,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "driveBays": [
+        {
+          "count": 15,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black"
+      },
+      "tags": [
+        "rosewill",
+        "server",
+        "chassis",
+        "diy"
+      ],
+      "sourceUrl": "https://www.rosewill.com/",
+      "verified": false,
+      "notes": "Popular home-lab storage case. Bays are internal cages behind a front door; depth not confirmed."
+    },
+    {
+      "id": "supermicro-cse-815",
+      "brand": "Supermicro",
+      "model": "CSE-815",
+      "name": "Supermicro CSE-815 chassis",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 650,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#2f6db5"
+      },
+      "tags": [
+        "supermicro",
+        "server",
+        "chassis"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Depth from a reseller listing. Weight varies by PSU option."
+    },
+    {
+      "id": "supermicro-cse-825",
+      "brand": "Supermicro",
+      "model": "CSE-825",
+      "name": "Supermicro CSE-825 chassis",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#2f6db5"
+      },
+      "tags": [
+        "supermicro",
+        "server",
+        "chassis"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions not found; 8× 3.5\" is the standard bay layout."
+    },
+    {
+      "id": "supermicro-cse-836",
+      "brand": "Supermicro",
+      "model": "CSE-836",
+      "name": "Supermicro CSE-836 chassis",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 3,
+      "width": "19in",
+      "depthMm": 648,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "driveBays": [
+        {
+          "count": 16,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#2f6db5"
+      },
+      "tags": [
+        "supermicro",
+        "server",
+        "chassis"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Depth (25.5\") from a used-market listing."
+    },
+    {
+      "id": "supermicro-cse-846",
+      "brand": "Supermicro",
+      "model": "CSE-846",
+      "name": "Supermicro CSE-846 chassis",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 4,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "driveBays": [
+        {
+          "count": 24,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#2f6db5"
+      },
+      "tags": [
+        "supermicro",
+        "server",
+        "chassis"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions not found."
+    },
+    {
+      "id": "supermicro-cse-847",
+      "brand": "Supermicro",
+      "model": "CSE-847",
+      "name": "Supermicro CSE-847 chassis",
+      "category": "server",
+      "subcategory": "chassis",
+      "formFactor": "rack",
+      "heightU": 4,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "driveBays": [
+        {
+          "count": 24,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#2f6db5"
+      },
+      "tags": [
+        "supermicro",
+        "server",
+        "chassis"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "36 bays total: 24 front + 12 rear (only the front 24 are drawn). Dimensions not found."
     }
   ]
 }

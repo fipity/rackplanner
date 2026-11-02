@@ -1,0 +1,523 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "Desktop gear (shelf-mounted)",
+  "description": "Mini PCs, SBCs, modems and other desktop devices that sit on a rack shelf.",
+  "parts": [
+    {
+      "id": "apple-mac-mini-m2",
+      "brand": "Apple",
+      "model": "Mac mini (M2)",
+      "name": "Mac mini (M2, 2023)",
+      "category": "mini-pc",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 35.8,
+      "width": {
+        "mm": 197
+      },
+      "depthMm": 197,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 1.18,
+      "ports": {
+        "rj45_1g": 1,
+        "usb": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "silver"
+      },
+      "tags": [
+        "apple",
+        "mini-pc",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions from memory/common listings; check before relying on them."
+    },
+    {
+      "id": "apple-mac-mini-m4",
+      "brand": "Apple",
+      "model": "Mac mini (M4)",
+      "name": "Mac mini (M4, 2024)",
+      "category": "mini-pc",
+      "formFactor": "desktop",
+      "heightU": 2,
+      "heightMm": 50,
+      "width": {
+        "mm": 127
+      },
+      "depthMm": 127,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 0.67,
+      "ports": {
+        "rj45_1g": 1,
+        "usb": 5
+      },
+      "render": {
+        "style": "desktop",
+        "body": "silver"
+      },
+      "tags": [
+        "apple",
+        "mini-pc",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions from memory/common listings; check before relying on them."
+    },
+    {
+      "id": "dell-optiplex-7060-micro",
+      "brand": "Dell",
+      "model": "OptiPlex 7060 Micro",
+      "name": "Dell OptiPlex 7060 Micro",
+      "category": "mini-pc",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 36,
+      "width": {
+        "mm": 182
+      },
+      "depthMm": 178,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "usb": 6
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black"
+      },
+      "tags": [
+        "dell",
+        "mini-pc",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions from memory/common listings; check before relying on them."
+    },
+    {
+      "id": "hp-elitedesk-800-g4-mini",
+      "brand": "HP",
+      "model": "EliteDesk 800 G4 Mini",
+      "name": "HP EliteDesk 800 G4 Mini",
+      "category": "mini-pc",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 34,
+      "width": {
+        "mm": 177
+      },
+      "depthMm": 175,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "usb": 5
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black"
+      },
+      "tags": [
+        "hp",
+        "mini-pc",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions from memory/common listings; check before relying on them."
+    },
+    {
+      "id": "intel-nuc-13-pro-slim",
+      "brand": "Intel",
+      "model": "NUC 13 Pro (slim)",
+      "name": "Intel NUC 13 Pro (slim chassis)",
+      "category": "mini-pc",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 37,
+      "width": {
+        "mm": 117
+      },
+      "depthMm": 112,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_2_5g": 1,
+        "usb": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "grey"
+      },
+      "tags": [
+        "intel",
+        "mini-pc",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions from memory/common listings; check before relying on them."
+    },
+    {
+      "id": "intel-nuc-13-pro-tall",
+      "brand": "Intel",
+      "model": "NUC 13 Pro (tall)",
+      "name": "Intel NUC 13 Pro (tall chassis)",
+      "category": "mini-pc",
+      "formFactor": "desktop",
+      "heightU": 2,
+      "heightMm": 54,
+      "width": {
+        "mm": 117
+      },
+      "depthMm": 112,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_2_5g": 1,
+        "usb": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "grey"
+      },
+      "tags": [
+        "intel",
+        "mini-pc",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Dimensions from memory/common listings; check before relying on them."
+    },
+    {
+      "id": "lenovo-thinkcentre-m720q",
+      "brand": "Lenovo",
+      "model": "ThinkCentre M720q Tiny",
+      "name": "Lenovo ThinkCentre M720q Tiny",
+      "category": "mini-pc",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 34.5,
+      "width": {
+        "mm": 179
+      },
+      "depthMm": 183,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "usb": 6
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black"
+      },
+      "tags": [
+        "lenovo",
+        "mini-pc",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Same 1L \"Tiny\" chassis as the M920q; weight not confirmed."
+    },
+    {
+      "id": "lenovo-thinkcentre-m920q",
+      "brand": "Lenovo",
+      "model": "ThinkCentre M920q Tiny",
+      "name": "Lenovo ThinkCentre M920q Tiny",
+      "category": "mini-pc",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 34.5,
+      "width": {
+        "mm": 179
+      },
+      "depthMm": 183,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 1.32,
+      "ports": {
+        "rj45_1g": 1,
+        "usb": 6
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black"
+      },
+      "tags": [
+        "lenovo",
+        "mini-pc",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://www.shi.com/product/35698554/Lenovo-ThinkCentre-M920q-10RS",
+      "verified": false,
+      "notes": "Reseller spec sheet."
+    },
+    {
+      "id": "generic-cable-modem",
+      "brand": "Generic",
+      "model": "MODEM",
+      "name": "Cable / DSL modem",
+      "category": "modem",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 45,
+      "width": {
+        "mm": 180
+      },
+      "depthMm": 180,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "modem",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic ISP modem; typical size."
+    },
+    {
+      "id": "generic-fibre-ont",
+      "brand": "Generic",
+      "model": "ONT",
+      "name": "Fibre ONT / NTD",
+      "category": "modem",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 35,
+      "width": {
+        "mm": 150
+      },
+      "depthMm": 110,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "modem",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic ISP fibre terminal; typical size."
+    },
+    {
+      "id": "raspberry-pi-5-case",
+      "brand": "Raspberry Pi",
+      "model": "Raspberry Pi 5 (official case)",
+      "name": "Raspberry Pi 5 in official case",
+      "category": "sbc",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 30,
+      "width": {
+        "mm": 95
+      },
+      "depthMm": 63,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "usb": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#c51a4a"
+      },
+      "tags": [
+        "raspberry-pi",
+        "sbc",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Board is 85 × 56 mm; case size approximate."
+    },
+    {
+      "id": "generic-2-5-inch-ssd",
+      "brand": "Generic",
+      "model": "USB-SSD",
+      "name": "External USB drive",
+      "category": "storage",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 20,
+      "width": {
+        "mm": 80
+      },
+      "depthMm": 120,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "desktop",
+        "body": "grey"
+      },
+      "tags": [
+        "generic",
+        "storage",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic external drive; typical size."
+    },
+    {
+      "id": "generic-desktop-switch-8",
+      "brand": "Generic",
+      "model": "DSW-8",
+      "name": "Unmanaged 8-port desktop switch",
+      "category": "switch",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 27,
+      "width": {
+        "mm": 160
+      },
+      "depthMm": 100,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 8
+      },
+      "render": {
+        "style": "desktop",
+        "body": "grey"
+      },
+      "tags": [
+        "generic",
+        "switch",
+        "needs-shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic desktop switch; typical size."
+    }
+  ]
+}

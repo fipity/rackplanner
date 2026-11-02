@@ -1,12 +1,21 @@
 {
   "$schema": "./schema.json",
-  "version": 1,
+  "version": 2,
   "title": "Power: UPS & PDU",
+  "description": "Rack UPS units from APC, CyberPower and Eaton, plus generic rack PDUs and power strips.",
   "parts": [
     {
+      "id": "generic-pdu-1u-12-c13",
+      "brand": "Generic",
+      "model": "PDU-12-C13",
+      "name": "1U PDU 12× C13",
+      "category": "power",
+      "subcategory": "pdu",
       "formFactor": "rack",
+      "heightU": 1,
       "width": "19in",
-      "mounting": "full-depth",
+      "depthMm": 50,
+      "mounting": "rear",
       "rackWidths": [
         "19in"
       ],
@@ -16,35 +25,104 @@
       },
       "weightKg": null,
       "ports": {
-        "outlet_c13": 4
+        "outlet_c13": 12
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
       },
       "tags": [
-        "ups",
-        "power"
+        "generic",
+        "power",
+        "pdu"
       ],
       "sourceUrl": null,
       "verified": false,
-      "id": "apc-smt1500rmi2u",
-      "brand": "APC",
-      "model": "SMT1500RMI2U",
-      "name": "APC Smart-UPS 1500 RM 2U",
-      "category": "power",
-      "subcategory": "ups",
-      "heightU": 2,
-      "depthMm": null,
-      "ups": {
-        "capacityW": 1000,
-        "capacityVA": 1500
-      },
-      "render": {
-        "style": "ups",
-        "body": "black",
-        "accent": "#00a651"
-      }
+      "notes": "Generic item; typical dimensions."
     },
     {
+      "id": "generic-pdu-1u-6-au",
+      "brand": "Generic",
+      "model": "PDU-6-AU",
+      "name": "1U power strip 6× AU/NZ",
+      "category": "power",
+      "subcategory": "pdu",
       "formFactor": "rack",
+      "heightU": 1,
       "width": "19in",
+      "depthMm": 50,
+      "mounting": "rear",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_au": 6
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "power",
+        "pdu"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic item; typical dimensions."
+    },
+    {
+      "id": "generic-pdu-1u-6-uk",
+      "brand": "Generic",
+      "model": "PDU-6-UK",
+      "name": "1U power strip 6× UK",
+      "category": "power",
+      "subcategory": "pdu",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 50,
+      "mounting": "rear",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_uk": 6
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "power",
+        "pdu"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic item; typical dimensions."
+    },
+    {
+      "id": "generic-pdu-1u-8-c13",
+      "brand": "Generic",
+      "model": "PDU-8-C13",
+      "name": "1U PDU 8× C13",
+      "category": "power",
+      "subcategory": "pdu",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 50,
       "mounting": "rear",
       "rackWidths": [
         "19in"
@@ -57,23 +135,337 @@
       "ports": {
         "outlet_c13": 8
       },
-      "tags": [
-        "power"
-      ],
-      "sourceUrl": null,
-      "verified": false,
-      "id": "generic-pdu-1u-8-19",
-      "brand": "Generic",
-      "model": "PDU-8-1U",
-      "name": "1U PDU 8-outlet",
-      "category": "power",
-      "subcategory": "pdu",
-      "heightU": 1,
-      "depthMm": 50,
       "render": {
         "style": "pdu",
         "body": "black"
-      }
+      },
+      "tags": [
+        "generic",
+        "power",
+        "pdu"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic item; typical dimensions."
+    },
+    {
+      "id": "generic-pdu-1u-8-nema",
+      "brand": "Generic",
+      "model": "PDU-8-NEMA",
+      "name": "1U power strip 8× NEMA 5-15",
+      "category": "power",
+      "subcategory": "pdu",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 50,
+      "mounting": "rear",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_nema": 8
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "power",
+        "pdu"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic item; typical dimensions."
+    },
+    {
+      "id": "generic-pdu-1u-8-schuko",
+      "brand": "Generic",
+      "model": "PDU-8-SCHUKO",
+      "name": "1U power strip 8× Schuko",
+      "category": "power",
+      "subcategory": "pdu",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 50,
+      "mounting": "rear",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_schuko": 8
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "power",
+        "pdu"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic item; typical dimensions."
+    },
+    {
+      "id": "apc-smt1500rm2u",
+      "brand": "APC",
+      "model": "SMT1500RM2U",
+      "name": "APC Smart-UPS 1500 VA RM 2U (120 V)",
+      "category": "power",
+      "subcategory": "ups",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_nema": 6
+      },
+      "ups": {
+        "capacityW": 1000,
+        "capacityVA": 1440
+      },
+      "render": {
+        "style": "ups",
+        "body": "black",
+        "accent": "#00a651"
+      },
+      "tags": [
+        "apc",
+        "power",
+        "ups",
+        "smart-ups"
+      ],
+      "sourceUrl": "https://www.se.com/us/en/product/SMT1500RM2U/apc-smartups-line-interactive-1440va-rackmount-2u-120v-6x-nema-515r-outlets-smartslot-avr-lcd/",
+      "verified": false,
+      "notes": "Outlets from the APC product page; watt rating and dimensions not shown there (1000 W per APC naming convention, unconfirmed)."
+    },
+    {
+      "id": "apc-smt1500rmi2u",
+      "brand": "APC",
+      "model": "SMT1500RMI2U",
+      "name": "APC Smart-UPS 1500 VA RM 2U (230 V)",
+      "category": "power",
+      "subcategory": "ups",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 457,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 28.64,
+      "ports": {
+        "outlet_c13": 4
+      },
+      "ups": {
+        "capacityW": 1000,
+        "capacityVA": 1500
+      },
+      "render": {
+        "style": "ups",
+        "body": "black",
+        "accent": "#00a651"
+      },
+      "tags": [
+        "apc",
+        "power",
+        "ups",
+        "smart-ups"
+      ],
+      "sourceUrl": "https://mayflex.com/shop/product/SMT1500RMI2U",
+      "verified": false,
+      "notes": "Distributor figures; other listings give 477 mm / 26 kg for close variants."
+    },
+    {
+      "id": "apc-smt2200rm2u",
+      "brand": "APC",
+      "model": "SMT2200RM2U",
+      "name": "APC Smart-UPS 2200 VA RM 2U",
+      "category": "power",
+      "subcategory": "ups",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 683,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 42.31,
+      "ports": {},
+      "ups": {
+        "capacityW": 1980,
+        "capacityVA": 2200
+      },
+      "render": {
+        "style": "ups",
+        "body": "black",
+        "accent": "#00a651"
+      },
+      "tags": [
+        "apc",
+        "power",
+        "ups",
+        "smart-ups"
+      ],
+      "sourceUrl": "https://www.shi.com/product/34616886/APC-Smart-UPS-SMT2200RM2UC",
+      "verified": false,
+      "notes": "Figures for the SMT2200RM2UC variant (reseller)."
+    },
+    {
+      "id": "cyberpower-cp1500pfcrm2u",
+      "brand": "CyberPower",
+      "model": "CP1500PFCRM2U",
+      "name": "CyberPower PFC Sinewave 1500 VA 2U",
+      "category": "power",
+      "subcategory": "ups",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 267,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 12.16,
+      "ports": {
+        "outlet_nema": 8
+      },
+      "ups": {
+        "capacityW": 1000,
+        "capacityVA": 1500
+      },
+      "render": {
+        "style": "ups",
+        "body": "black",
+        "accent": "#ef7d00"
+      },
+      "tags": [
+        "cyberpower",
+        "power",
+        "ups"
+      ],
+      "sourceUrl": "https://www.cyberpowersystems.com/?p=36630",
+      "verified": false,
+      "notes": "Short-depth 2U unit. Figures cross-checked with retailers."
+    },
+    {
+      "id": "cyberpower-or500lcdrm1u",
+      "brand": "CyberPower",
+      "model": "OR500LCDRM1U",
+      "name": "CyberPower Smart App LCD 500 VA 1U",
+      "category": "power",
+      "subcategory": "ups",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_nema": 6
+      },
+      "ups": {
+        "capacityW": 300,
+        "capacityVA": 500
+      },
+      "render": {
+        "style": "ups",
+        "body": "black",
+        "accent": "#ef7d00"
+      },
+      "tags": [
+        "cyberpower",
+        "power",
+        "ups"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Capacity and outlets from a retailer listing; depth and weight not found."
+    },
+    {
+      "id": "eaton-5p1500r",
+      "brand": "Eaton",
+      "model": "5P1500R",
+      "name": "Eaton 5P 1500 VA Rackmount 1U",
+      "category": "power",
+      "subcategory": "ups",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 554,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 19.7,
+      "ports": {
+        "outlet_nema": 5
+      },
+      "ups": {
+        "capacityW": 1100,
+        "capacityVA": 1440
+      },
+      "render": {
+        "style": "ups",
+        "body": "black",
+        "accent": "#005eb8"
+      },
+      "tags": [
+        "eaton",
+        "power",
+        "ups"
+      ],
+      "sourceUrl": "https://www.shi.com/product/27032121/Eaton-5P-1500-RACKMOUNT",
+      "verified": false,
+      "notes": "Reseller figures."
     }
   ]
 }

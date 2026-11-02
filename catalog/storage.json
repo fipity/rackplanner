@@ -1,0 +1,542 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "Rack NAS & storage",
+  "description": "Synology RackStation models. Specs from synology.com product pages (fetched 2026-11-02); typical power is Synology's \"Access\" figure.",
+  "parts": [
+    {
+      "id": "synology-rs1221-plus",
+      "brand": "Synology",
+      "model": "RS1221+",
+      "name": "Synology RackStation RS1221+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 307,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 49.89,
+        "maxW": null
+      },
+      "weightKg": 6.9,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS1221+#specs",
+      "verified": true,
+      "notes": "250 W PSU; expandable to 12 bays with RX418. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs1221rp-plus",
+      "brand": "Synology",
+      "model": "RS1221RP+",
+      "name": "Synology RackStation RS1221RP+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 408,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 61.94,
+        "maxW": null
+      },
+      "weightKg": 8.4,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS1221+#specs",
+      "verified": true,
+      "notes": "Redundant 350 W PSUs. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs1226-plus",
+      "brand": "Synology",
+      "model": "RS1226+",
+      "name": "Synology RackStation RS1226+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 307,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 72.33,
+        "maxW": null
+      },
+      "weightKg": 6.8,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        },
+        {
+          "count": 2,
+          "size": "m2"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS1226+#specs",
+      "verified": true,
+      "notes": "250 W PSU. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs1226rp-plus",
+      "brand": "Synology",
+      "model": "RS1226RP+",
+      "name": "Synology RackStation RS1226RP+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 398,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 81.82,
+        "maxW": null
+      },
+      "weightKg": 8.9,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        },
+        {
+          "count": 2,
+          "size": "m2"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS1226RP+#specs",
+      "verified": true,
+      "notes": "Redundant 550 W PSUs. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs1626xs-plus",
+      "brand": "Synology",
+      "model": "RS1626xs+",
+      "name": "Synology RackStation RS1626xs+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 668,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 97.59,
+        "maxW": null
+      },
+      "weightKg": 9.5,
+      "ports": {
+        "rj45_10g": 2,
+        "rj45_1g": 1
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        },
+        {
+          "count": 2,
+          "size": "m2"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS1626xs+#specs",
+      "verified": true,
+      "notes": "Includes an out-of-band management port. Expandable to 16 bays. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs2423-plus",
+      "brand": "Synology",
+      "model": "RS2423+",
+      "name": "Synology RackStation RS2423+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 552,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 119.95,
+        "maxW": null
+      },
+      "weightKg": 11.5,
+      "ports": {
+        "rj45_1g": 2,
+        "rj45_10g": 1
+      },
+      "driveBays": [
+        {
+          "count": 12,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS2423+#specs",
+      "verified": true,
+      "notes": "500 W PSU. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs2423rp-plus-ii",
+      "brand": "Synology",
+      "model": "RS2423RP+ II",
+      "name": "Synology RackStation RS2423RP+ II",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 578,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 114.86,
+        "maxW": null
+      },
+      "weightKg": 11.9,
+      "ports": {
+        "rj45_1g": 2,
+        "rj45_10g": 1
+      },
+      "driveBays": [
+        {
+          "count": 12,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS2423RP+II#specs",
+      "verified": true,
+      "notes": "Redundant 550 W PSUs. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs2825rp-plus",
+      "brand": "Synology",
+      "model": "RS2825RP+",
+      "name": "Synology RackStation RS2825RP+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 3,
+      "width": "19in",
+      "depthMm": 656,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 134.48,
+        "maxW": null
+      },
+      "weightKg": 17.3,
+      "ports": {
+        "rj45_1g": 2,
+        "rj45_10g": 1
+      },
+      "driveBays": [
+        {
+          "count": 16,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS2825RP+#specs",
+      "verified": true,
+      "notes": "Redundant 550 W PSUs; up to 28 bays with RX1225RP. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs422-plus",
+      "brand": "Synology",
+      "model": "RS422+",
+      "name": "Synology RackStation RS422+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 328,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 37.93,
+        "maxW": null
+      },
+      "weightKg": 4.38,
+      "ports": {
+        "rj45_1g": 2
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS422+#specs",
+      "verified": true,
+      "notes": "Depth includes handles. 100 W PSU. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs822-plus",
+      "brand": "Synology",
+      "model": "RS822+",
+      "name": "Synology RackStation RS822+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 493,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 47.69,
+        "maxW": null
+      },
+      "weightKg": 6.4,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation",
+        "legacy"
+      ],
+      "sourceUrl": "https://nascompares.com/news/synology-rs822-rs822rp4-bay-1u-rackmount-nas/",
+      "verified": false,
+      "notes": "Discontinued; specs from a secondary source. Typical power is Synology's \"Access\" figure with drives installed.",
+      "legacy": true
+    },
+    {
+      "id": "synology-rs826-plus",
+      "brand": "Synology",
+      "model": "RS826+",
+      "name": "Synology RackStation RS826+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 493,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 37.73,
+        "maxW": null
+      },
+      "weightKg": 6.4,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS826+#specs",
+      "verified": true,
+      "notes": "150 W PSU; expandable to 8 bays with RX426. Typical power is Synology's \"Access\" figure with drives installed."
+    },
+    {
+      "id": "synology-rs826rp-plus",
+      "brand": "Synology",
+      "model": "RS826RP+",
+      "name": "Synology RackStation RS826RP+",
+      "category": "nas",
+      "subcategory": "rackstation",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 519,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 46.07,
+        "maxW": null
+      },
+      "weightKg": 8.0,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#b5b5b6"
+      },
+      "tags": [
+        "synology",
+        "nas",
+        "rackstation"
+      ],
+      "sourceUrl": "https://www.synology.com/en-global/products/RS826RP+#specs",
+      "verified": true,
+      "notes": "Redundant 150 W PSUs. Typical power is Synology's \"Access\" figure with drives installed."
+    }
+  ]
+}

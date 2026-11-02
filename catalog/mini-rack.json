@@ -1,44 +1,20 @@
 {
   "$schema": "./schema.json",
-  "version": 1,
+  "version": 2,
   "title": "10-inch mini-rack",
+  "description": "DeskPi RackMate accessories and generic 10\" panels, shelves, mounts and PDUs.",
   "parts": [
     {
-      "formFactor": "rack",
-      "width": "10in",
-      "mounting": "front",
-      "rackWidths": [
-        "10in"
-      ],
-      "power": {
-        "typicalW": null,
-        "maxW": null
-      },
-      "weightKg": null,
-      "ports": {
-        "keystone": 12
-      },
-      "tags": [
-        "passive",
-        "10in"
-      ],
-      "sourceUrl": null,
-      "verified": false,
-      "id": "generic-patch-12-cat6-10in",
+      "id": "generic-fan-1u-10in",
       "brand": "Generic",
-      "model": "PP-12-C6-10",
-      "name": "10\" 12-port Cat6 patch panel",
-      "category": "patch-panel",
-      "heightU": 1,
-      "depthMm": 40,
-      "render": {
-        "style": "patch-panel",
-        "body": "black"
-      }
-    },
-    {
+      "model": "FAN-1U-10",
+      "name": "10\" fan panel 1U (2 fans)",
+      "category": "accessory",
+      "subcategory": "cooling",
       "formFactor": "rack",
+      "heightU": 1,
       "width": "10in",
+      "depthMm": 40,
       "mounting": "front",
       "rackWidths": [
         "10in"
@@ -49,27 +25,64 @@
       },
       "weightKg": null,
       "ports": {},
+      "render": {
+        "style": "fan",
+        "body": "black"
+      },
       "tags": [
-        "passive",
+        "generic",
+        "accessory",
         "10in"
       ],
       "sourceUrl": null,
       "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "deskpi-rackmate-blank-1u",
+      "brand": "DeskPi",
+      "model": "RackMate 1U Blank Panel",
+      "name": "DeskPi RackMate 10\" 1U blank panel",
+      "category": "blank",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 5,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "blank",
+        "body": "black"
+      },
+      "tags": [
+        "deskpi",
+        "blank",
+        "10in",
+        "deskpi",
+        "passive"
+      ],
+      "sourceUrl": "https://thepihut.com/collections/project-enclosures/products/1u-10-blank-panel-for-deskpi-rackmate",
+      "verified": false,
+      "notes": "Metal blank panel."
+    },
+    {
       "id": "generic-blank-1u-10in",
       "brand": "Generic",
       "model": "BLANK-1U-10",
       "name": "10\" blank panel 1U",
       "category": "blank",
-      "heightU": 1,
-      "depthMm": 5,
-      "render": {
-        "style": "blank",
-        "body": "black"
-      }
-    },
-    {
       "formFactor": "rack",
+      "heightU": 1,
       "width": "10in",
+      "depthMm": 5,
       "mounting": "front",
       "rackWidths": [
         "10in"
@@ -80,31 +93,305 @@
       },
       "weightKg": null,
       "ports": {},
+      "render": {
+        "style": "blank",
+        "body": "black"
+      },
       "tags": [
-        "shelf",
+        "generic",
+        "blank",
+        "10in",
+        "passive"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-blank-2u-10in",
+      "brand": "Generic",
+      "model": "BLANK-2U-10",
+      "name": "10\" blank panel 2U",
+      "category": "blank",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "10in",
+      "depthMm": 5,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "blank",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "blank",
+        "10in",
+        "passive"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-vented-1u-10in",
+      "brand": "Generic",
+      "model": "VENT-1U-10",
+      "name": "10\" vented panel 1U",
+      "category": "blank",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 5,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "vented",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "blank",
+        "10in",
+        "passive"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-brush-1u-10in",
+      "brand": "Generic",
+      "model": "BRUSH-1U-10",
+      "name": "10\" brush panel 1U",
+      "category": "cable-management",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 30,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "brush",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "cable-management",
+        "10in",
+        "passive"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-half19-to-10in-adapter",
+      "brand": "Generic",
+      "model": "ADAPT-10-19",
+      "name": "10\" device adapter for 19\" racks (1U, half width)",
+      "category": "mount",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "half-19in",
+      "depthMm": 10,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "blank",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "mount",
+        "adapter"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Placeholder for mounting 10\" gear in a 19\" rack: occupies half the width. Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-mac-mini-mount-2u-10in",
+      "brand": "Generic",
+      "model": "MACMINI-2U-10",
+      "name": "10\" 2U Mac mini mount",
+      "category": "mount",
+      "subcategory": "mini-pc",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "10in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "server",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "mount",
         "10in"
       ],
       "sourceUrl": null,
       "verified": false,
-      "id": "generic-shelf-1u-10in",
-      "brand": "Generic",
-      "model": "SHELF-1U-10",
-      "name": "10\" shelf 1U",
-      "category": "shelf",
-      "heightU": 1,
-      "depthMm": 200,
-      "shelf": {
-        "usableWidthMm": 210,
-        "usableDepthMm": 200
-      },
-      "render": {
-        "style": "shelf",
-        "body": "black"
-      }
+      "notes": "Generic 10\" item; typical dimensions."
     },
     {
+      "id": "generic-mini-pc-mount-1u-10in",
+      "brand": "Generic",
+      "model": "MINIPC-1U-10",
+      "name": "10\" 1U mini-PC mount (Lenovo Tiny / HP Mini / Dell Micro)",
+      "category": "mount",
+      "subcategory": "mini-pc",
       "formFactor": "rack",
+      "heightU": 1,
       "width": "10in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "server",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "mount",
+        "10in"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Front-facing bracket for one 1L business mini PC. Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-nuc-mount-1u-10in",
+      "brand": "Generic",
+      "model": "NUC-1U-10",
+      "name": "10\" 1U Intel NUC mount",
+      "category": "mount",
+      "subcategory": "mini-pc",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 150,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "server",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "mount",
+        "10in"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "deskpi-rackmate-sbc-shelf-1u",
+      "brand": "DeskPi",
+      "model": "RackMate 1U SBC Shelf",
+      "name": "DeskPi RackMate 10\" 1U SBC shelf (Raspberry Pi)",
+      "category": "mount",
+      "subcategory": "sbc",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#c51a4a"
+      },
+      "tags": [
+        "deskpi",
+        "mount",
+        "10in",
+        "raspberry-pi",
+        "deskpi"
+      ],
+      "sourceUrl": "https://thepihut.com/products/1u-10-sbc-shelf-for-deskpi-rackmate",
+      "verified": false,
+      "notes": "Ventilated tray with standoffs for Raspberry Pi boards and 2.5\" drives. Depth assumed (200 mm frame)."
+    },
+    {
+      "id": "generic-pi-mount-1u-10in",
+      "brand": "Generic",
+      "model": "PI-1U-4",
+      "name": "10\" Raspberry Pi mount (4× Pi) 1U",
+      "category": "mount",
+      "subcategory": "sbc",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 100,
       "mounting": "front",
       "rackWidths": [
         "10in",
@@ -118,29 +405,416 @@
       "ports": {
         "rj45_1g": 4
       },
-      "tags": [
-        "10in",
-        "raspberry-pi"
-      ],
-      "sourceUrl": null,
-      "verified": false,
-      "id": "generic-pi-mount-1u-10in",
-      "brand": "Generic",
-      "model": "PI-1U-4",
-      "name": "10\" Raspberry Pi mount (4\u00d7 Pi) 1U",
-      "category": "mount",
-      "heightU": 1,
-      "depthMm": 100,
       "render": {
         "style": "server",
         "body": "black",
         "accent": "#c51a4a"
       },
-      "notes": "Also fits a 19\" rack as a partial-width panel (with adapter ears)."
+      "tags": [
+        "generic",
+        "mount",
+        "10in",
+        "raspberry-pi"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Also fits a 19\" rack as a partial-width panel (with adapter ears). Generic 10\" item; typical dimensions."
     },
     {
+      "id": "deskpi-rackmate-patch-12-half-u",
+      "brand": "DeskPi",
+      "model": "RackMate 0.5U 12-port Cat6 Patch Panel",
+      "name": "DeskPi 10\" 0.5U 12-port Cat6 patch panel",
+      "category": "patch-panel",
+      "subcategory": "keystone",
       "formFactor": "rack",
+      "heightU": 0.5,
       "width": "10in",
+      "depthMm": 40,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 12
+      },
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      },
+      "tags": [
+        "deskpi",
+        "patch-panel",
+        "10in",
+        "deskpi",
+        "cat6",
+        "passive"
+      ],
+      "sourceUrl": "https://thepihut.com/collections/deskpi-rackmate-and-accessories",
+      "verified": false,
+      "notes": "Depth assumed."
+    },
+    {
+      "id": "generic-patch-12-cat6-10in",
+      "brand": "Generic",
+      "model": "PP-12-C6-10",
+      "name": "10\" 12-port Cat6 patch panel 1U",
+      "category": "patch-panel",
+      "subcategory": "keystone",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 40,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 12
+      },
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "patch-panel",
+        "10in",
+        "passive",
+        "cat6"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-patch-8-cat6-10in",
+      "brand": "Generic",
+      "model": "PP-8-C6-10",
+      "name": "10\" 8-port Cat6 patch panel 1U",
+      "category": "patch-panel",
+      "subcategory": "keystone",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 40,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 8
+      },
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "patch-panel",
+        "10in",
+        "passive",
+        "cat6"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-pdu-10in-3-nema",
+      "brand": "Generic",
+      "model": "PDU-10-3-NEMA",
+      "name": "10\" power strip 3× NEMA 1U",
+      "category": "power",
+      "subcategory": "pdu",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 50,
+      "mounting": "rear",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_nema": 3
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "power",
+        "10in"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-pdu-10in-4",
+      "brand": "Generic",
+      "model": "PDU-10-4",
+      "name": "10\" PDU 4× C13 1U",
+      "category": "power",
+      "subcategory": "pdu",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 50,
+      "mounting": "rear",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_c13": 4
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "power",
+        "10in"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "deskpi-rackmate-itx-shelf-1u",
+      "brand": "DeskPi",
+      "model": "RackMate 1U Mini ITX Shelf",
+      "name": "DeskPi RackMate 10\" 1U Mini-ITX shelf",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "shelf": {
+        "usableWidthMm": 210,
+        "usableDepthMm": 195
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      },
+      "tags": [
+        "deskpi",
+        "shelf",
+        "10in",
+        "shelf",
+        "deskpi"
+      ],
+      "sourceUrl": "https://thepihut.com/products/1u-10-mini-itx-shelf-for-deskpi-rackmate",
+      "verified": false,
+      "notes": "214 × 200 × 41.2 mm per retailer."
+    },
+    {
+      "id": "deskpi-rackmate-shelf-1u",
+      "brand": "DeskPi",
+      "model": "RackMate 1U Rack Shelf",
+      "name": "DeskPi RackMate 10\" 1U shelf",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "shelf": {
+        "usableWidthMm": 210,
+        "usableDepthMm": 195
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      },
+      "tags": [
+        "deskpi",
+        "shelf",
+        "10in",
+        "shelf",
+        "deskpi"
+      ],
+      "sourceUrl": "https://thepihut.com/products/1u-10-rack-shelf-for-deskpi-rackmate",
+      "verified": false,
+      "notes": "Depth assumed to match the RackMate frame (200 mm)."
+    },
+    {
+      "id": "deskpi-rackmate-shelf-half-u",
+      "brand": "DeskPi",
+      "model": "RackMate 0.5U Rack Shelf",
+      "name": "DeskPi RackMate 10\" 0.5U shelf",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "formFactor": "rack",
+      "heightU": 0.5,
+      "width": "10in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "shelf": {
+        "usableWidthMm": 210,
+        "usableDepthMm": 195
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      },
+      "tags": [
+        "deskpi",
+        "shelf",
+        "10in",
+        "shelf",
+        "deskpi"
+      ],
+      "sourceUrl": "https://thepihut.com/products/0-5u-10-rack-shelf-for-deskpi-rackmate",
+      "verified": false,
+      "notes": "214 × 200 × 21 mm per retailer."
+    },
+    {
+      "id": "generic-shelf-1u-10in",
+      "brand": "Generic",
+      "model": "SHELF-1U-10",
+      "name": "10\" shelf 1U",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "shelf": {
+        "usableWidthMm": 210,
+        "usableDepthMm": 195
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "shelf",
+        "10in",
+        "shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-shelf-2u-10in",
+      "brand": "Generic",
+      "model": "SHELF-2U-10",
+      "name": "10\" shelf 2U (lipped)",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "10in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "shelf": {
+        "usableWidthMm": 210,
+        "usableDepthMm": 195
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "shelf",
+        "10in",
+        "shelf"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "generic-switch-8p-10in",
+      "brand": "Generic",
+      "model": "SW-8-10",
+      "name": "10\" 8-port gigabit switch 1U",
+      "category": "switch",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 120,
       "mounting": "front",
       "rackWidths": [
         "10in",
@@ -154,57 +828,19 @@
       "ports": {
         "rj45_1g": 8
       },
-      "tags": [
-        "10in"
-      ],
-      "sourceUrl": null,
-      "verified": false,
-      "id": "generic-switch-8p-10in",
-      "brand": "Generic",
-      "model": "SW-8-10",
-      "name": "10\" 8-port gigabit switch 1U",
-      "category": "switch",
-      "heightU": 1,
-      "depthMm": 120,
       "render": {
         "style": "switch",
         "body": "black",
         "accent": "#22c55e"
-      }
-    },
-    {
-      "formFactor": "rack",
-      "width": "10in",
-      "mounting": "rear",
-      "rackWidths": [
-        "10in"
-      ],
-      "power": {
-        "typicalW": null,
-        "maxW": null
-      },
-      "weightKg": null,
-      "ports": {
-        "outlet_c13": 4
       },
       "tags": [
-        "10in",
-        "power"
+        "generic",
+        "switch",
+        "10in"
       ],
       "sourceUrl": null,
       "verified": false,
-      "id": "generic-pdu-10in-4",
-      "brand": "Generic",
-      "model": "PDU-10-4",
-      "name": "10\" PDU 4-outlet 1U",
-      "category": "power",
-      "subcategory": "pdu",
-      "heightU": 1,
-      "depthMm": 50,
-      "render": {
-        "style": "pdu",
-        "body": "black"
-      }
+      "notes": "Generic 10\" item; typical dimensions."
     }
   ]
 }

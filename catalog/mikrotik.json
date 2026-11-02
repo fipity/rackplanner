@@ -1,0 +1,1116 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "MikroTik",
+  "description": "CRS/CSS switches, CCR/RB routers and RDS storage. Specs from mikrotik.com product pages (fetched 2026-11-02).",
+  "parts": [
+    {
+      "id": "mikrotik-ccr2004-16g-2s",
+      "brand": "MikroTik",
+      "model": "CCR2004-16G-2S+",
+      "name": "MikroTik CCR2004-16G-2S+",
+      "category": "gateway",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 35.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 16,
+        "sfp_plus": 2
+      },
+      "render": {
+        "style": "gateway",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "gateway"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/ccr2004_16g_2splus",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 210,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-ccr2004-1g-12s-2xs",
+      "brand": "MikroTik",
+      "model": "CCR2004-1G-12S+2XS",
+      "name": "MikroTik CCR2004-1G-12S+2XS",
+      "category": "gateway",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 31.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "sfp_plus": 12,
+        "sfp28": 2
+      },
+      "render": {
+        "style": "gateway",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "gateway"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/ccr2004_1g_12s_2xs",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 224,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-ccr2116-12g-4s",
+      "brand": "MikroTik",
+      "model": "CCR2116-12G-4S+",
+      "name": "MikroTik CCR2116-12G-4S+",
+      "category": "gateway",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 60.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 13,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "gateway",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "gateway"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/ccr2116_12g_4splus",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 199,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-ccr2216-1g-12xs-2xq",
+      "brand": "MikroTik",
+      "model": "CCR2216-1G-12XS-2XQ",
+      "name": "MikroTik CCR2216-1G-12XS-2XQ",
+      "category": "gateway",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 80.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "sfp28": 12,
+        "qsfp28": 2
+      },
+      "render": {
+        "style": "gateway",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "gateway"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/ccr2216_1g_12xs_2xq",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 367,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-l009uigs-rm",
+      "brand": "MikroTik",
+      "model": "L009UiGS-RM",
+      "name": "MikroTik L009UiGS-RM",
+      "category": "gateway",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 8.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 8,
+        "sfp": 1
+      },
+      "render": {
+        "style": "gateway",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "gateway",
+        "poe"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/l009uigs_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments. Total PoE budget not stated on the product page. Ships with rack ears for 1U mounting. Dimensions not stated on the product page.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-rb1100dx4",
+      "brand": "MikroTik",
+      "model": "RB1100Dx4",
+      "name": "MikroTik RB1100Dx4",
+      "category": "gateway",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 25.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 13
+      },
+      "render": {
+        "style": "gateway",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "gateway"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/RB1100Dx4",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 148,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-rb4011igs-rm",
+      "brand": "MikroTik",
+      "model": "RB4011iGS+RM",
+      "name": "MikroTik RB4011iGS+RM",
+      "category": "gateway",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 18.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 10,
+        "sfp_plus": 1
+      },
+      "render": {
+        "style": "gateway",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "gateway",
+        "poe"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/rb4011igs_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 120,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments. Total PoE budget not stated on the product page. Ships with rack ears for 1U mounting.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-rds2216-2xg-4s-4xs-2xq",
+      "brand": "MikroTik",
+      "model": "RDS2216-2XG-4S+4XS-2XQ",
+      "name": "MikroTik RDS2216-2XG-4S+4XS-2XQ",
+      "category": "nas",
+      "formFactor": "rack",
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 105.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "rj45_10g": 2,
+        "sfp_plus": 4,
+        "sfp28": 4,
+        "qsfp28": 2
+      },
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "nas"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/rds2216",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 476,
+      "driveBays": [
+        {
+          "count": 20,
+          "size": "u2"
+        }
+      ],
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments. 20× U.2 NVMe bays. Listed as 476 × 443 × 44 mm (D × W × H).",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs312-4c-8xg-rm",
+      "brand": "MikroTik",
+      "model": "CRS312-4C+8XG-RM",
+      "name": "MikroTik CRS312-4C+8XG-RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 60.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_100m": 1,
+        "sfp_plus": 4,
+        "rj45_10g": 8
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs312_4c_8xg_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 183,
+      "notes": "Weight not published by MikroTik.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs317-1g-16s-rm",
+      "brand": "MikroTik",
+      "model": "CRS317-1G-16S+RM",
+      "name": "MikroTik CRS317-1G-16S+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 44.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "sfp_plus": 16
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs317_1g_16s_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 224,
+      "notes": "Weight not published by MikroTik.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs320-8p-8b-4s-rm",
+      "brand": "MikroTik",
+      "model": "CRS320-8P-8B-4S+RM",
+      "name": "MikroTik CRS320-8P-8B-4S+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 36.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 17,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "poe"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs320_8p_8b_4s_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
+      "poeBudgetW": 963,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments. Dimensions not stated on the product page.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs326-24g-2s-rm",
+      "brand": "MikroTik",
+      "model": "CRS326-24G-2S+RM",
+      "name": "MikroTik CRS326-24G-2S+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 24.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp_plus": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/CRS326-24G-2SplusRM",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 144,
+      "notes": "Weight not published by MikroTik.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs326-24s-2q-rm",
+      "brand": "MikroTik",
+      "model": "CRS326-24S+2Q+RM",
+      "name": "MikroTik CRS326-24S+2Q+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 42.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_100m": 1,
+        "sfp_plus": 24,
+        "qsfp_plus": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs326_24s_2q_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 200,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs326-4c-20g-2q-rm",
+      "brand": "MikroTik",
+      "model": "CRS326-4C+20G+2Q+RM",
+      "name": "MikroTik CRS326-4C+20G+2Q+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 51.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_100m": 1,
+        "rj45_2_5g": 20,
+        "sfp_plus": 4,
+        "qsfp_plus": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs326_4c_20g_2q_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments. Dimensions not stated on the product page.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs328-24p-4s-rm",
+      "brand": "MikroTik",
+      "model": "CRS328-24P-4S+RM",
+      "name": "MikroTik CRS328-24P-4S+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 44.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "poe"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs328_24p_4s_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 300,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments. Total PoE budget not stated on the product page.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs328-4c-20s-4s-rm",
+      "brand": "MikroTik",
+      "model": "CRS328-4C-20S-4S+RM",
+      "name": "MikroTik CRS328-4C-20S-4S+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 43.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4,
+        "sfp": 20,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs328_4c_20s_4s_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 194,
+      "notes": "Weight not published by MikroTik.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs354-48g-4s-2q-rm",
+      "brand": "MikroTik",
+      "model": "CRS354-48G-4S+2Q+RM",
+      "name": "MikroTik CRS354-48G-4S+2Q+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 50.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_100m": 1,
+        "rj45_1g": 48,
+        "sfp_plus": 4,
+        "qsfp_plus": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs354_48g_4splus2qplusrm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 297,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs354-48p-4s-2q-rm",
+      "brand": "MikroTik",
+      "model": "CRS354-48P-4S+2Q+RM",
+      "name": "MikroTik CRS354-48P-4S+2Q+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 85.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_100m": 1,
+        "rj45_1g": 48,
+        "sfp_plus": 4,
+        "qsfp_plus": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "poe"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs354_48p_4s_2q_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 382,
+      "poeBudgetW": 700,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs418-8p-8g-2s-rm",
+      "brand": "MikroTik",
+      "model": "CRS418-8P-8G-2S+RM",
+      "name": "MikroTik CRS418-8P-8G-2S+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 28.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 17,
+        "sfp_plus": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "poe"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs418_8p_8g_2s_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
+      "poeBudgetW": 150,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments. Dimensions not stated on the product page.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs518-16xs-2xq-rm",
+      "brand": "MikroTik",
+      "model": "CRS518-16XS-2XQ-RM",
+      "name": "MikroTik CRS518-16XS-2XQ-RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 45.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_100m": 1,
+        "sfp28": 16,
+        "qsfp28": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs518_16xs_2xq",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments. Dimensions not stated on the product page.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs520-4xs-16xq-rm",
+      "brand": "MikroTik",
+      "model": "CRS520-4XS-16XQ-RM",
+      "name": "MikroTik CRS520-4XS-16XQ-RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 123.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_10g": 2,
+        "sfp28": 4,
+        "qsfp28": 16
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs520_4xs_16xq_rm",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments. Dimensions not stated on the product page.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-css326-24g-2s-rm",
+      "brand": "MikroTik",
+      "model": "CSS326-24G-2S+RM",
+      "name": "MikroTik CSS326-24G-2S+RM",
+      "category": "switch",
+      "formFactor": "rack",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 19.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp_plus": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/CSS326-24G-2SplusRM",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 144,
+      "notes": "Weight not published by MikroTik.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-rb5009ug-s-in",
+      "brand": "MikroTik",
+      "model": "RB5009UG+S+IN",
+      "name": "MikroTik RB5009UG+S+IN",
+      "category": "gateway",
+      "formFactor": "desktop",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 14.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 7,
+        "rj45_2_5g": 1,
+        "sfp_plus": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "gateway",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/rb5009ug_s_in",
+      "heightU": 1,
+      "heightMm": 22.0,
+      "width": {
+        "mm": 220.0
+      },
+      "depthMm": 125,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs305-1g-4s-in",
+      "brand": "MikroTik",
+      "model": "CRS305-1G-4S+IN",
+      "name": "MikroTik CRS305-1G-4S+IN",
+      "category": "switch",
+      "formFactor": "desktop",
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 10.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs305_1g_4s_in",
+      "heightU": 1,
+      "heightMm": 28.0,
+      "width": {
+        "mm": 141.0
+      },
+      "depthMm": 115,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs309-1g-8s-in",
+      "brand": "MikroTik",
+      "model": "CRS309-1G-8S+IN",
+      "name": "MikroTik CRS309-1G-8S+IN",
+      "category": "switch",
+      "formFactor": "desktop",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 17.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "sfp_plus": 8
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs309_1g_8s_in",
+      "heightU": 1,
+      "heightMm": 44.0,
+      "width": {
+        "mm": 272.0
+      },
+      "depthMm": 191,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs310-1g-5s-4s-in",
+      "brand": "MikroTik",
+      "model": "CRS310-1G-5S-4S+IN",
+      "name": "MikroTik CRS310-1G-5S-4S+IN",
+      "category": "switch",
+      "formFactor": "desktop",
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 8.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1,
+        "sfp": 5,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs310_1g_5s_4s_in",
+      "heightU": 1,
+      "heightMm": 44.0,
+      "width": {
+        "mm": 200.0
+      },
+      "depthMm": 166,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs310-8g-2s-in",
+      "brand": "MikroTik",
+      "model": "CRS310-8G+2S+IN",
+      "name": "MikroTik CRS310-8G+2S+IN",
+      "category": "switch",
+      "formFactor": "desktop",
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 21.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_2_5g": 8,
+        "sfp_plus": 2
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs310_8g_2s_in",
+      "heightU": 1,
+      "heightMm": 44.0,
+      "width": {
+        "mm": 200.0
+      },
+      "depthMm": 206,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-crs504-4xq-in",
+      "brand": "MikroTik",
+      "model": "CRS504-4XQ-IN",
+      "name": "MikroTik CRS504-4XQ-IN",
+      "category": "switch",
+      "formFactor": "desktop",
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 25.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_100m": 1,
+        "qsfp28": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/crs504_4xq_in",
+      "heightU": 1,
+      "heightMm": 44.0,
+      "width": {
+        "mm": 320.0
+      },
+      "depthMm": 185,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    },
+    {
+      "id": "mikrotik-css610-8g-2s-in",
+      "brand": "MikroTik",
+      "model": "CSS610-8G-2S+IN",
+      "name": "MikroTik CSS610-8G-2S+IN",
+      "category": "switch",
+      "formFactor": "desktop",
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 5.0
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 8,
+        "sfp_plus": 2
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white",
+        "accent": "#d4202c"
+      },
+      "tags": [
+        "mikrotik",
+        "switch",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://mikrotik.com/product/css610_8g_2s_in",
+      "heightU": 1,
+      "heightMm": 44.0,
+      "width": {
+        "mm": 200.0
+      },
+      "depthMm": 164,
+      "notes": "Weight not published by MikroTik. Max power excludes PoE-out and attachments.",
+      "verified": true
+    }
+  ]
+}

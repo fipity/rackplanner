@@ -1,11 +1,750 @@
 {
   "$schema": "./schema.json",
-  "version": 1,
+  "version": 2,
   "title": "Other switching & routing",
+  "description": "TP-Link Omada (official datasheets), Netgear and Cisco (reseller/distributor figures), and legacy Ubiquiti EdgeMax/UISP gear (techspecs.ui.com).",
   "parts": [
     {
+      "id": "ubiquiti-er-12p",
+      "brand": "Ubiquiti",
+      "model": "ER-12P",
+      "name": "Ubiquiti EdgeRouter 12P",
+      "category": "gateway",
+      "subcategory": "edgemax",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 31.1,
+      "width": {
+        "mm": 268.1
+      },
+      "depthMm": 136,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 0.7,
+      "ports": {
+        "rj45_1g": 10,
+        "sfp": 2
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "gateway",
+        "needs-shelf",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/er-12p",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page."
+    },
+    {
+      "id": "ubiquiti-er-4",
+      "brand": "Ubiquiti",
+      "model": "ER-4",
+      "name": "Ubiquiti EdgeRouter 4",
+      "category": "gateway",
+      "subcategory": "edgemax",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 31.1,
+      "width": {
+        "mm": 229
+      },
+      "depthMm": 136,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 0.795,
+      "ports": {
+        "rj45_1g": 3,
+        "sfp": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "gateway",
+        "needs-shelf",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/er-4",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page."
+    },
+    {
+      "id": "ubiquiti-er-6p",
+      "brand": "Ubiquiti",
+      "model": "ER-6P",
+      "name": "Ubiquiti EdgeRouter 6 PoE",
+      "category": "gateway",
+      "subcategory": "edgemax",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 31.1,
+      "width": {
+        "mm": 229
+      },
+      "depthMm": 136,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 0.73,
+      "ports": {
+        "rj45_1g": 5,
+        "sfp": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "gateway",
+        "needs-shelf",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/er-6p",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page. Rack mounting needs ER-RMKIT."
+    },
+    {
+      "id": "ubiquiti-er-x",
+      "brand": "Ubiquiti",
+      "model": "ER-X",
+      "name": "Ubiquiti EdgeRouter X",
+      "category": "gateway",
+      "subcategory": "edgemax",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 22,
+      "width": {
+        "mm": 110
+      },
+      "depthMm": 75,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 0.175,
+      "ports": {
+        "rj45_1g": 5
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "gateway",
+        "needs-shelf",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/er-x",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page."
+    },
+    {
+      "id": "ubiquiti-uisp-console-u",
+      "brand": "Ubiquiti",
+      "model": "UISP-Console",
+      "name": "Ubiquiti UISP Console",
+      "category": "gateway",
+      "subcategory": "uisp",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 43.7,
+      "width": {
+        "mm": 210.4
+      },
+      "depthMm": 140,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 1.5,
+      "ports": {
+        "rj45_1g": 9,
+        "sfp_plus": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "gateway",
+        "needs-shelf",
+        "uisp"
+      ],
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/uisp-console-u",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page."
+    },
+    {
+      "id": "ubiquiti-uisp-r-pro",
+      "brand": "Ubiquiti",
+      "model": "UISP-R-Pro",
+      "name": "Ubiquiti UISP Router Pro",
+      "category": "gateway",
+      "subcategory": "uisp",
       "formFactor": "rack",
+      "heightU": 1,
       "width": "19in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 3.3,
+      "ports": {
+        "rj45_1g": 9,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "gateway",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "gateway",
+        "uisp"
+      ],
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/uisp-r-pro",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page. 60 W internal PSU."
+    },
+    {
+      "id": "cisco-ws-c2960x-24pd-l",
+      "brand": "Cisco",
+      "model": "Catalyst 2960X-24PD-L",
+      "name": "Cisco Catalyst 2960X-24PD-L",
+      "category": "switch",
+      "subcategory": "catalyst",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 368,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "poeBudgetW": 370,
+      "weightKg": 5.7,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp_plus": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#049fd9"
+      },
+      "tags": [
+        "cisco",
+        "switch",
+        "catalyst",
+        "poe"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://network-switch.com/ru/products/network-switch-cisco-catalyst-2960x-24pd-l",
+      "verified": false,
+      "notes": "Reseller figures."
+    },
+    {
+      "id": "cisco-ws-c2960x-48fpd-l",
+      "brand": "Cisco",
+      "model": "Catalyst 2960X-48FPD-L",
+      "name": "Cisco Catalyst 2960X-48FPD-L",
+      "category": "switch",
+      "subcategory": "catalyst",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 368,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "poeBudgetW": 740,
+      "weightKg": 5.8,
+      "ports": {
+        "rj45_1g": 48,
+        "sfp_plus": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#049fd9"
+      },
+      "tags": [
+        "cisco",
+        "switch",
+        "catalyst",
+        "poe"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://www.zenitel.com/print/pdf/node/4330",
+      "verified": false,
+      "notes": "Distributor figures."
+    },
+    {
+      "id": "cisco-cbs350-24p-4g",
+      "brand": "Cisco",
+      "model": "CBS350-24P-4G",
+      "name": "Cisco CBS350-24P-4G",
+      "category": "switch",
+      "subcategory": "cbs",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 299,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "poeBudgetW": 195,
+      "weightKg": 3.53,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#049fd9"
+      },
+      "tags": [
+        "cisco",
+        "switch",
+        "cbs",
+        "poe"
+      ],
+      "sourceUrl": "https://www.shi.com/product/40716115/Cisco-Business-350-Series-350-24P-4G",
+      "verified": false,
+      "notes": "Reseller figures."
+    },
+    {
+      "id": "cisco-cbs350-24t-4g",
+      "brand": "Cisco",
+      "model": "CBS350-24T-4G",
+      "name": "Cisco CBS350-24T-4G",
+      "category": "switch",
+      "subcategory": "cbs",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 240,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 25.9
+      },
+      "weightKg": 2.63,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#049fd9"
+      },
+      "tags": [
+        "cisco",
+        "switch",
+        "cbs"
+      ],
+      "sourceUrl": "https://zenitel.com/product/cbs350-24t-4g-eu",
+      "verified": false,
+      "notes": "Distributor figures."
+    },
+    {
+      "id": "cisco-cbs350-24t-4x",
+      "brand": "Cisco",
+      "model": "CBS350-24T-4X",
+      "name": "Cisco CBS350-24T-4X",
+      "category": "switch",
+      "subcategory": "cbs",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 240,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 27.5
+      },
+      "weightKg": 2.78,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#049fd9"
+      },
+      "tags": [
+        "cisco",
+        "switch",
+        "cbs"
+      ],
+      "sourceUrl": "https://www.zenitel.com/product/cbs350-24t-4x-eu",
+      "verified": false,
+      "notes": "Distributor figures."
+    },
+    {
+      "id": "cisco-cbs350-48p-4g",
+      "brand": "Cisco",
+      "model": "CBS350-48P-4G",
+      "name": "Cisco CBS350-48P-4G",
+      "category": "switch",
+      "subcategory": "cbs",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 350,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 60.8
+      },
+      "poeBudgetW": 370,
+      "weightKg": 5.43,
+      "ports": {
+        "rj45_1g": 48,
+        "sfp": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#049fd9"
+      },
+      "tags": [
+        "cisco",
+        "switch",
+        "cbs",
+        "poe"
+      ],
+      "sourceUrl": "https://network-switch.com/collections/cisco-cbs350-series-switches/products/network-switch-cisco-cbs350-48p-4g",
+      "verified": false,
+      "notes": "Reseller figures. Max power excludes PoE (452 W with PoE)."
+    },
+    {
+      "id": "ubiquiti-es-16-150w",
+      "brand": "Ubiquiti",
+      "model": "ES-16-150W",
+      "name": "Ubiquiti EdgeSwitch 16 PoE (150W)",
+      "category": "switch",
+      "subcategory": "edgemax",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 221,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 2.9,
+      "ports": {
+        "rj45_1g": 16,
+        "sfp": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "switch",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/es-16-150w",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page. 150 W internal PSU."
+    },
+    {
+      "id": "ubiquiti-es-16-xg",
+      "brand": "Ubiquiti",
+      "model": "ES-16-XG",
+      "name": "Ubiquiti EdgeSwitch 16 XG",
+      "category": "switch",
+      "subcategory": "edgemax",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 221,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 2.7,
+      "ports": {
+        "sfp_plus": 12,
+        "rj45_10g": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "switch",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/es-16-xg",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page. 56 W internal PSU."
+    },
+    {
+      "id": "ubiquiti-es-24-250w",
+      "brand": "Ubiquiti",
+      "model": "ES-24-250W",
+      "name": "Ubiquiti EdgeSwitch 24 PoE (250W)",
+      "category": "switch",
+      "subcategory": "edgemax",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 285,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "poeBudgetW": 250,
+      "weightKg": 4.7,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "switch",
+        "poe",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/es-24-250w",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page."
+    },
+    {
+      "id": "ubiquiti-es-24-500w",
+      "brand": "Ubiquiti",
+      "model": "ES-24-500W",
+      "name": "Ubiquiti EdgeSwitch 24 PoE (500W)",
+      "category": "switch",
+      "subcategory": "edgemax",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 285,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 4.8,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "switch",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/es-24-500w",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page. Total PoE budget not stated (500 W PSU)."
+    },
+    {
+      "id": "ubiquiti-es-48-500w",
+      "brand": "Ubiquiti",
+      "model": "ES-48-500W",
+      "name": "Ubiquiti EdgeSwitch 48 PoE (500W)",
+      "category": "switch",
+      "subcategory": "edgemax",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 375,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "poeBudgetW": 500,
+      "weightKg": 6.1,
+      "ports": {
+        "rj45_1g": 48,
+        "sfp_plus": 2,
+        "sfp": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "switch",
+        "poe",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/es-48-500w",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page."
+    },
+    {
+      "id": "ubiquiti-es-48-750w",
+      "brand": "Ubiquiti",
+      "model": "ES-48-750W",
+      "name": "Ubiquiti EdgeSwitch 48 PoE (750W)",
+      "category": "switch",
+      "subcategory": "edgemax",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 375,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 6.5,
+      "ports": {
+        "rj45_1g": 48,
+        "sfp_plus": 2,
+        "sfp": 2
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "switch",
+        "edgemax"
+      ],
+      "legacy": true,
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/es-48-750w",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page. Total PoE budget not stated (750 W PSU)."
+    },
+    {
+      "id": "netgear-m4250-26g4f-poe-plus",
+      "brand": "Netgear",
+      "model": "M4250-26G4F-PoE+",
+      "name": "Netgear M4250-26G4F-PoE+ (AV Line)",
+      "category": "switch",
+      "subcategory": "m4250",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": null,
       "mounting": "front",
       "rackWidths": [
         "19in"
@@ -17,25 +756,335 @@
       "weightKg": null,
       "ports": {
         "rj45_1g": 24,
-        "sfp_plus": 2
+        "sfp": 4
       },
-      "tags": [
-        "mikrotik"
-      ],
-      "sourceUrl": null,
-      "verified": false,
-      "id": "mikrotik-crs326-24g-2s-plus-rm",
-      "brand": "MikroTik",
-      "model": "CRS326-24G-2S+RM",
-      "name": "MikroTik CRS326-24G-2S+RM",
-      "category": "switch",
-      "heightU": 1,
-      "depthMm": null,
       "render": {
         "style": "switch",
         "body": "black",
-        "accent": "#d4202c"
-      }
+        "accent": "#5e2ca5"
+      },
+      "tags": [
+        "netgear",
+        "switch",
+        "av-line"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Port layout from the model name; dimensions, power and PoE budget not found."
+    },
+    {
+      "id": "tp-link-sg3428",
+      "brand": "TP-Link",
+      "model": "SG3428",
+      "name": "TP-Link Omada SG3428",
+      "category": "switch",
+      "subcategory": "omada",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 180,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 19.8
+      },
+      "weightKg": 2.0,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#4acbd6"
+      },
+      "tags": [
+        "tp-link",
+        "switch",
+        "omada"
+      ],
+      "sourceUrl": "https://static.tp-link.com/upload/product-overview/2026/202608/20260828/SG3428(UN)%202.40_datasheet.pdf",
+      "verified": true
+    },
+    {
+      "id": "tp-link-sg3428mp",
+      "brand": "TP-Link",
+      "model": "SG3428MP",
+      "name": "TP-Link Omada SG3428MP",
+      "category": "switch",
+      "subcategory": "omada",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 330,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 94.6
+      },
+      "poeBudgetW": 384,
+      "weightKg": 5.0,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#4acbd6"
+      },
+      "tags": [
+        "tp-link",
+        "switch",
+        "omada",
+        "poe"
+      ],
+      "sourceUrl": "https://static.tp-link.com/upload/product-overview/2026/202608/20260828/SG3428MP(UN)6.30_datasheet.pdf",
+      "verified": true,
+      "notes": "Max power derived: 478.6 W at 110 V with 384 W of PoE load, minus that load."
+    },
+    {
+      "id": "tp-link-sg3428x",
+      "brand": "TP-Link",
+      "model": "SG3428X",
+      "name": "TP-Link Omada SG3428X",
+      "category": "switch",
+      "subcategory": "omada",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 180,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 23.6
+      },
+      "weightKg": 2.01,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#4acbd6"
+      },
+      "tags": [
+        "tp-link",
+        "switch",
+        "omada"
+      ],
+      "sourceUrl": "https://static.tp-link.com/upload/product-overview/2026/202608/20260828/SG3428X(UN)%201.40_datasheet.pdf",
+      "verified": true
+    },
+    {
+      "id": "tp-link-sg3428xmp",
+      "brand": "TP-Link",
+      "model": "SG3428XMP",
+      "name": "TP-Link Omada SG3428XMP",
+      "category": "switch",
+      "subcategory": "omada",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 330,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 97.4
+      },
+      "poeBudgetW": 384,
+      "weightKg": 4.99,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#4acbd6"
+      },
+      "tags": [
+        "tp-link",
+        "switch",
+        "omada",
+        "poe"
+      ],
+      "sourceUrl": "https://static.tp-link.com/upload/product-overview/2026/202608/20260828/SG3428XMP(UN)%203.30_datasheet.pdf",
+      "verified": true,
+      "notes": "Max power derived: 481.4 W at 110 V with 384 W of PoE load, minus that load."
+    },
+    {
+      "id": "netgear-gs728tp",
+      "brand": "Netgear",
+      "model": "GS728TP",
+      "name": "Netgear GS728TP",
+      "category": "switch",
+      "subcategory": "smart",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 257,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "poeBudgetW": 190,
+      "weightKg": 3.73,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#5e2ca5"
+      },
+      "tags": [
+        "netgear",
+        "switch",
+        "prosafe",
+        "poe"
+      ],
+      "sourceUrl": "https://www.dateks.lv/ru/cenas/komutatori/170731-netgear-gs728tp-200eus-24x1gb-poe-4xsfp",
+      "verified": false,
+      "notes": "Reseller figures; PoE budget quoted as 190–192 W (lower used)."
+    },
+    {
+      "id": "netgear-gs752tp",
+      "brand": "Netgear",
+      "model": "GS752TP",
+      "name": "Netgear GS752TP",
+      "category": "switch",
+      "subcategory": "smart",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 316,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "poeBudgetW": 380,
+      "weightKg": 5.1,
+      "ports": {
+        "rj45_1g": 48,
+        "sfp": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#5e2ca5"
+      },
+      "tags": [
+        "netgear",
+        "switch",
+        "prosafe",
+        "poe"
+      ],
+      "sourceUrl": "https://www.disctech.com/NetGear-GS752TP-48-Port-Smart-Switch",
+      "verified": false,
+      "notes": "Reseller figures; PoE budget quoted as 380–384 W (lower used). Depth 310–316 mm."
+    },
+    {
+      "id": "netgear-gs752tpp",
+      "brand": "Netgear",
+      "model": "GS752TPP",
+      "name": "Netgear GS752TPP",
+      "category": "switch",
+      "subcategory": "smart",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 310,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "poeBudgetW": 760,
+      "weightKg": 5.03,
+      "ports": {
+        "rj45_1g": 48,
+        "sfp": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#5e2ca5"
+      },
+      "tags": [
+        "netgear",
+        "switch",
+        "prosafe",
+        "poe"
+      ],
+      "sourceUrl": "https://www.shi.com/product/46228255/NETGEAR-Smart-GS752TPP",
+      "verified": false,
+      "notes": "Reseller figures."
+    },
+    {
+      "id": "ubiquiti-uisp-s-pro-u",
+      "brand": "Ubiquiti",
+      "model": "UISP-S-Pro",
+      "name": "Ubiquiti UISP Switch Pro",
+      "category": "switch",
+      "subcategory": "uisp",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 268,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "poeBudgetW": 220,
+      "weightKg": 4.0,
+      "ports": {
+        "rj45_1g": 24,
+        "sfp_plus": 4
+      },
+      "render": {
+        "style": "switch",
+        "body": "black",
+        "accent": "#006fff"
+      },
+      "tags": [
+        "ubiquiti",
+        "switch",
+        "poe",
+        "uisp"
+      ],
+      "sourceUrl": "https://techspecs.ui.com/uisp/wired/uisp-s-pro-u",
+      "verified": true,
+      "notes": "Power consumption not listed on the spec page. 27 V passive PoE on 16 ports."
     }
   ]
 }
