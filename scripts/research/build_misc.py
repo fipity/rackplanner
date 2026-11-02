@@ -167,6 +167,40 @@ def storage():
     return S
 
 
+def qnap():
+    """QNAP rack NAS from qnap.com hardware spec pages (fetched 2026-11-02)."""
+    S = []
+    def Q(model, hu, depth, kg, bays, ports, typ, standby, psu, notes=''):
+        slug = model.lower().replace(' ', '-')
+        url = f'https://www.qnap.com/en/product/{slug}/specs/hardware'
+        extra = f' HDD standby {standby} W.' if standby else ''
+        p = part(f'qnap-{slug}', 'QNAP', model, f'QNAP {model}', 'nas', hu=hu, depth=round(depth),
+                 mounting='full-depth' if depth >= 400 else 'front', kg=kg, typ=typ, bays=bays, ports=ports,
+                 style='nas', accent='#1b65c4', tags=('rackmount',), sub='qnap', url=url, verified=True,
+                 notes=(f'{notes} ' if notes else '') + f'Typical power is QNAP\'s operating figure with drives installed.{extra} PSU: {psu}. Depth excludes ears and protruding PSU.')
+        S.append(p)
+    b35 = lambda n: [{'count': n, 'size': '3.5'}]
+    Q('TS-432PXU', 1, 479, 7.39, b35(4), {'rj45_2_5g': 2, 'sfp_plus': 2}, 39.6, None, '250 W')
+    Q('TS-432PXU-RP', 1, 479, 9.08, b35(4), {'rj45_2_5g': 2, 'sfp_plus': 2}, 53.3, None, '2× 250 W redundant')
+    Q('TS-464U', 1, 479, 7.52, b35(4), {'rj45_2_5g': 2}, 36.8, 22.3, '250 W')
+    Q('TS-464U-RP', 1, 479, 9.34, b35(4), {'rj45_2_5g': 2}, 51.4, 37.5, '2× 250 W redundant')
+    Q('TS-h987XU-RP', 1, 479, 9.5, [{'count': 4, 'size': '3.5'}, {'count': 5, 'size': 'u2'}], {'rj45_2_5g': 2, 'rj45_10g': 2}, 120.6, 114.6,
+      '2× 300 W redundant', '4× 3.5" SATA + 5× 2.5" U.2/U.3 NVMe or SATA bays.')
+    Q('TS-977XU-RP', 1, 505.5, 8.62, [{'count': 4, 'size': '3.5'}, {'count': 5, 'size': '2.5'}], {'rj45_1g': 2, 'sfp_plus': 2}, 76.4, None,
+      '2× 300 W redundant', '4× 3.5" + 5× 2.5" SATA bays.')
+    Q('TS-873AeU', 2, 297.4, 7.97, b35(8), {'rj45_2_5g': 2}, 52.5, 26.8, '250 W', 'Short-depth chassis; 2× M.2 2280 slots.')
+    Q('TS-873AeU-RP', 2, 297.4, 9.2, b35(8), {'rj45_2_5g': 2}, 58.1, 32.2, '2× 300 W redundant', 'Short-depth chassis; 2× M.2 2280 slots.')
+    Q('TS-864eU', 2, 297.4, 7.78, b35(8), {'rj45_2_5g': 2}, 51.0, 24.8, '300 W', 'Short-depth chassis.')
+    Q('TS-855eU', 2, 297.4, 8.1, b35(8), {'rj45_2_5g': 2}, 79.1, 49.8, '250 W', 'Short-depth chassis; 2× M.2 2280 slots.')
+    Q('TS-1264U-RP', 2, 370.7, 10.64, b35(12), {'rj45_2_5g': 2}, 70.9, 37.9, '2× 300 W redundant')
+    Q('TS-1273AU-RP', 2, 370.7, 11.13, b35(12), {'rj45_2_5g': 2}, 78.9, 43.7, '2× 300 W redundant')
+    Q('TS-h1277AXU-RP', 2, 550, 13.0, b35(12), {'rj45_2_5g': 2, 'rj45_10g': 2}, 203.3, 83.1, '2× 550 W redundant', '2× M.2 2280 PCIe Gen 5 slots.')
+    Q('TS-1673AU-RP', 3, 370.9, 13.53, b35(16), {'rj45_2_5g': 2}, 97.3, 47.8, '2× 550 W redundant')
+    for p in S:
+        p['tags'].append('qnap')
+    return S
+
+
 # ---------------------------------------------------------------------------
 # Switching & routing (TP-Link, Netgear, Cisco, Ubiquiti EdgeMax/UISP)
 # ---------------------------------------------------------------------------
@@ -453,8 +487,8 @@ def main():
           'Dell PowerEdge, HPE ProLiant, Supermicro chassis and generic DIY cases. Figures from rack-vendor guides and resellers (Dell/HPE spec pages for these older models are hard to reach), so all are verified: false. Server power is left blank because it depends on configuration.',
           servers(), 2)
     write('storage.json', 'Rack NAS & storage',
-          'Synology RackStation models. Specs from synology.com product pages (fetched 2026-11-02); typical power is Synology\'s "Access" figure.',
-          storage(), 1)
+          'Synology RackStation and QNAP rack NAS. Specs from synology.com and qnap.com spec pages (fetched 2026-11-02); typical power is the vendor\'s access/operating figure with drives installed.',
+          storage() + qnap(), 2)
     write('switching.json', 'Other switching & routing',
           'TP-Link Omada (official datasheets), Netgear and Cisco (reseller/distributor figures), and legacy Ubiquiti EdgeMax/UISP gear (techspecs.ui.com).',
           switching(), 2)

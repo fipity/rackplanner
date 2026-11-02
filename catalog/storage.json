@@ -1,9 +1,638 @@
 {
   "$schema": "./schema.json",
-  "version": 1,
+  "version": 2,
   "title": "Rack NAS & storage",
-  "description": "Synology RackStation models. Specs from synology.com product pages (fetched 2026-11-02); typical power is Synology's \"Access\" figure.",
+  "description": "Synology RackStation and QNAP rack NAS. Specs from synology.com and qnap.com spec pages (fetched 2026-11-02); typical power is the vendor's access/operating figure with drives installed.",
   "parts": [
+    {
+      "id": "qnap-ts-1264u-rp",
+      "brand": "QNAP",
+      "model": "TS-1264U-RP",
+      "name": "QNAP TS-1264U-RP",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 371,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 70.9,
+        "maxW": null
+      },
+      "weightKg": 10.64,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 12,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-1264u-rp/specs/hardware",
+      "verified": true,
+      "notes": "Typical power is QNAP's operating figure with drives installed. HDD standby 37.9 W. PSU: 2× 300 W redundant. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-1273au-rp",
+      "brand": "QNAP",
+      "model": "TS-1273AU-RP",
+      "name": "QNAP TS-1273AU-RP",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 371,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 78.9,
+        "maxW": null
+      },
+      "weightKg": 11.13,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 12,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-1273au-rp/specs/hardware",
+      "verified": true,
+      "notes": "Typical power is QNAP's operating figure with drives installed. HDD standby 43.7 W. PSU: 2× 300 W redundant. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-1673au-rp",
+      "brand": "QNAP",
+      "model": "TS-1673AU-RP",
+      "name": "QNAP TS-1673AU-RP",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 3,
+      "width": "19in",
+      "depthMm": 371,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 97.3,
+        "maxW": null
+      },
+      "weightKg": 13.53,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 16,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-1673au-rp/specs/hardware",
+      "verified": true,
+      "notes": "Typical power is QNAP's operating figure with drives installed. HDD standby 47.8 W. PSU: 2× 550 W redundant. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-432pxu",
+      "brand": "QNAP",
+      "model": "TS-432PXU",
+      "name": "QNAP TS-432PXU",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 479,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 39.6,
+        "maxW": null
+      },
+      "weightKg": 7.39,
+      "ports": {
+        "rj45_2_5g": 2,
+        "sfp_plus": 2
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-432pxu/specs/hardware",
+      "verified": true,
+      "notes": "Typical power is QNAP's operating figure with drives installed. PSU: 250 W. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-432pxu-rp",
+      "brand": "QNAP",
+      "model": "TS-432PXU-RP",
+      "name": "QNAP TS-432PXU-RP",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 479,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 53.3,
+        "maxW": null
+      },
+      "weightKg": 9.08,
+      "ports": {
+        "rj45_2_5g": 2,
+        "sfp_plus": 2
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-432pxu-rp/specs/hardware",
+      "verified": true,
+      "notes": "Typical power is QNAP's operating figure with drives installed. PSU: 2× 250 W redundant. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-464u",
+      "brand": "QNAP",
+      "model": "TS-464U",
+      "name": "QNAP TS-464U",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 479,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 36.8,
+        "maxW": null
+      },
+      "weightKg": 7.52,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-464u/specs/hardware",
+      "verified": true,
+      "notes": "Typical power is QNAP's operating figure with drives installed. HDD standby 22.3 W. PSU: 250 W. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-464u-rp",
+      "brand": "QNAP",
+      "model": "TS-464U-RP",
+      "name": "QNAP TS-464U-RP",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 479,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 51.4,
+        "maxW": null
+      },
+      "weightKg": 9.34,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-464u-rp/specs/hardware",
+      "verified": true,
+      "notes": "Typical power is QNAP's operating figure with drives installed. HDD standby 37.5 W. PSU: 2× 250 W redundant. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-855eu",
+      "brand": "QNAP",
+      "model": "TS-855eU",
+      "name": "QNAP TS-855eU",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 297,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 79.1,
+        "maxW": null
+      },
+      "weightKg": 8.1,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-855eu/specs/hardware",
+      "verified": true,
+      "notes": "Short-depth chassis; 2× M.2 2280 slots. Typical power is QNAP's operating figure with drives installed. HDD standby 49.8 W. PSU: 250 W. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-864eu",
+      "brand": "QNAP",
+      "model": "TS-864eU",
+      "name": "QNAP TS-864eU",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 297,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 51.0,
+        "maxW": null
+      },
+      "weightKg": 7.78,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-864eu/specs/hardware",
+      "verified": true,
+      "notes": "Short-depth chassis. Typical power is QNAP's operating figure with drives installed. HDD standby 24.8 W. PSU: 300 W. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-873aeu",
+      "brand": "QNAP",
+      "model": "TS-873AeU",
+      "name": "QNAP TS-873AeU",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 297,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 52.5,
+        "maxW": null
+      },
+      "weightKg": 7.97,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-873aeu/specs/hardware",
+      "verified": true,
+      "notes": "Short-depth chassis; 2× M.2 2280 slots. Typical power is QNAP's operating figure with drives installed. HDD standby 26.8 W. PSU: 250 W. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-873aeu-rp",
+      "brand": "QNAP",
+      "model": "TS-873AeU-RP",
+      "name": "QNAP TS-873AeU-RP",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 297,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 58.1,
+        "maxW": null
+      },
+      "weightKg": 9.2,
+      "ports": {
+        "rj45_2_5g": 2
+      },
+      "driveBays": [
+        {
+          "count": 8,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-873aeu-rp/specs/hardware",
+      "verified": true,
+      "notes": "Short-depth chassis; 2× M.2 2280 slots. Typical power is QNAP's operating figure with drives installed. HDD standby 32.2 W. PSU: 2× 300 W redundant. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-977xu-rp",
+      "brand": "QNAP",
+      "model": "TS-977XU-RP",
+      "name": "QNAP TS-977XU-RP",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 506,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 76.4,
+        "maxW": null
+      },
+      "weightKg": 8.62,
+      "ports": {
+        "rj45_1g": 2,
+        "sfp_plus": 2
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        },
+        {
+          "count": 5,
+          "size": "2.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-977xu-rp/specs/hardware",
+      "verified": true,
+      "notes": "4× 3.5\" + 5× 2.5\" SATA bays. Typical power is QNAP's operating figure with drives installed. PSU: 2× 300 W redundant. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-h1277axu-rp",
+      "brand": "QNAP",
+      "model": "TS-h1277AXU-RP",
+      "name": "QNAP TS-h1277AXU-RP",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "19in",
+      "depthMm": 550,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 203.3,
+        "maxW": null
+      },
+      "weightKg": 13.0,
+      "ports": {
+        "rj45_2_5g": 2,
+        "rj45_10g": 2
+      },
+      "driveBays": [
+        {
+          "count": 12,
+          "size": "3.5"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-h1277axu-rp/specs/hardware",
+      "verified": true,
+      "notes": "2× M.2 2280 PCIe Gen 5 slots. Typical power is QNAP's operating figure with drives installed. HDD standby 83.1 W. PSU: 2× 550 W redundant. Depth excludes ears and protruding PSU."
+    },
+    {
+      "id": "qnap-ts-h987xu-rp",
+      "brand": "QNAP",
+      "model": "TS-h987XU-RP",
+      "name": "QNAP TS-h987XU-RP",
+      "category": "nas",
+      "subcategory": "qnap",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 479,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": 120.6,
+        "maxW": null
+      },
+      "weightKg": 9.5,
+      "ports": {
+        "rj45_2_5g": 2,
+        "rj45_10g": 2
+      },
+      "driveBays": [
+        {
+          "count": 4,
+          "size": "3.5"
+        },
+        {
+          "count": 5,
+          "size": "u2"
+        }
+      ],
+      "render": {
+        "style": "nas",
+        "body": "black",
+        "accent": "#1b65c4"
+      },
+      "tags": [
+        "qnap",
+        "nas",
+        "rackmount",
+        "qnap"
+      ],
+      "sourceUrl": "https://www.qnap.com/en/product/ts-h987xu-rp/specs/hardware",
+      "verified": true,
+      "notes": "4× 3.5\" SATA + 5× 2.5\" U.2/U.3 NVMe or SATA bays. Typical power is QNAP's operating figure with drives installed. HDD standby 114.6 W. PSU: 2× 300 W redundant. Depth excludes ears and protruding PSU."
+    },
     {
       "id": "synology-rs1221-plus",
       "brand": "Synology",

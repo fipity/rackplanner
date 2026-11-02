@@ -35,7 +35,7 @@
 - Tests: 106 unit/API tests; Playwright flows for every phase pass against the production image.
 
 ### Possible follow-ups
-- QNAP rack NAS not yet in the catalog (their spec pages need a browser); add in Phase 4 or via custom parts.
+- QNAP rack NAS added after Phase 4: 14 models from qnap.com spec pages (TS-h1886XU-RP R2 page wouldn't load, so it's not included).
 - Placement-level power override would help servers whose draw is config-dependent (catalog power is null).
 - Static files: @fastify/static with wildcard:false indexes files at startup (fine in Docker); add cache headers in Phase 4.
 - Image size: consider an alpine runtime in Phase 4 (better-sqlite3 has musl prebuilds).

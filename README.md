@@ -10,7 +10,7 @@ Runs as a single Docker container with a SQLite database. No accounts and no clo
 - **Placement:** drag and drop with whole-U snapping. Collisions are blocked, with an explanation. Front, rear and full-depth mounting are supported, and front + rear devices too deep for the rack are blocked.
 - **Partial width and shelves:** 10″ and half-width gear placed left / centre / right, and desktop gear (mini PCs, NAS, Flex switches, Raspberry Pis) dropped onto shelves.
 - **Faceplates:** generated from catalog data (ports, SFP cages, drive bays, displays, outlets), with no brand artwork.
-- **Catalog:** full UniFi lineup plus MikroTik, Synology, UGREEN, TP-Link, Netgear, Cisco, Dell, HPE, Supermicro, APC, CyberPower, Eaton, DeskPi, Raspberry Pi and generic passive gear. Includes search, filters and a **custom part builder**.
+- **Catalog:** full UniFi lineup plus MikroTik, Synology, QNAP, UGREEN, TP-Link, Netgear, Cisco, Dell, HPE, Supermicro, APC, CyberPower, Eaton, DeskPi, Raspberry Pi and generic passive gear. Includes search, filters and a **custom part builder**.
 - **Designs:** multiple designs with autosave, thumbnails, rename / duplicate / delete, undo / redo.
 - **Stats:** U used, typical and max power, **measured power** per device, UPS capacity, PoE budget vs expected load, weight, ports, and a warnings list.
 - **Exports:** PNG / SVG (front, rear or both), PDF (views + parts list + summary), CSV bill of materials, JSON. Plus import and a printable view.
@@ -131,7 +131,7 @@ The **Stats** tab, next to the device details, updates live:
 | `unifi.json` | Full rack-relevant UniFi lineup: gateways, switches, UNAS/UNVR/ENVR, UPS/PDU/RPS, OCD panels, shelves, rack-mount kits, plus desktop gear for shelves |
 | `mikrotik.json` | CRS/CSS switches, CCR/RB routers, RDS storage |
 | `switching.json` | TP-Link Omada, Netgear, Cisco, legacy Ubiquiti EdgeMax/UISP |
-| `storage.json` | Synology RackStation |
+| `storage.json` | Synology RackStation, QNAP rack NAS |
 | `servers.json` | Dell PowerEdge, HPE ProLiant, Supermicro chassis, generic DIY cases |
 | `power.json` | APC, CyberPower, Eaton UPS units and generic PDUs |
 | `patch-panels.json` | Generic 19" patch panels, blanks, brush panels, cable managers, shelves, drawers |
