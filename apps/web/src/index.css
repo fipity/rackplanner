@@ -38,3 +38,16 @@ body {
 .no-touch-scroll {
   touch-action: none;
 }
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  html,
+  body,
+  #root {
+    height: auto;
+    background: #fff !important;
+    color: #111 !important;
+  }
+}

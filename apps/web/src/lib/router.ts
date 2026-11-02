@@ -1,12 +1,14 @@
 /** Minimal history-API router: "/" (home) and "/d/:id" (editor). */
 import { useSyncExternalStore } from 'react';
 
-export type Route = { name: 'home' } | { name: 'design'; id: string } | { name: 'notfound' };
+export type Route = { name: 'home' } | { name: 'design'; id: string } | { name: 'print'; id: string } | { name: 'notfound' };
 
 export function parseRoute(pathname: string): Route {
   if (pathname === '/' || pathname === '') return { name: 'home' };
   const m = /^\/d\/([^/]+)\/?$/.exec(pathname);
   if (m?.[1]) return { name: 'design', id: decodeURIComponent(m[1]) };
+  const pm = /^\/d\/([^/]+)\/print\/?$/.exec(pathname);
+  if (pm?.[1]) return { name: 'print', id: decodeURIComponent(pm[1]) };
   return { name: 'notfound' };
 }
 

@@ -1,7 +1,11 @@
 import {
   PORT_TYPE_LABELS,
+  alignedX,
   allowedMountings,
+  canAlign,
+  displayName,
   checkPlacement,
+  type Alignment,
   formatURange,
   occupancyOf,
   type Mounting,
@@ -184,7 +188,10 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
           <div className="text-xs text-zinc-500 dark:text-zinc-400">
             {part.brand} · {part.model}
             {occ && ` · ${formatURange(occ.u0, occ.u1, design.rack)}`}
-            {placement.parentId && ' · on shelf'}
+            {placement.parentId && ` · on ${(() => {
+              const shelf = design.placements.find((p) => p.id === placement.parentId);
+              return shelf ? displayName(shelf, catalog.get(shelf.partId)) : 'a shelf';
+            })()}`}
           </div>
         </div>
       </div>
@@ -221,6 +228,32 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
           ))}
         </div>
       </Field>
+
+      {canAlign(design, placement, catalog) && (
+        <Field label={placement.parentId ? 'Position on shelf' : 'Horizontal position'}>
+          <div className="grid grid-cols-3 gap-1">
+            {(['left', 'centre', 'right'] as Alignment[]).map((a) => {
+              const x = alignedX(design, placement, catalog, a);
+              const active = x !== null && Math.abs(x - placement.xMm) < 0.5;
+              return (
+                <Button
+                  key={a}
+                  active={active}
+                  className="border border-zinc-300 capitalize dark:border-zinc-700"
+                  onClick={() => {
+                    if (x === null || active) return;
+                    const check = checkPlacement(design, { ...placement, xMm: x }, catalog);
+                    if (!check.ok) return toast(check.problems[0]?.message ?? 'Cannot move there', 'error');
+                    updatePlacement(placement.id, { xMm: x });
+                  }}
+                >
+                  {a}
+                </Button>
+              );
+            })}
+          </div>
+        </Field>
+      )}
 
       {placement.parentId === undefined && (
         <Field label="Mounting">

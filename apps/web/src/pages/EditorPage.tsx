@@ -4,6 +4,7 @@ import { BarChart3, ChevronLeft, PanelLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { CatalogSidebar } from '../components/catalog/CatalogSidebar';
 import { DesignName } from '../components/DesignName';
+import { ExportMenu } from '../components/ExportMenu';
 import { PartThumb } from '../components/faceplates/PartThumb';
 import { RackCanvas } from '../components/rack/RackCanvas';
 import { RightPanel } from '../components/RightPanel';
@@ -128,6 +129,7 @@ export function EditorPage({ id }: { id: string }) {
           <SaveIndicator />
         </div>
         <Toolbar />
+        <ExportMenu />
         <Button
           aria-label="Stats"
           title="Stats & warnings"

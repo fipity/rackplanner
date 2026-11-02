@@ -4,16 +4,19 @@ import {
   RACK_DEPTH_PRESETS,
   RACK_HEIGHT_PRESETS,
   computeStats,
+  parseDesignImport,
   type Design,
   type RackWidth,
 } from '@rackplanner/shared';
-import { Copy, MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Copy, DatabaseBackup, MoreVertical, Pencil, Plus, Trash2, Upload } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { RackView } from '../components/rack/RackView';
 import { Badge, Button, Segmented, cx, inputClass, selectClass } from '../components/ui';
 import {
+  ApiError,
   createDesignApi,
+  createPart,
   deleteDesignApi,
   duplicateDesignApi,
   listDesigns,
@@ -262,6 +265,31 @@ export function HomePage() {
   };
 
   const nextTheme: Record<Theme, Theme> = { light: 'dark', dark: 'system', system: 'light' };
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  /** Import an exported design (plus any custom parts it carries). */
+  const importFile = async (file: File) => {
+    if (file.size > 5 * 1024 * 1024) return toast('That file is too large to be a design', 'error');
+    const parsed = parseDesignImport(await file.text());
+    if (!parsed.ok) return toast(parsed.error, 'error');
+    const { catalog, upsert } = useCatalogStore.getState();
+    try {
+      for (const part of parsed.customParts) {
+        if (catalog.has(part.id)) continue;
+        try {
+          upsert(await createPart(part));
+        } catch (e) {
+          if (!(e instanceof ApiError && e.status === 409)) throw e;
+        }
+      }
+      const { design } = await createDesignApi({ design: parsed.design });
+      const missing = new Set(design.placements.map((p) => p.partId).filter((id) => !useCatalogStore.getState().catalog.has(id)));
+      toast(missing.size ? `Imported, but ${missing.size} part type(s) aren't in this catalog` : `Imported ${design.name}`, missing.size ? 'error' : 'info');
+      navigate(designPath(design.id));
+    } catch (e) {
+      toast(e instanceof Error ? `Import failed: ${e.message}` : 'Import failed', 'error');
+    }
+  };
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto">
@@ -271,9 +299,32 @@ export function HomePage() {
           <h1 className="text-lg font-semibold tracking-tight">RackPlanner</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button onClick={() => setTheme(nextTheme[theme])} title={`Theme: ${theme}`}>
+          <Button onClick={() => setTheme(nextTheme[theme])} title={`Theme: ${theme}`} className="max-sm:hidden">
             Theme: {theme}
           </Button>
+          <a
+            href="/api/backup"
+            download
+            title="Download a backup of all designs and custom parts"
+            className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            <DatabaseBackup className="size-4" /> <span className="max-sm:hidden">Backup</span>
+          </a>
+          <Button onClick={() => fileRef.current?.click()} title="Import a design exported as JSON">
+            <Upload className="size-4" /> <span className="max-sm:hidden">Import</span>
+          </Button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".json,application/json"
+            hidden
+            aria-label="Import design file"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              e.target.value = '';
+              if (f) void importFile(f);
+            }}
+          />
           <Button variant="primary" onClick={() => setCreating(true)}>
             <Plus className="size-4" /> New design
           </Button>

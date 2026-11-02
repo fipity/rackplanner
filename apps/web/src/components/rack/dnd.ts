@@ -17,6 +17,7 @@ import {
   type Mounting,
   type Part,
 } from '@rackplanner/shared';
+import { toast } from '../../lib/toast';
 import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
 import { useDragStore } from '../../store/dragStore';
@@ -131,6 +132,7 @@ export function handleDragMove(e: DragMoveEvent): void {
     rawBottomU,
     rawXMm,
     mounting: active.mounting,
+    view,
   });
   drag.update({ resolution, overRack: true, pointer });
 }
@@ -150,17 +152,19 @@ export function handleDragEnd(_e: DragEndEvent): void {
       existing.bottomU === c.bottomU &&
       existing.xMm === c.xMm &&
       existing.mounting === c.mounting &&
-      existing.parentId === undefined
+      existing.parentId === c.parentId
     ) {
       return; // no-op move: don't pollute undo history
     }
-    store.updatePlacement(active.placementId, { bottomU: c.bottomU, xMm: c.xMm, mounting: c.mounting, parentId: undefined });
+    store.updatePlacement(active.placementId, { bottomU: c.bottomU, xMm: c.xMm, mounting: c.mounting, parentId: c.parentId });
+    if (c.parentId && existing?.parentId !== c.parentId) toast('Placed on shelf');
     return;
   }
 
   const id = newId('p_');
   store.addPlacement({ ...c, id });
   useUiStore.getState().select(id);
+  if (c.parentId) toast('Placed on shelf');
 }
 
 export function handleDragCancel(): void {
