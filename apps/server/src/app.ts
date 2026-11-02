@@ -1,4 +1,6 @@
-import { existsSync } from 'node:fs';
+import { createReadStream, existsSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import fastifyStatic from '@fastify/static';
 import Fastify, { type FastifyInstance } from 'fastify';
 import { registerBasicAuth } from './auth.js';
@@ -22,6 +24,19 @@ export async function buildApp({ config, db }: AppDeps): Promise<FastifyInstance
   app.get('/api/health', async () => {
     db.$client.prepare('SELECT 1').get();
     return { status: 'ok' };
+  });
+
+  /** Consistent snapshot of the SQLite database (safe while the app is running). */
+  app.get('/api/backup', async (_req, reply) => {
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const file = path.join(tmpdir(), `rackplanner-backup-${stamp}-${process.pid}.db`);
+    await db.$client.backup(file);
+    const stream = createReadStream(file);
+    stream.on('close', () => rmSync(file, { force: true }));
+    return reply
+      .header('content-type', 'application/vnd.sqlite3')
+      .header('content-disposition', `attachment; filename="rackplanner-${stamp.slice(0, 19)}.db"`)
+      .send(stream);
   });
 
   registerCatalogRoutes(app, db, config.catalogDir);
@@ -51,7 +66,15 @@ export async function buildApp({ config, db }: AppDeps): Promise<FastifyInstance
   });
 
   if (existsSync(config.webDist)) {
-    await app.register(fastifyStatic, { root: config.webDist, wildcard: false });
+    await app.register(fastifyStatic, {
+      root: config.webDist,
+      wildcard: false,
+      cacheControl: false,
+      setHeaders: (res, filePath) => {
+        // Hashed build assets never change; index.html must always be revalidated.
+        res.setHeader('cache-control', filePath.includes(`${path.sep}assets${path.sep}`) ? 'public, max-age=31536000, immutable' : 'no-cache');
+      },
+    });
   } else {
     app.log.warn(`Web build not found at ${config.webDist}; serving API only`);
   }

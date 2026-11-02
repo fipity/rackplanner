@@ -105,7 +105,8 @@ export function normaliseCustom(input: unknown, id?: string): Part {
   const raw = typeof input === 'object' && input !== null ? (input as Record<string, unknown>) : {};
   const candidate: PartInput = {
     ...(raw as PartInput),
-    id: id ?? `custom-${slugify(String(raw.name ?? 'part'))}-${newId().slice(0, 6)}`,
+    // Imports keep their custom-* ids so designs that reference them still resolve.
+    id: id ?? (typeof raw.id === 'string' && /^custom-[a-z0-9-]{3,80}$/.test(raw.id) ? raw.id : `custom-${slugify(String(raw.name ?? 'part'))}-${newId().slice(0, 6)}`),
     source: 'custom',
     verified: false,
     sourceUrl: typeof raw.sourceUrl === 'string' && raw.sourceUrl ? raw.sourceUrl : null,

@@ -127,3 +127,24 @@ describe('health', () => {
     expect((await app.inject('/api/health')).json()).toEqual({ status: 'ok' });
   });
 });
+
+describe('imports and backups', () => {
+  it('keeps a valid custom-* id from an imported part', async () => {
+    const payload = { ...seedPart('custom-imported-box', 'Imported box') };
+    const res = await app.inject({ method: 'POST', url: '/api/parts', payload });
+    expect(res.json().id).toBe('custom-imported-box');
+    expect((await app.inject({ method: 'POST', url: '/api/parts', payload })).statusCode).toBe(409);
+  });
+
+  it('ignores non-custom ids on create', async () => {
+    const res = await app.inject({ method: 'POST', url: '/api/parts', payload: seedPart('test-a', 'Sneaky') });
+    expect(res.json().id).toMatch(/^custom-sneaky-/);
+  });
+
+  it('downloads a SQLite backup', async () => {
+    const res = await app.inject('/api/backup');
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['content-disposition']).toMatch(/attachment; filename="rackplanner-/);
+    expect(res.rawPayload.subarray(0, 15).toString()).toBe('SQLite format 3');
+  });
+});

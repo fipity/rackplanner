@@ -1,10 +1,6 @@
-// Bundle the server (inlining the TypeScript-only shared workspace package)
-// while leaving real npm dependencies external.
+// Bundle the server and all pure-JS dependencies into one file. Only the
+// native better-sqlite3 module stays external (installed in the image).
 import { build } from 'esbuild';
-import { readFileSync } from 'node:fs';
-
-const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
-const external = Object.keys(pkg.dependencies).filter((d) => !d.startsWith('@rackplanner/'));
 
 await build({
   entryPoints: ['src/index.ts'],
@@ -14,6 +10,8 @@ await build({
   target: 'node22',
   format: 'esm',
   sourcemap: true,
-  external,
+  external: ['better-sqlite3'],
+  // CommonJS dependencies (fastify, pino…) call require(); give ESM output one.
+  banner: { js: "import { createRequire as __cr } from 'node:module'; const require = __cr(import.meta.url);" },
   logLevel: 'info',
 });
