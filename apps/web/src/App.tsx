@@ -11,6 +11,7 @@ import { formatURange } from '@rackplanner/shared';
 import { PanelLeft, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { CatalogSidebar } from './components/catalog/CatalogSidebar';
+import { CustomPartBuilder } from './components/catalog/CustomPartBuilder';
 import { PartThumb } from './components/faceplates/PartThumb';
 import { Inspector } from './components/inspector/Inspector';
 import { handleDragCancel, handleDragEnd, handleDragMove, handleDragStart } from './components/rack/dnd';
@@ -84,6 +85,7 @@ export function App() {
   const { status, error, load } = useCatalogStore();
   const theme = useUiStore((s) => s.theme);
   const selectedId = useUiStore((s) => s.selectedId);
+  const builder = useUiStore((s) => s.builder);
   const [catalogOpen, setCatalogOpen] = useState(false);
   useKeyboardShortcuts();
 
@@ -167,6 +169,7 @@ export function App() {
         <DragPreview />
       </DragOverlay>
       <DragFeedback />
+      {builder && <CustomPartBuilder key={`${builder.mode}:${builder.partId ?? ''}`} />}
       <Toasts />
     </DndContext>
   );

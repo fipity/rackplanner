@@ -336,7 +336,8 @@ function Port({ kind, x, y, tint, flip, n, fin }: { kind: PortKind; x: number; y
 // ---------------------------------------------------------------------------
 
 function DriveBays({ part, x, y, w, h, fin }: { part: Part; x: number; y: number; w: number; h: number; fin: Finish }) {
-  const bays = part.driveBays ?? [];
+  // Internal M.2 / E1.S slots aren't visible on the faceplate.
+  const bays = (part.driveBays ?? []).filter((b) => b.size !== 'm2' && b.size !== 'e1s');
   const n = bays.reduce((s, b) => s + b.count, 0);
   if (!n || w < 8 || h < 6) return null;
   const size = bays[0]?.size ?? '3.5';
@@ -465,7 +466,7 @@ function SwitchFront({ part, x, y, w, h, fin, accent, gateway }: ContentProps & 
 }
 
 function ServerFront({ part, x, y, w, h, fin, accent }: ContentProps) {
-  const hasBays = (part.driveBays?.length ?? 0) > 0;
+  const hasBays = (part.driveBays ?? []).some((b) => b.size !== 'm2' && b.size !== 'e1s');
   const ctrl = Math.min(22, w * 0.1);
   const right = Math.min(hasBays ? 26 : 40, w * 0.15);
   const pad = Math.min(3, h * 0.08);

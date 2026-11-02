@@ -9,7 +9,7 @@ import {
   type PlacedPart,
   type PortType,
 } from '@rackplanner/shared';
-import { Copy, ExternalLink, Trash2 } from 'lucide-react';
+import { Copy, ExternalLink, Pencil, Trash2, Wand2 } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { deleteSelected, duplicateSelected } from '../../lib/actions';
 import { toast } from '../../lib/toast';
@@ -220,8 +220,23 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
         </Button>
       </div>
 
-      <div className="border-t border-zinc-200 pt-3 dark:border-zinc-800">
+      <div className="space-y-3 border-t border-zinc-200 pt-3 dark:border-zinc-800">
         <Specs part={part} />
+        {part.notes && <p className="text-xs text-zinc-500 dark:text-zinc-400">{part.notes}</p>}
+        <Button
+          onClick={() => useUiStore.getState().openBuilder(part.source === 'custom' ? { mode: 'edit', partId: part.id } : { mode: 'copy', partId: part.id })}
+          className="w-full border border-zinc-300 dark:border-zinc-700"
+        >
+          {part.source === 'custom' ? (
+            <>
+              <Pencil className="size-4" /> Edit custom part
+            </>
+          ) : (
+            <>
+              <Wand2 className="size-4" /> Customise a copy of this part
+            </>
+          )}
+        </Button>
       </div>
     </div>
   );
