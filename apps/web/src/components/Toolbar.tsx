@@ -1,5 +1,5 @@
 import { MAX_RACK_U, MIN_RACK_U, RACK_DEPTH_PRESETS, RACK_HEIGHT_PRESETS, type Rack, type RackChangeResult } from '@rackplanner/shared';
-import { ArrowDown01, ArrowUp01, Maximize, Minus, Monitor, Moon, Plus, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
+import { ArrowDown01, ArrowUp01, Cable, Eye, EyeOff, Maximize, Minus, Monitor, Moon, Plus, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
 import { useState } from 'react';
 import { commitRackChange, previewRackChange } from '../lib/actions';
 import { useDesignStore, useHistory } from '../store/designStore';
@@ -12,7 +12,7 @@ const ALL_HEIGHTS = Array.from({ length: MAX_RACK_U - MIN_RACK_U + 1 }, (_, i) =
 export function Toolbar() {
   const rack = useDesignStore((s) => s.design.rack);
   const { canUndo, canRedo, undo, redo } = useHistory();
-  const { view, setView, zoom, fitScale, zoomBy, setZoom, theme, setTheme } = useUiStore();
+  const { view, setView, zoom, fitScale, zoomBy, setZoom, theme, setTheme, cableMode, setCableMode, showCables, setShowCables } = useUiStore();
   const [pending, setPending] = useState<{ rack: Rack; result: RackChangeResult } | null>(null);
 
   const requestRack = (patch: Partial<Rack>) => {
@@ -97,6 +97,23 @@ export function Toolbar() {
           { value: 'rear', label: 'Rear' },
         ]}
       />
+
+      <div className="flex items-center gap-0.5">
+        <Button
+          aria-label="Cable mode"
+          aria-pressed={cableMode}
+          title="Draw cables between ports (C)"
+          active={cableMode}
+          onClick={() => setCableMode(!cableMode)}
+          className={cableMode ? '!bg-amber-500 !text-zinc-950' : ''}
+        >
+          <Cable className="size-4" />
+          <span className="max-xl:hidden">Cables</span>
+        </Button>
+        <Button aria-label={showCables ? 'Hide cables' : 'Show cables'} title={showCables ? 'Hide cables' : 'Show cables'} className="px-1.5" onClick={() => setShowCables(!showCables)} disabled={cableMode}>
+          {showCables ? <Eye className="size-4" /> : <EyeOff className="size-4" />}
+        </Button>
+      </div>
 
       <div className="flex items-center">
         <Button aria-label="Undo" title="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo} className="px-1.5">

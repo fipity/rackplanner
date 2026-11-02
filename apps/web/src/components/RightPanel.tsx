@@ -5,7 +5,7 @@ import { Button, cx } from './ui';
 import { useUiStore } from '../store/uiStore';
 
 export function RightPanel() {
-  const { rightTab, setRightTab, selectedId, setPanelOpen } = useUiStore();
+  const { rightTab, setRightTab, selectedId, selectedCableId, setPanelOpen } = useUiStore();
   const stats = useDesignStats();
   const problems = stats.warnings.filter((w) => w.severity !== 'info').length;
   const tab = (id: 'details' | 'stats', label: string, badge?: number) => (
@@ -29,7 +29,7 @@ export function RightPanel() {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div role="tablist" className="flex items-center border-b border-zinc-200 pr-1 dark:border-zinc-800">
-        {tab('details', selectedId ? 'Device' : 'Rack')}
+        {tab('details', selectedCableId ? 'Cable' : selectedId ? 'Device' : 'Rack')}
         {tab('stats', 'Stats', problems)}
         <Button
           aria-label="Close panel"
@@ -37,6 +37,7 @@ export function RightPanel() {
           onClick={() => {
             setPanelOpen(false);
             useUiStore.getState().select(null);
+            useUiStore.getState().selectCable(null);
           }}
         >
           <X className="size-4" />

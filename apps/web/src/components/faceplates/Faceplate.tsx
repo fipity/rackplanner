@@ -177,6 +177,8 @@ interface PortGroup {
   kind: PortKind;
   /** LED / tint per port. */
   tints: string[];
+  /** Port type of each port (parallel to tints). */
+  types: PortType[];
 }
 
 const TIER: Partial<Record<PortType, string>> = {
@@ -205,22 +207,18 @@ function portGroups(part: Part): PortGroup[] {
   const p = part.ports;
   const n = (k: PortType) => p[k] ?? 0;
   const groups: PortGroup[] = [];
-  const rj: string[] = [];
-  for (const k of ['rj45_100m', 'rj45_1g', 'rj45_2_5g', 'rj45_5g', 'rj45_10g'] as const) {
-    for (let i = 0; i < n(k); i++) rj.push(TIER[k]!);
-  }
-  if (rj.length) groups.push({ kind: 'rj45', tints: rj });
-  const sfp: string[] = [];
-  for (const k of ['sfp', 'sfp_plus', 'sfp28'] as const) for (let i = 0; i < n(k); i++) sfp.push(TIER[k]!);
-  if (sfp.length) groups.push({ kind: 'sfp', tints: sfp });
-  const q: string[] = [];
-  for (const k of ['qsfp_plus', 'qsfp28'] as const) for (let i = 0; i < n(k); i++) q.push(TIER[k]!);
-  if (q.length) groups.push({ kind: 'qsfp', tints: q });
-  const ks = n('keystone') + n('lc_duplex');
-  if (ks) groups.push({ kind: 'keystone', tints: Array.from({ length: ks }, () => '#e5e7eb') });
-  const outlets = n('outlet_c13') + n('outlet_nema') + n('outlet_schuko') + n('outlet_au') + n('outlet_uk');
-  if (outlets) groups.push({ kind: 'outlet', tints: Array.from({ length: outlets }, () => '#111') });
-  if (n('outlet_c19')) groups.push({ kind: 'outlet-big', tints: Array.from({ length: n('outlet_c19') }, () => '#111') });
+  const add = (kind: PortKind, keys: readonly PortType[], tint: (k: PortType) => string) => {
+    const tints: string[] = [];
+    const types: PortType[] = [];
+    for (const k of keys) for (let i = 0; i < n(k); i++) (tints.push(tint(k)), types.push(k));
+    if (types.length) groups.push({ kind, tints, types });
+  };
+  add('rj45', ['rj45_100m', 'rj45_1g', 'rj45_2_5g', 'rj45_5g', 'rj45_10g'], (k) => TIER[k]!);
+  add('sfp', ['sfp', 'sfp_plus', 'sfp28'], (k) => TIER[k]!);
+  add('qsfp', ['qsfp_plus', 'qsfp28'], (k) => TIER[k]!);
+  add('keystone', ['keystone', 'lc_duplex'], () => '#e5e7eb');
+  add('outlet', ['outlet_c13', 'outlet_nema', 'outlet_schuko', 'outlet_au', 'outlet_uk'], () => '#111');
+  add('outlet-big', ['outlet_c19'], () => '#111');
   return groups;
 }
 
@@ -244,24 +242,59 @@ function groupSize(kind: PortKind, count: number, rows: number) {
   };
 }
 
-/** Lay out port groups left-to-right inside a box, scaling down to fit. */
-function PortBlock({ groups, x, y, w, h, fin, align = 'center' }: { groups: PortGroup[]; x: number; y: number; w: number; h: number; fin: Finish; align?: 'center' | 'start' | 'end' }) {
+interface PortSpec {
+  groups: PortGroup[];
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  align?: 'center' | 'start' | 'end';
+}
+
+/** A laid-out port. Coordinates are local to the block (before its scale). */
+export interface PortSlot {
+  kind: PortKind;
+  type: PortType;
+  /** 1-based number among ports of the same type on this device. */
+  index: number;
+  /** 1-based number within the drawn group (for labels). */
+  n: number;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  flip: boolean;
+  tint: string;
+}
+
+interface PortLayout {
+  slots: PortSlot[];
+  scale: number;
+  ox: number;
+  oy: number;
+}
+
+/** Lay out port groups left-to-right inside a box, scaling down to fit. Pure. */
+function layoutPorts(spec: PortSpec | null): PortLayout | null {
+  if (!spec) return null;
+  const { groups, x, y, w, h, align = 'center' } = spec;
   if (!groups.length || w <= 4 || h <= 3) return null;
   const sized = groups.map((g) => {
     const rows = rowsFor(g.kind, g.tints.length, h);
     return { g, rows, ...groupSize(g.kind, g.tints.length, rows) };
   });
   const interGroup = 6;
-  const totalW = sized.reduce((s, g) => s + g.w, 0) + interGroup * (sized.length - 1);
+  const totalW = sized.reduce((sum, g) => sum + g.w, 0) + interGroup * (sized.length - 1);
   const totalH = Math.max(...sized.map((g) => g.h));
-  const s = Math.min(1, w / totalW, h / totalH);
-  const drawnW = totalW * s;
+  const scale = Math.min(1, w / totalW, h / totalH);
+  const drawnW = totalW * scale;
   const ox = align === 'start' ? x : align === 'end' ? x + w - drawnW : x + (w - drawnW) / 2;
-  const oy = y + (h - totalH * s) / 2;
+  const oy = y + (h - totalH * scale) / 2;
 
+  const typeCount = new Map<PortType, number>();
   let cursor = 0;
-  const out: ReactNode[] = [];
-  sized.forEach(({ g, rows, cols, w: gw, h: gh }, gi) => {
+  const slots: PortSlot[] = [];
+  for (const { g, rows, cols, w: gw, h: gh } of sized) {
     const c = CELL[g.kind];
     const labelH = g.kind === 'keystone' ? 3.2 : 0;
     const gy = (totalH - gh) / 2;
@@ -269,14 +302,114 @@ function PortBlock({ groups, x, y, w, h, fin, align = 'center' }: { groups: Port
       // Switch-style numbering: odd ports on top, even below.
       const col = rows === 2 ? Math.floor(i / 2) : i % cols;
       const row = rows === 2 ? i % 2 : Math.floor(i / cols);
-      const px = cursor + col * (c.w + c.gap) + Math.floor(col / c.groupEvery) * c.groupGap;
-      const py = gy + row * (c.h + labelH + c.gap) + labelH;
-      out.push(<Port key={`${gi}-${i}`} kind={g.kind} x={px} y={py} tint={tint} flip={rows === 2 && row === 1} n={i + 1} fin={fin} />);
+      const type = g.types[i]!;
+      const index = (typeCount.get(type) ?? 0) + 1;
+      typeCount.set(type, index);
+      slots.push({
+        kind: g.kind,
+        type,
+        index,
+        n: i + 1,
+        x: cursor + col * (c.w + c.gap) + Math.floor(col / c.groupEvery) * c.groupGap,
+        y: gy + row * (c.h + labelH + c.gap) + labelH,
+        w: c.w,
+        h: c.h,
+        flip: rows === 2 && row === 1,
+        tint,
+      });
     });
     cursor += gw + interGroup;
-  });
+  }
+  return { slots, scale, ox, oy };
+}
 
-  return <g transform={`translate(${ox} ${oy}) scale(${s})`}>{out}</g>;
+function PortBlock({ layout, fin }: { layout: PortLayout | null; fin: Finish }) {
+  if (!layout) return null;
+  return (
+    <g transform={`translate(${layout.ox} ${layout.oy}) scale(${layout.scale})`}>
+      {layout.slots.map((sl, i) => (
+        <Port key={i} kind={sl.kind} x={sl.x} y={sl.y} tint={sl.tint} flip={sl.flip} n={sl.n} fin={fin} />
+      ))}
+    </g>
+  );
+}
+
+// Port areas per faceplate style. Shared by drawing and portPositions() so
+// cable endpoints land exactly on the drawn ports.
+const hasFrontBays = (part: Part) => (part.driveBays ?? []).some((b) => b.size !== 'm2' && b.size !== 'e1s');
+
+function switchSpec(part: Part, x: number, y: number, w: number, h: number, gateway: boolean): PortSpec {
+  const left = Math.min(gateway ? 64 : 48, w * 0.25);
+  const pad = Math.min(4, h * 0.1);
+  return { groups: portGroups(part), x: x + left, y: y + pad, w: w - left - 5, h: h - pad * 2, align: 'end' };
+}
+function serverSpec(part: Part, x: number, y: number, w: number, h: number): PortSpec | null {
+  if (hasFrontBays(part)) return null;
+  const ctrl = Math.min(22, w * 0.1);
+  const right = Math.min(40, w * 0.15);
+  const pad = Math.min(3, h * 0.08);
+  return { groups: portGroups(part), x: x + ctrl, y: y + pad + 4, w: (w - ctrl - right) * 0.6, h: h - pad * 2 - 4 };
+}
+function patchSpec(part: Part, x: number, y: number, w: number, h: number): PortSpec {
+  const pad = Math.min(3, h * 0.12);
+  return { groups: portGroups(part), x: x + 8, y: y + pad, w: w - 16, h: h - pad * 2 };
+}
+function pduSpec(part: Part, x: number, y: number, w: number, h: number): PortSpec {
+  const pad = Math.min(4, h * 0.12);
+  const labelW = Math.min(40, w * 0.18);
+  return { groups: portGroups(part), x: x + labelW, y: y + pad, w: w - labelW - 22, h: h - pad * 2 };
+}
+function desktopSpec(part: Part, x: number, y: number, w: number, h: number): PortSpec {
+  return { groups: portGroups(part), x: x + w * 0.35, y: y + h * 0.18, w: w * 0.6, h: h * 0.64, align: 'end' };
+}
+/** Rear panels of full-depth gear show up to four RJ45 ports (the first ones). */
+function rearSpec(part: Part, x: number, y: number, w: number, h: number, accent: string): PortSpec | null {
+  const rjGroup = portGroups(part).find((g) => g.kind === 'rj45');
+  if (!rjGroup) return null;
+  const types = rjGroup.types.slice(0, 4);
+  const pad = Math.min(4, h * 0.1);
+  return { groups: [{ kind: 'rj45', types, tints: types.map(() => accent) }], x: x + w * 0.4, y: y + pad, w: Math.min(80, w * 0.25), h: h - pad * 2 };
+}
+
+function portSpecFor(part: Part, style: RenderStyle, rear: boolean, x: number, y: number, w: number, h: number, accent: string): PortSpec | null {
+  if (rear) return rearSpec(part, x, y, w, h, accent);
+  switch (style) {
+    case 'switch':
+    case 'gateway':
+      return switchSpec(part, x, y, w, h, style === 'gateway');
+    case 'server':
+    case 'nas':
+      return serverSpec(part, x, y, w, h);
+    case 'patch-panel':
+      return patchSpec(part, x, y, w, h);
+    case 'pdu':
+      return pduSpec(part, x, y, w, h);
+    case 'desktop':
+      return desktopSpec(part, x, y, w, h);
+    default:
+      return null;
+  }
+}
+
+/**
+ * Where each drawn port sits on a faceplate of size w × h (faceplate-local
+ * mm), for the given view. Ports not drawn in that view are absent.
+ */
+export function portPositions(part: Part, w: number, h: number, ears: boolean, view: View): PortSlot[] {
+  const style = part.render.style;
+  if (style === 'shelf') return [];
+  const earW = ears ? RAIL : 0;
+  const rear = view === 'rear' && part.mounting === 'full-depth';
+  const bodyH = style === 'desktop' && part.heightMm ? Math.min(h, part.heightMm) : h;
+  const layout = layoutPorts(portSpecFor(part, style, rear, earW, h - bodyH, w - earW * 2, bodyH, part.render.accent ?? '#64748b'));
+  if (!layout) return [];
+  return layout.slots.map((sl) => ({
+    ...sl,
+    x: layout.ox + sl.x * layout.scale,
+    y: layout.oy + sl.y * layout.scale,
+    w: sl.w * layout.scale,
+    h: sl.h * layout.scale,
+  }));
 }
 
 function Port({ kind, x, y, tint, flip, n, fin }: { kind: PortKind; x: number; y: number; tint: string; flip: boolean; n: number; fin: Finish }) {
@@ -460,7 +593,7 @@ function SwitchFront({ part, x, y, w, h, fin, accent, gateway }: ContentProps & 
           <rect x={x + left - 27} y={y + h * 0.3 + 6} width={16} height={1} fill="#94a3b8" opacity={0.6} />
         </g>
       )}
-      <PortBlock groups={portGroups(part)} x={x + left} y={y + pad} w={w - left - 5} h={h - pad * 2} fin={fin} align="end" />
+      <PortBlock layout={layoutPorts(switchSpec(part, x, y, w, h, gateway))} fin={fin} />
     </g>
   );
 }
@@ -481,7 +614,7 @@ function ServerFront({ part, x, y, w, h, fin, accent }: ContentProps) {
         <DriveBays part={part} x={x + ctrl} y={y + pad} w={w - ctrl - right} h={h - pad * 2} fin={fin} />
       ) : (
         <>
-          <PortBlock groups={portGroups(part)} x={x + ctrl} y={y + pad + 4} w={(w - ctrl - right) * 0.6} h={h - pad * 2 - 4} fin={fin} />
+          <PortBlock layout={layoutPorts(serverSpec(part, x, y, w, h))} fin={fin} />
           <Vents x={x + ctrl + (w - ctrl - right) * 0.62} y={y + pad} w={(w - ctrl - right) * 0.38} h={h - pad * 2} fin={fin} />
         </>
       )}
@@ -492,8 +625,7 @@ function ServerFront({ part, x, y, w, h, fin, accent }: ContentProps) {
 }
 
 function PatchPanelFront({ part, x, y, w, h, fin }: ContentProps) {
-  const pad = Math.min(3, h * 0.12);
-  return <PortBlock groups={portGroups(part)} x={x + 8} y={y + pad} w={w - 16} h={h - pad * 2} fin={fin} />;
+  return <PortBlock layout={layoutPorts(patchSpec(part, x, y, w, h))} fin={fin} />;
 }
 
 function UpsFront({ part, x, y, w, h, fin, accent }: ContentProps) {
@@ -525,7 +657,7 @@ function PduFront({ part, x, y, w, h, fin }: ContentProps) {
   return (
     <g>
       <ModelText x={x + 4} y={y + h / 2 + textSize / 3} text={part.model} fin={fin} size={textSize} />
-      <PortBlock groups={portGroups(part)} x={x + labelW} y={y + pad} w={w - labelW - 22} h={h - pad * 2} fin={fin} />
+      <PortBlock layout={layoutPorts(pduSpec(part, x, y, w, h))} fin={fin} />
       <rect x={x + w - 18} y={y + h / 2 - 5} width={12} height={10} rx={1} fill="#7f1d1d" stroke="#450a0a" strokeWidth={0.5} />
       <rect x={x + w - 16} y={y + h / 2 - 3.5} width={8} height={4} rx={0.6} fill="#ef4444" opacity={0.9} />
     </g>
@@ -611,7 +743,7 @@ function DesktopFront({ part, x, y, w, h, fin, accent }: ContentProps) {
     <g>
       <ModelText x={x + 3} y={y + Math.max(textSize + 1, h * 0.35)} text={part.model} fin={fin} size={textSize} />
       <Led x={x + 4} y={y + h - Math.min(4, h * 0.3)} color={accent} r={Math.min(1, h * 0.08)} />
-      <PortBlock groups={portGroups(part)} x={x + w * 0.35} y={y + h * 0.18} w={w * 0.6} h={h * 0.64} fin={fin} align="end" />
+      <PortBlock layout={layoutPorts(desktopSpec(part, x, y, w, h))} fin={fin} />
     </g>
   );
 }
@@ -635,15 +767,11 @@ function RearPanel({ part, x, y, w, h, fin, accent }: ContentProps) {
   const psuW = Math.min(52, w * 0.16);
   const psuH = Math.min(h - 4, 38);
   const pad = Math.min(4, h * 0.1);
-  const rj = Math.min(4, (part.ports.rj45_1g ?? 0) + (part.ports.rj45_10g ?? 0) + (part.ports.rj45_2_5g ?? 0));
-  const portsW = Math.min(80, w * 0.25);
   return (
     <g>
       <ModelText x={x + 4} y={y + pad + 3} text={`${part.model} — rear`} fin={fin} size={Math.min(3, h * 0.12)} />
       <Vents x={x + 4} y={y + pad + 5} w={w * 0.35} h={h - pad * 2 - 5} fin={fin} />
-      {rj > 0 && (
-        <PortBlock groups={[{ kind: 'rj45', tints: Array.from({ length: rj }, () => accent) }]} x={x + w * 0.4} y={y + pad} w={portsW} h={h - pad * 2} fin={fin} />
-      )}
+      <PortBlock layout={layoutPorts(rearSpec(part, x, y, w, h, accent))} fin={fin} />
       {Array.from({ length: psuCount }, (_, i) => {
         const px = x + w - (i + 1) * (psuW + 3);
         const py = y + (h - psuH) / 2;

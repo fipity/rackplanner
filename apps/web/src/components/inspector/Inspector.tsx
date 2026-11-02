@@ -2,8 +2,10 @@ import {
   PORT_TYPE_LABELS,
   alignedX,
   allowedMountings,
+  cablesAt,
   canAlign,
   displayName,
+  endLabel,
   checkPlacement,
   type Alignment,
   formatURange,
@@ -21,6 +23,7 @@ import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
 import { useUiStore } from '../../store/uiStore';
 import { PartThumb } from '../faceplates/PartThumb';
+import { CableInspector } from './CableInspector';
 import { Badge, Button, cx, inputClass, selectClass } from '../ui';
 
 const SWATCHES = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'];
@@ -124,6 +127,43 @@ function Specs({ part }: { part: Part }) {
   );
 }
 
+function DeviceCables({ placementId }: { placementId: string }) {
+  const design = useDesignStore((s) => s.design);
+  const catalog = useCatalogStore((s) => s.catalog);
+  const cables = cablesAt(design, placementId);
+  return (
+    <Field label={`Cables (${cables.length})`}>
+      {cables.length === 0 ? (
+        <p className="text-xs text-zinc-500">
+          None. Use <b>Cables</b> mode (C) and click two ports to connect them.
+        </p>
+      ) : (
+        <ul className="space-y-1">
+          {cables.map((c) => {
+            const here = c.a.placementId === placementId ? c.a : c.b;
+            const there = here === c.a ? c.b : c.a;
+            return (
+              <li key={c.id}>
+                <button
+                  type="button"
+                  onClick={() => useUiStore.getState().selectCable(c.id)}
+                  className="flex w-full items-center gap-2 rounded px-1 py-0.5 text-left text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                >
+                  <span className="h-1.5 w-4 shrink-0 rounded-full" style={{ background: c.color }} />
+                  <span className="truncate">
+                    {here.port ? `${endLabel(design, catalog, here).split(' · ')[1]} → ` : '→ '}
+                    {endLabel(design, catalog, there)}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </Field>
+  );
+}
+
 /** Per-placement measured draw; overrides catalog figures in the stats. */
 function MeasuredPower({ placement, part }: { placement: PlacedPart; part: Part }) {
   const updatePlacement = useDesignStore((s) => s.updatePlacement);
@@ -188,10 +228,23 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
           <div className="text-xs text-zinc-500 dark:text-zinc-400">
             {part.brand} · {part.model}
             {occ && ` · ${formatURange(occ.u0, occ.u1, design.rack)}`}
-            {placement.parentId && ` · on ${(() => {
-              const shelf = design.placements.find((p) => p.id === placement.parentId);
-              return shelf ? displayName(shelf, catalog.get(shelf.partId)) : 'a shelf';
-            })()}`}
+            {placement.parentId &&
+              (() => {
+                const shelf = design.placements.find((p) => p.id === placement.parentId);
+                return (
+                  <>
+                    {' · on '}
+                    <button
+                      type="button"
+                      className="text-blue-700 hover:underline dark:text-blue-400"
+                      title="Select the shelf"
+                      onClick={() => shelf && useUiStore.getState().select(shelf.id)}
+                    >
+                      {shelf ? displayName(shelf, catalog.get(shelf.partId)) : 'a shelf'}
+                    </button>
+                  </>
+                );
+              })()}
           </div>
         </div>
       </div>
@@ -275,6 +328,8 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
 
       <MeasuredPower placement={placement} part={part} />
 
+      <DeviceCables placementId={placement.id} />
+
       <Field label="Notes">
         <CommitText
           label="Notes"
@@ -332,6 +387,7 @@ function RackSummary() {
           ['Del', 'remove'],
           ['Ctrl+D', 'duplicate'],
           ['Ctrl+Z / Ctrl+Shift+Z', 'undo / redo'],
+          ['C', 'cable mode'],
           ['+ / − / 0', 'zoom / fit'],
           ['Ctrl+scroll', 'zoom'],
         ].map(([k, v]) => (
@@ -347,7 +403,10 @@ function RackSummary() {
 
 export function Inspector() {
   const selectedId = useUiStore((s) => s.selectedId);
+  const selectedCableId = useUiStore((s) => s.selectedCableId);
+  const cable = useDesignStore((s) => (selectedCableId ? s.design.cables.find((c) => c.id === selectedCableId) : undefined));
   const placement = useDesignStore((s) => s.design.placements.find((p) => p.id === selectedId));
   const part = useCatalogStore((s) => (placement ? s.catalog.get(placement.partId) : undefined));
+  if (cable) return <CableInspector key={cable.id} cable={cable} />;
   return placement && part ? <PlacementInspector key={placement.id} placement={placement} part={part} /> : <RackSummary />;
 }

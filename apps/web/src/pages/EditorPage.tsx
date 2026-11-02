@@ -61,6 +61,7 @@ export function EditorPage({ id }: { id: string }) {
   const [error, setError] = useState('');
   const catalogStatus = useCatalogStore((s) => s.status);
   const selectedId = useUiStore((s) => s.selectedId);
+  const selectedCableId = useUiStore((s) => s.selectedCableId);
   const panelOpen = useUiStore((s) => s.panelOpen);
   const [catalogOpen, setCatalogOpen] = useState(false);
   useKeyboardShortcuts();
@@ -73,6 +74,8 @@ export function EditorPage({ id }: { id: string }) {
       (res) => {
         if (cancelled) return;
         useUiStore.getState().select(null);
+        useUiStore.getState().selectCable(null);
+        useUiStore.getState().setCableMode(false);
         useDesignStore.getState().loadDesign(res.design);
         useSaveStore.getState().init(id, res.revision);
         document.title = `${res.design.name} · RackPlanner`;
@@ -113,7 +116,7 @@ export function EditorPage({ id }: { id: string }) {
     return <div className="m-auto text-sm text-zinc-500">Loading…</div>;
   }
 
-  const showPanel = !!selectedId || panelOpen;
+  const showPanel = !!selectedId || !!selectedCableId || panelOpen;
   return (
     <>
       <header className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900">

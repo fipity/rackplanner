@@ -3,6 +3,7 @@ import {
   applyRackChange,
   checkPlacement,
   findFreeSlot,
+  findShelfSlot,
   newId,
   uStep,
   type Rack,
@@ -34,7 +35,10 @@ export function duplicateSelected(): void {
   const part = catalog.get(p.partId);
   if (!part) return;
   const mounting = p.parentId !== undefined ? (part.mounting === 'full-depth' ? 'full-depth' : 'front') : p.mounting;
-  const slot = findFreeSlot(design, catalog, p.partId, mounting, p.bottomU + part.heightU);
+  // Shelf items are duplicated onto the same shelf (or another) when there's room.
+  const slot =
+    (part.formFactor === 'desktop' ? findShelfSlot(design, catalog, p.partId, p.parentId) : null) ??
+    findFreeSlot(design, catalog, p.partId, mounting, p.bottomU + part.heightU);
   if (!slot) {
     toast(`No free space for another ${part.name}`, 'error');
     return;

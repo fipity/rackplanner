@@ -54,9 +54,17 @@ export interface DeviceBox {
   ears: boolean;
 }
 
-/** Box to draw for a device occupying [u0, u1) at xMm. Full-width devices span the rails (ears). */
-export function deviceBox(layout: RackLayout, part: Part, u0: number, u1: number, xMm: number, view: View, onShelf: boolean): DeviceBox {
-  const y = uTopToY(layout, u1);
+/** Thickness of a shelf's tray as drawn (items on the shelf stand on it). */
+export function shelfTrayMm(shelfPart: Part): number {
+  return Math.min(4, shelfPart.heightU * U_MM * 0.12);
+}
+
+/**
+ * Box to draw for a device occupying [u0, u1) at xMm. Full-width devices span
+ * the rails (ears). `lift` raises the box (mm), e.g. onto a shelf's tray.
+ */
+export function deviceBox(layout: RackLayout, part: Part, u0: number, u1: number, xMm: number, view: View, onShelf: boolean, lift = 0): DeviceBox {
+  const y = uTopToY(layout, u1) - lift;
   const h = (u1 - u0) * U_MM;
   const w = partWidthMm(part);
   if (!onShelf && part.formFactor === 'rack' && isFullWidth(part, layout.rack.width)) {

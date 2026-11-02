@@ -52,7 +52,7 @@ export function PrintPage({ id }: { id: string }) {
           {(['front', 'rear'] as const).map((v) => (
             <figure key={v} className="text-center">
               <figcaption className="mb-1 text-sm font-semibold">{v === 'front' ? 'Front' : 'Rear'}</figcaption>
-              <RackView design={design} catalog={catalog} view={v} className="mx-auto h-auto max-h-[80vh] w-full print:max-h-[22cm]" />
+              <RackView design={design} catalog={catalog} view={v} cables={design.cables} className="mx-auto h-auto max-h-[80vh] w-full print:max-h-[22cm]" />
             </figure>
           ))}
         </section>

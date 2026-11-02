@@ -1,3 +1,4 @@
+import type { CableEnd } from '@rackplanner/shared';
 import { create } from 'zustand';
 import type { View } from '../components/rack/geometry';
 import { readLocal, writeLocal } from '../lib/storage';
@@ -38,6 +39,12 @@ interface UiState {
   fitScale: number;
   theme: Theme;
   showIncompatible: boolean;
+  /** Cable drawing mode: clicks on ports/devices create cables instead of selecting. */
+  cableMode: boolean;
+  /** First end of a cable being drawn. */
+  pendingEnd: CableEnd | null;
+  selectedCableId: string | null;
+  showCables: boolean;
   /** Right panel tab. */
   rightTab: 'details' | 'stats';
   /** On narrow screens the right panel is an overlay; this opens it without a selection. */
@@ -52,6 +59,10 @@ interface UiState {
   setTheme: (t: Theme) => void;
   setShowIncompatible: (v: boolean) => void;
   setRightTab: (t: 'details' | 'stats') => void;
+  setCableMode: (v: boolean) => void;
+  setPendingEnd: (e: CableEnd | null) => void;
+  selectCable: (id: string | null) => void;
+  setShowCables: (v: boolean) => void;
   setPanelOpen: (v: boolean) => void;
   setFilters: (patch: Partial<CatalogFilters>) => void;
   resetFilters: () => void;
@@ -74,11 +85,15 @@ export const useUiStore = create<UiState>()((set, get) => ({
   fitScale: 1,
   theme: savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'system',
   showIncompatible: false,
+  cableMode: false,
+  pendingEnd: null,
+  selectedCableId: null,
+  showCables: true,
   rightTab: 'stats',
   panelOpen: false,
   filters: DEFAULT_FILTERS,
   builder: null,
-  select: (selectedId) => set(selectedId ? { selectedId, rightTab: 'details' } : { selectedId }),
+  select: (selectedId) => set(selectedId ? { selectedId, selectedCableId: null, rightTab: 'details' } : { selectedId }),
   setView: (view) => set({ view }),
   setZoom: (zoom) => set({ zoom }),
   setFitScale: (fitScale) => set({ fitScale }),
@@ -94,6 +109,10 @@ export const useUiStore = create<UiState>()((set, get) => ({
   },
   setShowIncompatible: (showIncompatible) => set({ showIncompatible }),
   setRightTab: (rightTab) => set({ rightTab }),
+  setCableMode: (cableMode) => set({ cableMode, pendingEnd: null, ...(cableMode ? { showCables: true } : {}) }),
+  setPendingEnd: (pendingEnd) => set({ pendingEnd }),
+  selectCable: (selectedCableId) => set(selectedCableId ? { selectedCableId, selectedId: null, rightTab: 'details' } : { selectedCableId }),
+  setShowCables: (showCables) => set({ showCables }),
   setPanelOpen: (panelOpen) => set({ panelOpen }),
   setFilters: (patch) => set({ filters: { ...get().filters, ...patch } }),
   resetFilters: () => set({ filters: DEFAULT_FILTERS }),

@@ -1,5 +1,5 @@
 import { useDraggable } from '@dnd-kit/core';
-import { findFreeSlot, newId, type Part, type RackWidth } from '@rackplanner/shared';
+import { displayName, findFreeSlot, findShelfSlot, newId, type Part, type RackWidth } from '@rackplanner/shared';
 import { Copy, Filter, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { deletePart } from '../../lib/api';
@@ -20,6 +20,16 @@ function addToRack(part: Part) {
   // Click-to-add uses the part's own default side (e.g. PDUs go to the rear),
   // except that front-mounted gear added while looking at the rear goes there.
   const mounting = part.mounting === 'front' && view === 'rear' ? 'rear' : part.mounting;
+  // Desktop gear goes onto a shelf with room, if there is one.
+  const shelfSlot = findShelfSlot(design, catalog, part.id);
+  if (shelfSlot) {
+    const id = newId('p_');
+    addPlacement({ ...shelfSlot, id });
+    useUiStore.getState().select(id);
+    const shelf = design.placements.find((p) => p.id === shelfSlot.parentId);
+    toast(`${part.name} placed on ${shelf ? displayName(shelf, catalog.get(shelf.partId)) : 'a shelf'}`);
+    return;
+  }
   const slot = findFreeSlot(design, catalog, part.id, mounting);
   if (!slot) {
     toast(`No free space for ${part.name}`, 'error');
@@ -28,7 +38,11 @@ function addToRack(part: Part) {
   const id = newId('p_');
   addPlacement({ ...slot, id });
   useUiStore.getState().select(id);
-  if (mounting !== 'full-depth' && mounting !== view) toast(`${part.name} added to the ${mounting} of the rack`);
+  if (part.formFactor === 'desktop') {
+    const hasShelf = design.placements.some((p) => p.parentId === undefined && catalog.get(p.partId)?.shelf);
+    toast(hasShelf ? `No room on a shelf for ${part.name}; placed loose` : `${part.name} placed loose; add a shelf to stand it on`);
+  }
+  else if (mounting !== 'full-depth' && mounting !== view) toast(`${part.name} added to the ${mounting} of the rack`);
 }
 
 const CatalogItem = memo(function CatalogItem({

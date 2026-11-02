@@ -4,13 +4,15 @@ import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
 import { useDragStore } from '../../store/dragStore';
 import { useUiStore } from '../../store/uiStore';
+import { handleCableEndClick } from '../../lib/cableActions';
 import { rackSvgRef, type DragData } from './dnd';
 import { rackLayout } from './geometry';
 import { RackView, type PlacementWrapperProps, type RackGhost } from './RackView';
 
 function DraggablePlacement({ placement, box, children }: PlacementWrapperProps) {
   const data: DragData = { kind: 'placement', placementId: placement.id };
-  const { setNodeRef, listeners, attributes } = useDraggable({ id: `placement:${placement.id}`, data });
+  const cableMode = useUiStore((s) => s.cableMode);
+  const { setNodeRef, listeners, attributes } = useDraggable({ id: `placement:${placement.id}`, data, disabled: cableMode });
   const select = useUiStore((s) => s.select);
   return (
     <g
@@ -19,12 +21,17 @@ function DraggablePlacement({ placement, box, children }: PlacementWrapperProps)
       ref={(el) => setNodeRef(el as unknown as HTMLElement | null)}
       {...listeners}
       {...attributes}
+      // dnd-kit marks a disabled draggable aria-disabled; in cable mode it's still clickable.
+      aria-disabled={cableMode ? undefined : attributes['aria-disabled']}
+      aria-roledescription={cableMode ? undefined : attributes['aria-roledescription']}
       role="button"
       aria-label={placement.label ?? placement.partId}
-      className="cursor-grab outline-none active:cursor-grabbing"
+      className={cableMode ? 'cursor-crosshair outline-none' : 'cursor-grab outline-none active:cursor-grabbing'}
       onClick={(e) => {
         e.stopPropagation();
-        select(placement.id);
+        // In cable mode a click on the device body makes a device-level connection.
+        if (cableMode) handleCableEndClick({ placementId: placement.id });
+        else select(placement.id);
       }}
     >
       {/* Transparent hit area so gaps in the faceplate are still grabbable. */}
@@ -37,7 +44,8 @@ function DraggablePlacement({ placement, box, children }: PlacementWrapperProps)
 export function RackCanvas() {
   const design = useDesignStore((s) => s.design);
   const catalog = useCatalogStore((s) => s.catalog);
-  const { view, zoom, selectedId, select, setFitScale, zoomBy } = useUiStore();
+  const { view, zoom, selectedId, select, setFitScale, zoomBy, cableMode, pendingEnd, selectedCableId, showCables, selectCable } = useUiStore();
+  const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   const drag = useDragStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 800, h: 600 });
@@ -80,7 +88,26 @@ export function RackCanvas() {
   }, [zoomBy]);
 
   return (
-    <div ref={containerRef} className="relative h-full w-full overflow-auto" onClick={() => select(null)}>
+    <div
+      ref={containerRef}
+      className="relative h-full w-full overflow-auto"
+      onClick={() => {
+        select(null);
+        selectCable(null);
+      }}
+      onPointerMove={(e) => {
+        if (!pendingEnd) return;
+        const ctm = rackSvgRef.current?.getScreenCTM();
+        if (!ctm) return;
+        const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(ctm.inverse());
+        setPointer({ x: pt.x, y: pt.y });
+      }}
+    >
+      {cableMode && (
+        <div className="pointer-events-none sticky top-2 z-10 mx-auto w-fit rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-zinc-950 shadow">
+          {pendingEnd ? 'Click the other end: a port or device (Esc to cancel)' : 'Cable mode: click a port or device to start a cable (Esc to finish)'}
+        </div>
+      )}
       <div className="flex min-h-full min-w-full items-center justify-center p-6" style={{ width: 'max-content', minWidth: '100%' }}>
         <RackView
           svgRef={(el) => {
@@ -94,6 +121,13 @@ export function RackCanvas() {
           draggingId={drag.active?.placementId ?? null}
           ghost={ghost}
           Wrapper={DraggablePlacement}
+          cables={design.cables}
+          showCables={showCables}
+          selectedCableId={selectedCableId}
+          onCableClick={cableMode ? undefined : (id) => selectCable(id)}
+          onPortClick={cableMode ? handleCableEndClick : undefined}
+          pendingEnd={pendingEnd}
+          pointer={pendingEnd ? pointer : null}
           className="no-touch-scroll drop-shadow-xl select-none"
         />
       </div>

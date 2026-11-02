@@ -189,7 +189,7 @@ function DesignCard({ item, onChanged, onRename, onDelete }: { item: StoredDesig
         aria-label={`Open ${design.name}`}
       >
         <div className="flex h-52 items-center justify-center bg-zinc-100 p-3 dark:bg-zinc-950">
-          <RackView design={design} catalog={catalog} view="front" className="h-full w-auto max-w-full" />
+          <RackView design={design} catalog={catalog} view="front" cables={design.cables} className="h-full w-auto max-w-full" />
         </div>
         <div className="space-y-1 p-3">
           <div className="truncate pr-6 font-semibold">{design.name}</div>

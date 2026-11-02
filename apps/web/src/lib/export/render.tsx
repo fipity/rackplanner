@@ -15,7 +15,7 @@ const FONT = 'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-se
 
 function rackMarkup(design: Design, catalog: Catalog, view: View): { markup: string; width: number; height: number } {
   const layout = rackLayout(design.rack);
-  const markup = resolveCssVars(renderToStaticMarkup(<RackView design={design} catalog={catalog} view={view} scale={1} />));
+  const markup = resolveCssVars(renderToStaticMarkup(<RackView design={design} catalog={catalog} view={view} scale={1} cables={design.cables} />));
   return { markup, width: layout.width, height: layout.height };
 }
 

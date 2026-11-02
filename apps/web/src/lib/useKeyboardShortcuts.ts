@@ -28,7 +28,11 @@ export function useKeyboardShortcuts(): void {
         duplicateSelected();
       } else if (!mod && (e.key === 'Delete' || e.key === 'Backspace')) {
         e.preventDefault();
-        deleteSelected();
+        const cableId = useUiStore.getState().selectedCableId;
+        if (cableId) {
+          useDesignStore.getState().removeCable(cableId);
+          useUiStore.getState().selectCable(null);
+        } else deleteSelected();
       } else if (!mod && e.key === 'ArrowUp') {
         e.preventDefault();
         nudgeSelected(1);
@@ -36,7 +40,16 @@ export function useKeyboardShortcuts(): void {
         e.preventDefault();
         nudgeSelected(-1);
       } else if (e.key === 'Escape') {
-        useUiStore.getState().select(null);
+        const ui = useUiStore.getState();
+        if (ui.pendingEnd) ui.setPendingEnd(null);
+        else if (ui.cableMode) ui.setCableMode(false);
+        else {
+          ui.select(null);
+          ui.selectCable(null);
+        }
+      } else if (!mod && key === 'c') {
+        const ui = useUiStore.getState();
+        ui.setCableMode(!ui.cableMode);
       } else if (!mod && (e.key === '+' || e.key === '=')) {
         useUiStore.getState().zoomBy(1.2);
       } else if (!mod && e.key === '-') {

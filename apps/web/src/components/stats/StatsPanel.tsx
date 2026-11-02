@@ -1,4 +1,4 @@
-import { PORT_TYPE_LABELS, computeStats, type PortType, type StatsWarning } from '@rackplanner/shared';
+import { CABLE_TYPE_LABELS, PORT_TYPE_LABELS, computeStats, type CableType, type PortType, type StatsWarning } from '@rackplanner/shared';
 import { AlertOctagon, AlertTriangle, Info } from 'lucide-react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useCatalogStore } from '../../store/catalogStore';
@@ -193,6 +193,25 @@ export function StatsPanel() {
           </div>
         </Block>
       )}
+
+      <Block title="Cables">
+        {stats.cables.count === 0 ? (
+          <p className="text-xs text-zinc-500">No cables yet. Turn on Cables mode (C) and click two ports.</p>
+        ) : (
+          <>
+            <Row label="Count" value={stats.cables.count} />
+            <div className="flex flex-wrap gap-1">
+              {(Object.entries(stats.cables.byType) as [CableType, number][]).map(([t, n]) => (
+                <Badge key={t}>
+                  {n}× {CABLE_TYPE_LABELS[t]}
+                </Badge>
+              ))}
+            </div>
+            <Row label="Total length" value={`${stats.cables.totalLengthM} m`} />
+            {stats.cables.withoutLength > 0 && <p className="text-xs text-zinc-500">{stats.cables.withoutLength} cable(s) have no length set.</p>}
+          </>
+        )}
+      </Block>
 
       <Block title={`Warnings (${warnings.length})`}>
         {warnings.length === 0 ? (

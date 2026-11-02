@@ -1,4 +1,4 @@
-import { newId, type Design, type PlacedPart, type Rack } from '@rackplanner/shared';
+import { newId, type Cable, type Design, type PlacedPart, type Rack } from '@rackplanner/shared';
 import { temporal } from 'zundo';
 import { create } from 'zustand';
 import { useStore } from 'zustand';
@@ -13,13 +13,14 @@ export function emptyDesign(): Design {
     rack: { width: '19in', heightU: 12, depthMm: null, numbering: 'bottom-up' },
     expectedPoeLoadW: null,
     placements: [],
+    cables: [],
     createdAt: now,
     updatedAt: now,
   };
 }
 
 /**
- * Keep each shelf item's stored bottomU equal to its shelf's top. Rendering
+ * Keep each shelf item's stored bottomU equal to its shelf's bottom U. Rendering
  * derives the position from the shelf anyway; this keeps saved/exported JSON
  * truthful after a shelf moves.
  */
@@ -31,10 +32,10 @@ function syncShelfChildren(placements: PlacedPart[]): PlacedPart[] {
     const shelf = placements.find((q) => q.id === p.parentId);
     const shelfPart = shelf && catalog.get(shelf.partId);
     if (!shelf || !shelfPart) return p;
-    const top = shelf.bottomU + shelfPart.heightU;
-    if (p.bottomU === top) return p;
+    // Items stand on the shelf's tray, at the shelf's own bottom U.
+    if (p.bottomU === shelf.bottomU) return p;
     changed = true;
-    return { ...p, bottomU: top };
+    return { ...p, bottomU: shelf.bottomU };
   });
   return changed ? out : placements;
 }
@@ -51,6 +52,9 @@ interface DesignState {
   /** Removes the placement and anything sitting on it. */
   removePlacement: (id: string) => void;
   setExpectedPoe: (w: number | null) => void;
+  addCable: (c: Cable) => void;
+  updateCable: (id: string, patch: Partial<Omit<Cable, 'id'>>) => void;
+  removeCable: (id: string) => void;
   /** Replace the whole design (opening a design) and reset undo history. */
   loadDesign: (d: Design) => void;
 }
@@ -62,7 +66,12 @@ export const useDesignStore = create<DesignState>()(
     (set) => ({
       design: emptyDesign(),
       setName: (name) => set((s) => ({ design: touch({ ...s.design, name }) })),
-      setRack: (rack, placements) => set((s) => ({ design: touch({ ...s.design, rack, placements: syncShelfChildren(placements) }) })),
+      setRack: (rack, placements) =>
+        set((s) => {
+          const ids = new Set(placements.map((p) => p.id));
+          const cables = s.design.cables.filter((c) => ids.has(c.a.placementId) && ids.has(c.b.placementId));
+          return { design: touch({ ...s.design, rack, placements: syncShelfChildren(placements), cables }) };
+        }),
       addPlacement: (p) => set((s) => ({ design: touch({ ...s.design, placements: [...s.design.placements, p] }) })),
       updatePlacement: (id, patch) =>
         set((s) => ({
@@ -92,11 +101,32 @@ export const useDesignStore = create<DesignState>()(
               }
             }
           }
-          return { design: touch({ ...s.design, placements: s.design.placements.filter((p) => !doomed.has(p.id)) }) };
+          return {
+            design: touch({
+              ...s.design,
+              placements: s.design.placements.filter((p) => !doomed.has(p.id)),
+              // Cables attached to removed devices go with them.
+              cables: s.design.cables.filter((c) => !doomed.has(c.a.placementId) && !doomed.has(c.b.placementId)),
+            }),
+          };
         }),
+      addCable: (c) => set((s) => ({ design: touch({ ...s.design, cables: [...s.design.cables, c] }) })),
+      updateCable: (id, patch) =>
+        set((s) => ({
+          design: touch({
+            ...s.design,
+            cables: s.design.cables.map((c) => {
+              if (c.id !== id) return c;
+              const next: Cable = { ...c, ...patch };
+              for (const k of ['label', 'lengthM'] as const) if (k in patch && patch[k] === undefined) delete next[k];
+              return next;
+            }),
+          }),
+        })),
+      removeCable: (id) => set((s) => ({ design: touch({ ...s.design, cables: s.design.cables.filter((c) => c.id !== id) }) })),
       setExpectedPoe: (w) => set((s) => ({ design: touch({ ...s.design, expectedPoeLoadW: w }) })),
       loadDesign: (d) => {
-        set({ design: d });
+        set({ design: { ...d, placements: syncShelfChildren(d.placements) } });
         useDesignStore.temporal.getState().clear();
       },
     }),
