@@ -1,0 +1,105 @@
+# Builds the desktop installers (Windows .exe, Ubuntu .deb) and attaches them
+# to a GitHub Release.
+#   - Push a tag like v0.2.0  -> test, build, smoke-test, publish the release.
+#   - Run manually (Actions tab -> "Run workflow") -> test and build only; the
+#     installers are kept as a workflow artifact for 14 days.
+name: Desktop release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desktop-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # Install scripts are skipped: better-sqlite3 ships prebuilt binaries.
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run validate:catalog
+      - run: npm run typecheck
+      - run: npm test
+
+  build:
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use the tag as the app version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          cd desktop
+          npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --allow-same-version
+
+      - name: Build installers (Docker, electron-builder + Wine)
+        run: desktop/build.sh
+
+      - name: Smoke-test the .deb
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ./desktop/dist/rackplanner_*_amd64.deb xvfb
+          RACKPLANNER_LOG_LEVEL=info xvfb-run -a rackplanner --no-sandbox --disable-gpu > app.log 2>&1 &
+          for i in $(seq 1 60); do grep -q "listening on" app.log && break; sleep 1; done
+          URL=$(grep -o 'http://127.0.0.1:[0-9]*' app.log | head -1)
+          if [ -z "$URL" ]; then cat app.log; exit 1; fi
+          curl -fsS "$URL/api/health"; echo
+          curl -fsS "$URL/api/designs" | grep -q '"My RackMate T1"'
+          echo "App started and served the example designs at $URL"
+          pkill -f /opt/RackPlanner/rackplanner || true
+
+      - name: Checksums
+        run: |
+          cd desktop/dist
+          sha256sum *.exe *.deb > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installers
+          path: |
+            desktop/dist/*.exe
+            desktop/dist/*.deb
+            desktop/dist/SHA256SUMS.txt
+          retention-days: 14
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: installers
+          path: dist
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            sed "s/{version}/${TAG#v}/g" .github/release-notes.md > notes.md
+            gh release create "$TAG" --title "RackPlanner ${TAG#v}" --notes-file notes.md --generate-notes dist/*
+          fi

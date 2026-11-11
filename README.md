@@ -87,6 +87,14 @@ desktop/build.sh          # both; or: desktop/build.sh linux | win
 
 This builds the web app and server, then packages them with Electron and electron-builder in the `electronuserland/builder:wine` image (Wine is used to stamp the Windows .exe's icon and version info). The installers land in `desktop/dist/`. The only native module, better-sqlite3, ships Node-API prebuilds that work in Electron on every platform, so nothing is compiled.
 
+**Releases are automated.** Pushing a version tag runs [`.github/workflows/desktop-release.yml`](.github/workflows/desktop-release.yml): it runs the checks, builds both installers with `desktop/build.sh`, installs the .deb on the runner to check it starts, and attaches the installers and `SHA256SUMS.txt` to a GitHub Release for that tag:
+
+```bash
+git tag -a v0.2.0 -m "RackPlanner 0.2.0" && git push origin v0.2.0
+```
+
+The app version comes from the tag. Running the workflow by hand from the Actions tab builds the installers as a downloadable artifact without publishing anything.
+
 To run the desktop shell from source (needs Node 22+ and a desktop): `npm run build`, then `cd desktop && npm install && npm start`.
 
 ## Install on Ubuntu (server)
