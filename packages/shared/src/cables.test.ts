@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cableProblems, guessCableType, portOptions, suggestCableLengthM } from './cables.js';
+import { cableProblems, guessCableType, portOptions, sameEnd, suggestCableLengthM } from './cables.js';
 import { createDesign } from './design.js';
 import { buildBom } from './exchange.js';
 import type { Catalog } from './placement.js';
@@ -11,7 +11,7 @@ const mk = (o: Partial<PartInput> & { id: string }): Part =>
     brand: 'T', model: o.id, name: o.id, category: 'switch', heightU: 1, width: '19in', depthMm: 200, mounting: 'front', rackWidths: ['19in'],
     power: { typicalW: null, maxW: null }, weightKg: null, render: { style: 'switch' }, sourceUrl: null, verified: false, ...o,
   });
-const catalog: Catalog = new Map([mk({ id: 'swx', ports: { rj45_1g: 8, sfp_plus: 2 } }), mk({ id: 'ppx', category: 'patch-panel', ports: { keystone: 24 } })].map((p) => [p.id, p]));
+const catalog: Catalog = new Map([mk({ id: 'swx', ports: { rj45_1g: 8, sfp_plus: 2 } }), mk({ id: 'ppx', category: 'patch-panel', ports: { keystone: 24 }, render: { style: 'patch-panel' } })].map((p) => [p.id, p]));
 const cable = (id: string, a: Cable['a'], b: Cable['b'], extra: Partial<Cable> = {}): Cable => ({ id, a, b, type: 'copper', color: '#3b82f6', ...extra });
 const base = {
   ...createDesign(),
@@ -26,6 +26,26 @@ describe('cables', () => {
     const opts = portOptions(catalog.get('swx')!);
     expect(opts).toHaveLength(10);
     expect(opts[8]).toEqual({ type: 'sfp_plus', index: 1, label: 'SFP+ 10G 1' });
+  });
+
+  it('lists the rear of each patch panel port separately', () => {
+    const opts = portOptions(catalog.get('ppx')!);
+    expect(opts).toHaveLength(48);
+    expect(opts[0]).toEqual({ type: 'keystone', index: 1, label: 'Keystone 1 (front)' });
+    expect(opts[24]).toEqual({ type: 'keystone', index: 1, back: true, label: 'Keystone 1 (rear)' });
+  });
+
+  it('lets the front and rear of a patch port take one cable each', () => {
+    const front = { placementId: 'p', port: { type: 'keystone' as const, index: 3 } };
+    const back = { placementId: 'p', port: { type: 'keystone' as const, index: 3, back: true as const } };
+    const cables = [
+      cable('c1', { placementId: 's', port: { type: 'rj45_1g', index: 1 } }, front),
+      cable('c2', { placementId: 's', port: { type: 'rj45_1g', index: 2 } }, back),
+      cable('c3', { placementId: 's', port: { type: 'rj45_1g', index: 3 } }, { placementId: 'p', port: { type: 'keystone', index: 25, back: true } }),
+    ];
+    expect(cableProblems({ ...base, cables }, catalog).map((p) => `${p.cableId}: ${p.message}`)).toEqual(["c3: ppx · Keystone 25 (rear) doesn't exist on ppx"]);
+    expect(sameEnd(front, back)).toBe(false);
+    expect(DesignSchema.parse({ ...base, cables }).cables[1]!.b.port).toEqual(back.port);
   });
 
   it('guesses a cable type from the ports', () => {

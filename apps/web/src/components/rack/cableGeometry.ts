@@ -1,4 +1,4 @@
-import { occupancyOf, type CableEnd, type Catalog, type Design, type Part, type PlacedPart } from '@rackplanner/shared';
+import { occupancyOf, samePort, type CableEnd, type Catalog, type Design, type Part, type PlacedPart } from '@rackplanner/shared';
 import { portPositions } from '../faceplates/Faceplate';
 import { deviceBox, faceSeen, rackLayout, shelfTrayMm, type DeviceBox, type View } from './geometry';
 
@@ -34,7 +34,7 @@ export function cableEndPoint(design: Pick<Design, 'rack' | 'placements'>, catal
   const { box, part, visible, face } = info;
   if (end.port) {
     // Ports live on one face; a port on the face we're looking at is visible.
-    const slot = portPositions(part, box.w, box.h, box.ears, face).find((s) => s.type === end.port!.type && s.index === end.port!.index);
+    const slot = portPositions(part, box.w, box.h, box.ears, face).find((s) => samePort(s, end.port));
     if (slot) return { x: box.x + slot.x + slot.w / 2, y: box.y + slot.y + slot.h / 2, visible: true, onPort: true };
     return { x: box.x + box.w / 2, y: box.y + box.h / 2, visible: false, onPort: false };
   }

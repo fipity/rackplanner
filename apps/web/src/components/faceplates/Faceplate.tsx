@@ -195,6 +195,8 @@ function LabelTag({ x, y, text }: { x: number; y: number; text: string }) {
 export interface PortSlot {
   type: PortType;
   index: number;
+  /** Back of a pass-through port (patch panel rear). */
+  back?: true;
   number: number;
   title: string;
   x: number;
@@ -214,5 +216,5 @@ export function portPositions(part: Part, w: number, h: number, ears: boolean, v
   const face = resolveFace(part, view === 'front' ? 'front' : 'rear', w - earW * 2, bodyH);
   return face.elements
     .filter((e): e is PortElement & { portType: PortType; index: number } => e.kind === 'port' && e.portType !== undefined && e.index !== undefined)
-    .map((p) => ({ type: p.portType, index: p.index, number: p.number, title: p.title, x: earW + p.x, y: h - bodyH + p.y, w: p.w, h: p.h }));
+    .map((p) => ({ type: p.portType, index: p.index, ...(p.back ? { back: true as const } : {}), number: p.number, title: p.title, x: earW + p.x, y: h - bodyH + p.y, w: p.w, h: p.h }));
 }

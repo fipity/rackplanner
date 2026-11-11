@@ -26,6 +26,8 @@ export interface PortElement extends Box {
   /** Catalog port type and 1-based index among that type on the device (cable key). */
   portType?: PortType;
   index?: number;
+  /** Rear of a pass-through port (patch panel back): same index as the front port it carries. */
+  back?: boolean;
   poe?: PoeLevel;
   uplink: boolean;
   /** Latch / key side. */
@@ -300,9 +302,24 @@ export function regionBoxes(regions: readonly Region[], W: number, H: number): B
 interface Counters {
   family: Map<string, number>;
   type: Map<PortType, number>;
+  back: Map<PortType, number>;
 }
 
-function layoutPorts(r: PortRegion, box: Box, counters: Counters, out: FaceElement[]) {
+/** Port type a pass-through back carries (the front jack it connects to). */
+const BACK_PORT_TYPE: Partial<Record<Connector, PortType>> = {
+  keystone: 'keystone',
+  coupler: 'keystone',
+  punchdown: 'keystone',
+  lc: 'lc_duplex',
+  sc: 'sc_duplex',
+};
+
+/** A rear patch region that doesn't count as ports of its own: the backs of the front jacks. */
+export function isPassThroughBack(r: Region, face: FaceName): r is PortRegion {
+  return face === 'rear' && isPortRegion(r) && r.portType === 'none' && CONNECTOR_SPECS[r.type].family === 'patch';
+}
+
+function layoutPorts(r: PortRegion, box: Box, counters: Counters, out: FaceElement[], face?: FaceName) {
   const s = CONNECTOR_SPECS[r.type];
   const blk = portBlock(r, box.h);
   const scale = Math.min(1, blk.w > 0 ? box.w / blk.w : 1, blk.h > 0 ? box.h / blk.h : 1);
@@ -314,7 +331,8 @@ function layoutPorts(r: PortRegion, box: Box, counters: Counters, out: FaceEleme
   const order = r.order ?? (s.family === 'patch' || blk.rows !== 2 ? 'row' : 'zigzag');
   const famStart = (counters.family.get(s.family) ?? 0) + 1;
   const start = r.start ?? famStart;
-  const portType = portTypeOf(r);
+  const back = face !== undefined && isPassThroughBack(r, face);
+  const portType = back ? BACK_PORT_TYPE[r.type] : portTypeOf(r);
   const poeLevel: PoeLevel | undefined = r.poe === true ? 'poe+' : r.poe === false ? undefined : r.poe;
   for (let i = 0; i < r.count; i++) {
     const col = order === 'zigzag' ? Math.floor(i / 2) : i % blk.cols;
@@ -325,13 +343,14 @@ function layoutPorts(r: PortRegion, box: Box, counters: Counters, out: FaceEleme
     const y = oy + (row * (s.h + blk.labelH + s.gapY) + blk.labelH) * scale;
     let index: number | undefined;
     if (portType) {
-      index = (counters.type.get(portType) ?? 0) + 1;
-      counters.type.set(portType, index);
+      const counter = back ? counters.back : counters.type;
+      index = (counter.get(portType) ?? 0) + 1;
+      counter.set(portType, index);
     }
     const poe = poeLevel && (!r.poePorts || r.poePorts.includes(number)) ? poeLevel : undefined;
     const speed = r.speed ?? (portType ? PORT_SPEED_TEXT[portType] : s.label);
     const name = s.family === 'net' || s.family === 'patch' ? `Port ${number}` : `${s.label} ${number}`;
-    const extras = [poe ? POE_TEXT[poe] : null, r.uplink ? 'uplink' : null, r.role ?? null].filter(Boolean).join(', ');
+    const extras = [poe ? POE_TEXT[poe] : null, r.uplink ? 'uplink' : null, back ? 'rear' : null, r.role ?? null].filter(Boolean).join(', ');
     out.push({
       kind: 'port',
       connector: r.type,
@@ -341,6 +360,7 @@ function layoutPorts(r: PortRegion, box: Box, counters: Counters, out: FaceEleme
       h: s.h * scale,
       number,
       ...(portType ? { portType, index } : {}),
+      ...(back ? { back: true } : {}),
       ...(poe ? { poe } : {}),
       uplink: r.uplink ?? false,
       latch: blk.rows >= 2 && row % 2 === 0 ? 'top' : 'bottom',
@@ -372,18 +392,24 @@ function layoutBays(r: Extract<FeatureRegion, { type: 'bays' }>, box: Box, out: 
 }
 
 /** Resolve a face layout into positioned elements. W × H is the face area in mm (ears excluded). */
-export function resolveLayout(layout: FaceLayout, W: number, H: number, indexOffsets: Partial<Record<PortType, number>> = {}): FaceElement[] {
+export function resolveLayout(
+  layout: FaceLayout,
+  W: number,
+  H: number,
+  opts: { indexOffsets?: Partial<Record<PortType, number>>; face?: FaceName } = {},
+): FaceElement[] {
   const boxes = regionBoxes(layout.regions, W, H);
-  const counters: Counters = { family: new Map(), type: new Map(Object.entries(indexOffsets) as [PortType, number][]) };
+  const counters: Counters = { family: new Map(), type: new Map(Object.entries(opts.indexOffsets ?? {}) as [PortType, number][]), back: new Map() };
+  const face = opts.face;
   const out: FaceElement[] = [];
   layout.regions.forEach((r, i) => {
     const box = boxes[i]!;
     if (box.w <= 0.01 || box.h <= 0.01) {
       // Still count ports so cable indexes stay stable even when squeezed out.
-      if (isPortRegion(r)) layoutPorts(r, { ...box, w: 0, h: 0 }, counters, []);
+      if (isPortRegion(r)) layoutPorts(r, { ...box, w: 0, h: 0 }, counters, [], face);
       return;
     }
-    if (isPortRegion(r)) layoutPorts(r, box, counters, out);
+    if (isPortRegion(r)) layoutPorts(r, box, counters, out, face);
     else if (r.type === 'bays') layoutBays(r, box, out);
     else out.push({ kind: r.type, ...box, region: r } as FeatureElement);
   });
@@ -411,7 +437,7 @@ export function resolveFace(part: Part, face: FaceName, w: number, h: number): R
     preset: layout.style ?? resolvePreset(part),
     w,
     h,
-    elements: resolveLayout(layout, w, h, portIndexOffsets(part, face)),
+    elements: resolveLayout(layout, w, h, { indexOffsets: portIndexOffsets(part, face), face }),
     auto,
   };
   if (!byPart) cache.set(part, (byPart = new Map()));
@@ -434,6 +460,17 @@ const FACE_ORDER: readonly FaceName[] = ['front', 'rear', 'top'];
  */
 export function portIndexOffsets(part: Part, face: FaceName): Partial<Record<PortType, number>> {
   return portCountsOn(part, FACE_ORDER.slice(0, FACE_ORDER.indexOf(face)));
+}
+
+/** Cable-able pass-through backs per port type (patch panel rears). */
+export function backPortCounts(part: Part): Partial<Record<PortType, number>> {
+  const counts: Partial<Record<PortType, number>> = {};
+  for (const r of faceLayoutFor(part, 'rear').layout.regions) {
+    if (!isPassThroughBack(r, 'rear')) continue;
+    const t = BACK_PORT_TYPE[r.type];
+    if (t) counts[t] = (counts[t] ?? 0) + r.count;
+  }
+  return counts;
 }
 
 export function layoutPortCounts(part: Part): Partial<Record<PortType, number>> {

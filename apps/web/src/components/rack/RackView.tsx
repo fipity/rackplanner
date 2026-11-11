@@ -8,6 +8,8 @@ import {
   PORT_TYPE_LABELS,
   occupancyOf,
   overlaps,
+  portKey,
+  samePort,
   type Cable,
   type CableEnd,
   type Catalog,
@@ -304,20 +306,21 @@ export function RackView({
             const covering = behind ? visibleBoxes.filter((b) => overlaps(b, box)) : [];
             return portPositions(part, box.w, box.h, box.ears, faceSeen(occ.faces, view)).map((sl) => {
               if (covering.some((b) => overlaps(b, { x: box.x + sl.x, y: box.y + sl.y, w: sl.w, h: sl.h }))) return null;
-              const end: CableEnd = { placementId: p.id, port: { type: sl.type, index: sl.index } };
-              const used = cables.some((c) => [c.a, c.b].some((e) => e.placementId === p.id && e.port?.type === sl.type && e.port.index === sl.index));
-              const pending = pendingEnd?.placementId === p.id && pendingEnd.port?.type === sl.type && pendingEnd.port.index === sl.index;
+              const port = { type: sl.type, index: sl.index, ...(sl.back ? { back: true as const } : {}) };
+              const end: CableEnd = { placementId: p.id, port };
+              const used = cables.some((c) => [c.a, c.b].some((e) => e.placementId === p.id && samePort(e.port, port)));
+              const pending = pendingEnd?.placementId === p.id && samePort(pendingEnd.port, port);
               const title = `${sl.title}${used ? ' · in use' : ''}`;
               return (
                 <rect
-                  key={`${p.id}-${sl.type}-${sl.index}`}
+                  key={`${p.id}-${portKey(port)}`}
                   x={box.x + sl.x - 0.6}
                   y={box.y + sl.y - 0.6}
                   width={sl.w + 1.2}
                   height={sl.h + 1.2}
                   rx={0.8}
                   role="button"
-                  aria-label={`${part.name} ${PORT_TYPE_LABELS[sl.type]} ${sl.index}`}
+                  aria-label={`${part.name} ${PORT_TYPE_LABELS[sl.type]} ${sl.index}${sl.back ? ' (rear)' : ''}`}
                   className="cursor-crosshair fill-transparent stroke-transparent hover:fill-blue-400/30 hover:stroke-blue-500"
                   style={pending ? { fill: 'rgba(250,204,21,0.45)', stroke: '#eab308' } : used ? { stroke: 'rgba(96,165,250,0.6)' } : undefined}
                   strokeWidth={0.6}

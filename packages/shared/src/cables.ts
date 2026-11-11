@@ -2,6 +2,7 @@
  * Cables between devices: port enumeration, defaults, length suggestions and
  * validation. Drawing lives in the web app; this is the pure part.
  */
+import { backPortCounts } from './layout/engine.js';
 import { displayName, type Catalog } from './placement.js';
 import { PORT_TYPE_LABELS, PORT_TYPES, type Cable, type CableEnd, type CableType, type Design, type Part, type PortType } from './schemas.js';
 
@@ -27,17 +28,32 @@ export const STANDARD_LENGTHS_M = [0.15, 0.3, 0.5, 1, 1.5, 2, 3, 5, 7.5, 10, 15,
 export interface PortOption {
   type: PortType;
   index: number;
+  back?: true;
   label: string;
 }
 
 /** Every port on a part, numbered per type ("RJ45 1G 3"). */
 export function portOptions(part: Part): PortOption[] {
   const out: PortOption[] = [];
+  const backs = backPortCounts(part);
   for (const type of PORT_TYPES) {
     const n = part.ports[type] ?? 0;
-    for (let i = 1; i <= n; i++) out.push({ type, index: i, label: `${PORT_TYPE_LABELS[type]} ${i}` });
+    for (let i = 1; i <= n; i++) out.push({ type, index: i, label: `${PORT_TYPE_LABELS[type]} ${i}${backs[type] ? ' (front)' : ''}` });
+  }
+  for (const type of PORT_TYPES) {
+    const n = backs[type] ?? 0;
+    for (let i = 1; i <= n; i++) out.push({ type, index: i, back: true, label: `${PORT_TYPE_LABELS[type]} ${i} (rear)` });
   }
   return out;
+}
+
+/** "type:index" or "type:index:back": a key for one port of a device. */
+export function portKey(port: NonNullable<CableEnd['port']>): string {
+  return `${port.type}:${port.index}${port.back ? ':back' : ''}`;
+}
+
+export function samePort(x: CableEnd['port'], y: CableEnd['port']): boolean {
+  return !!x && !!y && x.type === y.type && x.index === y.index && !!x.back === !!y.back;
 }
 
 const SFP_FAMILY: ReadonlySet<PortType> = new Set(['sfp', 'sfp_plus', 'sfp28', 'qsfp_plus', 'qsfp28']);
@@ -63,13 +79,13 @@ export function suggestCableLengthM(distanceMm: number): number {
 }
 
 export function sameEnd(x: CableEnd, y: CableEnd): boolean {
-  return x.placementId === y.placementId && x.port?.type === y.port?.type && x.port?.index === y.port?.index && !!x.port === !!y.port;
+  return x.placementId === y.placementId && (x.port ? samePort(x.port, y.port) : !y.port);
 }
 
 export function endLabel(design: Pick<Design, 'placements'>, catalog: Catalog, end: CableEnd): string {
   const p = design.placements.find((q) => q.id === end.placementId);
   const name = p ? displayName(p, catalog.get(p.partId)) : 'missing device';
-  return end.port ? `${name} · ${PORT_TYPE_LABELS[end.port.type]} ${end.port.index}` : name;
+  return end.port ? `${name} · ${PORT_TYPE_LABELS[end.port.type]} ${end.port.index}${end.port.back ? ' (rear)' : ''}` : name;
 }
 
 export interface CableProblem {
@@ -90,11 +106,12 @@ export function cableProblems(design: Pick<Design, 'placements' | 'cables'>, cat
         continue;
       }
       if (!end.port) continue;
-      if (end.port.index > (part.ports[end.port.type] ?? 0)) {
+      const available = end.port.back ? (backPortCounts(part)[end.port.type] ?? 0) : (part.ports[end.port.type] ?? 0);
+      if (end.port.index > available) {
         out.push({ cableId: c.id, message: `${endLabel(design, catalog, end)} doesn't exist on ${part.name}` });
         continue;
       }
-      const key = `${end.placementId}|${end.port.type}|${end.port.index}`;
+      const key = `${end.placementId}|${portKey(end.port)}`;
       const other = used.get(key);
       if (other && other !== c.id) out.push({ cableId: c.id, message: `${endLabel(design, catalog, end)} has more than one cable` });
       used.set(key, c.id);

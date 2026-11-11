@@ -460,7 +460,15 @@ export const CableEndSchema = z
   .object({
     placementId: z.string().min(1),
     /** Specific port; omitted for a device-level connection. */
-    port: z.object({ type: PortTypeSchema, index: z.number().int().positive() }).strict().optional(),
+    port: z
+      .object({
+        type: PortTypeSchema,
+        index: z.number().int().positive(),
+        /** The back of a pass-through port (patch panel rear) rather than its front jack. */
+        back: z.literal(true).optional(),
+      })
+      .strict()
+      .optional(),
   })
   .strict();
 export type CableEnd = z.infer<typeof CableEndSchema>;

@@ -177,6 +177,18 @@ describe('cable indexes across faces', () => {
   });
 });
 
+describe('pass-through backs', () => {
+  it('gives patch panel rears the indexes of the front jacks they carry', () => {
+    const part = mk({ category: 'patch-panel', ports: { keystone: 12 }, render: { style: 'patch-panel' }, depthMm: 100 });
+    const rear = ports(resolveFace(part, 'rear', 450, U1).elements);
+    expect(rear).toHaveLength(12);
+    expect(rear.every((p) => p.portType === 'keystone' && p.back)).toBe(true);
+    expect(rear.map((p) => p.index)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    expect(ports(resolveFace(part, 'front', 450, U1).elements).some((p) => p.back)).toBe(false);
+    expect(layoutPortCounts(part)).toEqual({ keystone: 12 });
+  });
+});
+
 describe('regressions', () => {
   it('stacks 16 ports in two rows on a 1U face (no float rounding to one row)', () => {
     const part = mk({ ports: { rj45_1g: 16, rj45_2_5g: 8, sfp_plus: 2 }, poeBudgetW: 400 });

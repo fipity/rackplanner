@@ -3,6 +3,7 @@ import {
   CABLE_TYPES,
   CABLE_TYPE_LABELS,
   displayName,
+  portKey,
   portOptions,
   suggestCableLengthM,
   type Cable,
@@ -34,7 +35,7 @@ function EndEditor({ label, end, onChange }: { label: string; end: CableEnd; onC
   const p = placements.find((q) => q.id === end.placementId);
   const part = p && catalog.get(p.partId);
   const options = part ? portOptions(part) : [];
-  const value = end.port ? `${end.port.type}:${end.port.index}` : '';
+  const value = end.port ? portKey(end.port) : '';
   return (
     <Field label={label}>
       <button
@@ -52,13 +53,13 @@ function EndEditor({ label, end, onChange }: { label: string; end: CableEnd; onC
         onChange={(e) => {
           const v = e.target.value;
           if (!v) return onChange({ placementId: end.placementId });
-          const [type, index] = v.split(':');
-          onChange({ placementId: end.placementId, port: { type: type as NonNullable<CableEnd['port']>['type'], index: Number(index) } });
+          const o = options.find((x) => portKey(x) === v);
+          if (o) onChange({ placementId: end.placementId, port: { type: o.type, index: o.index, ...(o.back ? { back: true as const } : {}) } });
         }}
       >
         <option value="">Whole device (no specific port)</option>
         {options.map((o) => (
-          <option key={`${o.type}:${o.index}`} value={`${o.type}:${o.index}`}>
+          <option key={portKey(o)} value={portKey(o)}>
             {o.label}
           </option>
         ))}

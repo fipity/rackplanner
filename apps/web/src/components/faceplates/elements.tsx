@@ -65,7 +65,7 @@ function hash(n: number): number {
 }
 
 function portColor(p: PortElement, ctx: DrawCtx): string {
-  if (p.portType && p.index !== undefined) {
+  if (p.portType && p.index !== undefined && !p.back) {
     const over = ctx.portColors?.[`${p.portType}:${p.index}`];
     if (over) return over;
   }

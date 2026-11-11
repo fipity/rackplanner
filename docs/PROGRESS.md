@@ -87,3 +87,4 @@
 - In the rear view, cable mode now offers the rear ports of front-mounted gear (and the front ports of rear-mounted gear in the front view), unless gear on the viewed face covers them. Start a cable on one side, switch views, and finish it on the other.
 - Cable port indexes are unique per device across faces (front ports first, then rear, then top), so a front USB 1 and a rear USB 1 no longer share a key. No existing design or example cable was affected.
 - Test: tests/visual/cables.spec.ts.
+- Patch panels: the rear coupler / punch-down of each port is cable-able separately from its front jack. A rear patch region marked `portType: "none"` is a pass-through back; its ports carry the front port type (keystone, LC, SC) with the same index and `back: true`, and cable ends store `port.back: true`. The inspector lists "Keystone 3 (front)" and "Keystone 3 (rear)".
