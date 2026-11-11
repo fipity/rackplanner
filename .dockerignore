@@ -5,3 +5,6 @@ data
 .git
 .env
 coverage
+desktop
+test-results
+playwright-report

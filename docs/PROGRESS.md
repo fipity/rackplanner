@@ -88,3 +88,10 @@
 - Cable port indexes are unique per device across faces (front ports first, then rear, then top), so a front USB 1 and a rear USB 1 no longer share a key. No existing design or example cable was affected.
 - Test: tests/visual/cables.spec.ts.
 - Patch panels: the rear coupler / punch-down of each port is cable-able separately from its front jack. A rear patch region marked `portType: "none"` is a pass-through back; its ports carry the front port type (keystone, LC, SC) with the same index and `back: true`, and cable ends store `port.back: true`. The inspector lists "Keystone 3 (front)" and "Keystone 3 (rear)".
+
+## Desktop app (2026-11-11)
+
+- `desktop/`: Electron 45 shell that imports the bundled server in the main process (127.0.0.1, free port, data in the user's app-data folder) and shows the UI. Single instance; external links open in the browser; no Edit menu so Ctrl+Z/Y stay with the app.
+- `desktop/build.sh [linux|win]` builds `RackPlanner-Setup-<v>.exe` (NSIS, per-user, unsigned) and `rackplanner_<v>_amd64.deb` in Docker (`electronuserland/builder:wine`).
+- better-sqlite3 upgraded to 13.0.3 (Node-API prebuilds bundled for every OS, so no Electron rebuild or cross-compiling). npm 10 still tries node-gyp on it, so the build installs with `--ignore-scripts`.
+- Verified: .deb installs and runs on a clean ubuntu:24.04 (Xvfb); the Windows build runs under Wine (server up, designs in %APPDATA%\RackPlanner\data). The NSIS installer itself wasn't exercised (silent install under Wine didn't complete).
