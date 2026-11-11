@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 2,
+  "version": 7,
   "title": "Servers & chassis",
   "description": "Dell PowerEdge, HPE ProLiant, Supermicro chassis and generic DIY cases. Figures from rack-vendor guides and resellers (Dell/HPE spec pages for these older models are hard to reach), so all are verified: false. Server power is left blank because it depends on configuration.",
   "parts": [
@@ -244,7 +244,10 @@
       },
       "weightKg": 17.4,
       "ports": {
-        "rj45_1g": 4
+        "rj45_1g": 5,
+        "usb": 4,
+        "vga": 2,
+        "serial": 1
       },
       "driveBays": [
         {
@@ -255,7 +258,8 @@
       "render": {
         "style": "server",
         "body": "black",
-        "accent": "#0076ce"
+        "accent": "#0076ce",
+        "preset": "dell-bezel"
       },
       "tags": [
         "dell",
@@ -266,7 +270,160 @@
       "legacy": true,
       "sourceUrl": "https://www.racksolutions.com/news/blog/dell-poweredge-r630-specs-and-rack-compatibility/",
       "verified": false,
-      "notes": "Sources give 755–769 mm depth; the larger value is used. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+      "notes": "Sources give 755–769 mm depth; the larger value is used. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part.",
+      "powerInput": {
+        "connector": "iec_c14",
+        "adapter": "none",
+        "inputs": 2,
+        "notes": "Two hot-swap PSUs; each takes its own C13 lead."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://i.dell.com/sites/csdocuments/Product_Docs/en/poweredge-r740-r740xd-technical-guide.pdf",
+          "https://www.racksolutions.com/news/blog/dell-poweredge-r630-specs-and-rack-compatibility/"
+        ],
+        "notes": "Port list (front: iDRAC Direct USB, USB, VGA; rear: 4-port NDC, iDRAC, VGA, serial, 2 × USB, PCIe risers, 2 PSUs) from the R740 technical guide; the R630/R730 follow the same 13th/14th-gen layout. Exact positions are estimated from the guide's chassis drawings.",
+        "front": {
+          "style": "dell-bezel",
+          "regions": [
+            {
+              "type": "leds",
+              "count": 3,
+              "colors": [
+                "#38bdf8",
+                "#22c55e",
+                "#f59e0b"
+              ],
+              "x": 0.012,
+              "w": 0.035,
+              "y": 0.15,
+              "h": 0.12
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "usb",
+              "role": "iDRAC Direct",
+              "x": 0.012,
+              "w": 0.045,
+              "y": 0.55,
+              "h": 0.2
+            },
+            {
+              "type": "bays",
+              "count": 8,
+              "size": "2.5",
+              "rows": 2,
+              "x": 0.07,
+              "w": 0.78
+            },
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.87,
+              "y": 0.12,
+              "h": 0.2
+            },
+            {
+              "type": "vga",
+              "count": 1,
+              "portType": "vga",
+              "x": 0.86,
+              "w": 0.12,
+              "y": 0.38,
+              "h": 0.25
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "usb",
+              "x": 0.88,
+              "w": 0.05,
+              "y": 0.72,
+              "h": 0.14
+            },
+            {
+              "type": "vent",
+              "pattern": "honeycomb",
+              "x": 0.94,
+              "w": 0.05,
+              "y": 0.7,
+              "h": 0.25
+            }
+          ]
+        },
+        "rear": {
+          "style": "dell-bezel",
+          "regions": [
+            {
+              "type": "pcie",
+              "count": 3,
+              "x": 0.02,
+              "w": 0.4,
+              "y": 0.04,
+              "h": 0.45
+            },
+            {
+              "type": "rj45",
+              "count": 4,
+              "portType": "rj45_1g",
+              "speed": "1 GbE (NDC)",
+              "grouping": 4,
+              "x": 0.04,
+              "w": 0.24,
+              "y": 0.6,
+              "h": 0.32
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_1g",
+              "role": "iDRAC",
+              "start": 0,
+              "x": 0.3,
+              "w": 0.05,
+              "y": 0.6,
+              "h": 0.32
+            },
+            {
+              "type": "vga",
+              "count": 1,
+              "portType": "vga",
+              "x": 0.36,
+              "w": 0.08,
+              "y": 0.62,
+              "h": 0.28
+            },
+            {
+              "type": "serial",
+              "count": 1,
+              "portType": "serial",
+              "x": 0.45,
+              "w": 0.08,
+              "y": 0.62,
+              "h": 0.28
+            },
+            {
+              "type": "usb_a",
+              "count": 2,
+              "portType": "usb",
+              "x": 0.54,
+              "w": 0.07,
+              "y": 0.62,
+              "h": 0.28
+            },
+            {
+              "type": "psu",
+              "count": 2,
+              "x": 0.66,
+              "w": 0.32,
+              "y": 0.08,
+              "h": 0.84
+            }
+          ]
+        }
+      }
     },
     {
       "id": "dell-poweredge-r640",
@@ -418,7 +575,10 @@
       },
       "weightKg": null,
       "ports": {
-        "rj45_1g": 4
+        "rj45_1g": 5,
+        "usb": 4,
+        "vga": 2,
+        "serial": 1
       },
       "driveBays": [
         {
@@ -429,7 +589,8 @@
       "render": {
         "style": "server",
         "body": "black",
-        "accent": "#0076ce"
+        "accent": "#0076ce",
+        "preset": "dell-bezel"
       },
       "tags": [
         "dell",
@@ -440,7 +601,159 @@
       "legacy": true,
       "sourceUrl": null,
       "verified": false,
-      "notes": "Depth/weight not found from a reliable source (shares the R730xd chassis length of ~684 mm per rack vendors). Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+      "notes": "Depth/weight not found from a reliable source (shares the R730xd chassis length of ~684 mm per rack vendors). Power draw depends on configuration, so it is left blank; add your own measurement via a custom part.",
+      "powerInput": {
+        "connector": "iec_c14",
+        "adapter": "none",
+        "inputs": 2,
+        "notes": "Two hot-swap PSUs; each takes its own C13 lead."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://i.dell.com/sites/csdocuments/Product_Docs/en/poweredge-r740-r740xd-technical-guide.pdf"
+        ],
+        "notes": "Port list (front: iDRAC Direct USB, USB, VGA; rear: 4-port NDC, iDRAC, VGA, serial, 2 × USB, PCIe risers, 2 PSUs) from the R740 technical guide; the R630/R730 follow the same 13th/14th-gen layout. Exact positions are estimated from the guide's chassis drawings.",
+        "front": {
+          "style": "dell-bezel",
+          "regions": [
+            {
+              "type": "leds",
+              "count": 3,
+              "colors": [
+                "#38bdf8",
+                "#22c55e",
+                "#f59e0b"
+              ],
+              "x": 0.012,
+              "w": 0.035,
+              "y": 0.15,
+              "h": 0.12
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "usb",
+              "role": "iDRAC Direct",
+              "x": 0.012,
+              "w": 0.045,
+              "y": 0.55,
+              "h": 0.2
+            },
+            {
+              "type": "bays",
+              "count": 8,
+              "size": "3.5",
+              "rows": 2,
+              "x": 0.07,
+              "w": 0.78
+            },
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.87,
+              "y": 0.12,
+              "h": 0.2
+            },
+            {
+              "type": "vga",
+              "count": 1,
+              "portType": "vga",
+              "x": 0.86,
+              "w": 0.12,
+              "y": 0.38,
+              "h": 0.25
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "usb",
+              "x": 0.88,
+              "w": 0.05,
+              "y": 0.72,
+              "h": 0.14
+            },
+            {
+              "type": "vent",
+              "pattern": "honeycomb",
+              "x": 0.94,
+              "w": 0.05,
+              "y": 0.7,
+              "h": 0.25
+            }
+          ]
+        },
+        "rear": {
+          "style": "dell-bezel",
+          "regions": [
+            {
+              "type": "pcie",
+              "count": 7,
+              "x": 0.02,
+              "w": 0.5,
+              "y": 0.04,
+              "h": 0.5
+            },
+            {
+              "type": "rj45",
+              "count": 4,
+              "portType": "rj45_1g",
+              "speed": "1 GbE (NDC)",
+              "grouping": 4,
+              "x": 0.04,
+              "w": 0.24,
+              "y": 0.6,
+              "h": 0.32
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_1g",
+              "role": "iDRAC",
+              "start": 0,
+              "x": 0.3,
+              "w": 0.05,
+              "y": 0.6,
+              "h": 0.32
+            },
+            {
+              "type": "vga",
+              "count": 1,
+              "portType": "vga",
+              "x": 0.36,
+              "w": 0.08,
+              "y": 0.62,
+              "h": 0.28
+            },
+            {
+              "type": "serial",
+              "count": 1,
+              "portType": "serial",
+              "x": 0.45,
+              "w": 0.08,
+              "y": 0.62,
+              "h": 0.28
+            },
+            {
+              "type": "usb_a",
+              "count": 2,
+              "portType": "usb",
+              "x": 0.54,
+              "w": 0.07,
+              "y": 0.62,
+              "h": 0.28
+            },
+            {
+              "type": "psu",
+              "count": 2,
+              "x": 0.66,
+              "w": 0.32,
+              "y": 0.55,
+              "h": 0.42
+            }
+          ]
+        }
+      }
     },
     {
       "id": "dell-poweredge-r730xd",
@@ -506,7 +819,10 @@
       },
       "weightKg": 33.1,
       "ports": {
-        "rj45_1g": 4
+        "rj45_1g": 5,
+        "usb": 4,
+        "vga": 2,
+        "serial": 1
       },
       "driveBays": [
         {
@@ -517,7 +833,8 @@
       "render": {
         "style": "server",
         "body": "black",
-        "accent": "#0076ce"
+        "accent": "#0076ce",
+        "preset": "dell-bezel"
       },
       "tags": [
         "dell",
@@ -526,7 +843,160 @@
       ],
       "sourceUrl": "https://pcserverandparts.com/content/Spec%20Sheets/Servers/Dell/Dell%20PowerEdge%20R740/Dell%20EMC%20PowerEdge%20R740%20Technical%20Specifications.pdf",
       "verified": false,
-      "notes": "Max weight for 3.5\" systems; depth not found. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part."
+      "notes": "Max weight for 3.5\" systems; depth not found. Power draw depends on configuration, so it is left blank; add your own measurement via a custom part.",
+      "powerInput": {
+        "connector": "iec_c14",
+        "adapter": "none",
+        "inputs": 2,
+        "notes": "Two hot-swap PSUs; each takes its own C13 lead."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://i.dell.com/sites/csdocuments/Product_Docs/en/poweredge-r740-r740xd-technical-guide.pdf",
+          "https://pcserverandparts.com/content/Spec%20Sheets/Servers/Dell/Dell%20PowerEdge%20R740/Dell%20EMC%20PowerEdge%20R740%20Technical%20Specifications.pdf"
+        ],
+        "notes": "Port list (front: iDRAC Direct USB, USB, VGA; rear: 4-port NDC, iDRAC, VGA, serial, 2 × USB, PCIe risers, 2 PSUs) from the R740 technical guide; the R630/R730 follow the same 13th/14th-gen layout. Exact positions are estimated from the guide's chassis drawings.",
+        "front": {
+          "style": "dell-bezel",
+          "regions": [
+            {
+              "type": "leds",
+              "count": 3,
+              "colors": [
+                "#38bdf8",
+                "#22c55e",
+                "#f59e0b"
+              ],
+              "x": 0.012,
+              "w": 0.035,
+              "y": 0.15,
+              "h": 0.12
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "usb",
+              "role": "iDRAC Direct",
+              "x": 0.012,
+              "w": 0.045,
+              "y": 0.55,
+              "h": 0.2
+            },
+            {
+              "type": "bays",
+              "count": 8,
+              "size": "3.5",
+              "rows": 2,
+              "x": 0.07,
+              "w": 0.78
+            },
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.87,
+              "y": 0.12,
+              "h": 0.2
+            },
+            {
+              "type": "vga",
+              "count": 1,
+              "portType": "vga",
+              "x": 0.86,
+              "w": 0.12,
+              "y": 0.38,
+              "h": 0.25
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "usb",
+              "x": 0.88,
+              "w": 0.05,
+              "y": 0.72,
+              "h": 0.14
+            },
+            {
+              "type": "vent",
+              "pattern": "honeycomb",
+              "x": 0.94,
+              "w": 0.05,
+              "y": 0.7,
+              "h": 0.25
+            }
+          ]
+        },
+        "rear": {
+          "style": "dell-bezel",
+          "regions": [
+            {
+              "type": "pcie",
+              "count": 8,
+              "x": 0.02,
+              "w": 0.5,
+              "y": 0.04,
+              "h": 0.5
+            },
+            {
+              "type": "rj45",
+              "count": 4,
+              "portType": "rj45_1g",
+              "speed": "1 GbE (NDC)",
+              "grouping": 4,
+              "x": 0.04,
+              "w": 0.24,
+              "y": 0.6,
+              "h": 0.32
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_1g",
+              "role": "iDRAC",
+              "start": 0,
+              "x": 0.3,
+              "w": 0.05,
+              "y": 0.6,
+              "h": 0.32
+            },
+            {
+              "type": "vga",
+              "count": 1,
+              "portType": "vga",
+              "x": 0.36,
+              "w": 0.08,
+              "y": 0.62,
+              "h": 0.28
+            },
+            {
+              "type": "serial",
+              "count": 1,
+              "portType": "serial",
+              "x": 0.45,
+              "w": 0.08,
+              "y": 0.62,
+              "h": 0.28
+            },
+            {
+              "type": "usb_a",
+              "count": 2,
+              "portType": "usb",
+              "x": 0.54,
+              "w": 0.07,
+              "y": 0.62,
+              "h": 0.28
+            },
+            {
+              "type": "psu",
+              "count": 2,
+              "x": 0.66,
+              "w": 0.32,
+              "y": 0.55,
+              "h": 0.42
+            }
+          ]
+        }
+      }
     },
     {
       "id": "dell-poweredge-r740xd",

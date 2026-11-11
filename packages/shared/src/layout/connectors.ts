@@ -162,6 +162,7 @@ export const POE_TEXT: Record<PoeLevel, string> = {
   poe: 'PoE',
   'poe+': 'PoE+',
   'poe++': 'PoE++',
+  'poe+++': 'PoE+++',
   passive: 'Passive PoE',
 };
 

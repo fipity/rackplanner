@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 2,
+  "version": 7,
   "title": "Power: UPS & PDU",
   "description": "Rack UPS units from APC, CyberPower and Eaton, plus generic rack PDUs and power strips.",
   "parts": [
@@ -38,7 +38,44 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic horizontal PDU: outlets, rocker switch and breaker.",
+        "front": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "breaker",
+              "x": 0.02,
+              "y": 0.25,
+              "h": 0.5
+            },
+            {
+              "type": "iec_c13",
+              "count": 12,
+              "portType": "outlet_c13",
+              "x": 0.07,
+              "w": 0.82,
+              "y": 0.08,
+              "h": 0.84
+            },
+            {
+              "type": "switch",
+              "variant": "rocker",
+              "count": 1,
+              "x": 0.92,
+              "y": 0.2,
+              "h": 0.6
+            }
+          ]
+        }
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      }
     },
     {
       "id": "generic-pdu-1u-6-au",
@@ -74,7 +111,44 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic horizontal PDU: outlets, rocker switch and breaker.",
+        "front": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "breaker",
+              "x": 0.02,
+              "y": 0.25,
+              "h": 0.5
+            },
+            {
+              "type": "outlet_au",
+              "count": 6,
+              "portType": "outlet_au",
+              "x": 0.07,
+              "w": 0.82,
+              "y": 0.08,
+              "h": 0.84
+            },
+            {
+              "type": "switch",
+              "variant": "rocker",
+              "count": 1,
+              "x": 0.92,
+              "y": 0.2,
+              "h": 0.6
+            }
+          ]
+        }
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      }
     },
     {
       "id": "generic-pdu-1u-6-uk",
@@ -110,7 +184,44 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic horizontal PDU: outlets, rocker switch and breaker.",
+        "front": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "breaker",
+              "x": 0.02,
+              "y": 0.25,
+              "h": 0.5
+            },
+            {
+              "type": "outlet_uk",
+              "count": 6,
+              "portType": "outlet_uk",
+              "x": 0.07,
+              "w": 0.82,
+              "y": 0.08,
+              "h": 0.84
+            },
+            {
+              "type": "switch",
+              "variant": "rocker",
+              "count": 1,
+              "x": 0.92,
+              "y": 0.2,
+              "h": 0.6
+            }
+          ]
+        }
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      }
     },
     {
       "id": "generic-pdu-1u-8-c13",
@@ -146,7 +257,44 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic horizontal PDU: outlets, rocker switch and breaker.",
+        "front": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "breaker",
+              "x": 0.02,
+              "y": 0.25,
+              "h": 0.5
+            },
+            {
+              "type": "iec_c13",
+              "count": 8,
+              "portType": "outlet_c13",
+              "x": 0.07,
+              "w": 0.82,
+              "y": 0.08,
+              "h": 0.84
+            },
+            {
+              "type": "switch",
+              "variant": "rocker",
+              "count": 1,
+              "x": 0.92,
+              "y": 0.2,
+              "h": 0.6
+            }
+          ]
+        }
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      }
     },
     {
       "id": "generic-pdu-1u-8-nema",
@@ -182,7 +330,44 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic horizontal PDU: outlets, rocker switch and breaker.",
+        "front": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "breaker",
+              "x": 0.02,
+              "y": 0.25,
+              "h": 0.5
+            },
+            {
+              "type": "outlet_nema",
+              "count": 8,
+              "portType": "outlet_nema",
+              "x": 0.07,
+              "w": 0.82,
+              "y": 0.08,
+              "h": 0.84
+            },
+            {
+              "type": "switch",
+              "variant": "rocker",
+              "count": 1,
+              "x": 0.92,
+              "y": 0.2,
+              "h": 0.6
+            }
+          ]
+        }
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      }
     },
     {
       "id": "generic-pdu-1u-8-schuko",
@@ -218,7 +403,44 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic horizontal PDU: outlets, rocker switch and breaker.",
+        "front": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "breaker",
+              "x": 0.02,
+              "y": 0.25,
+              "h": 0.5
+            },
+            {
+              "type": "outlet_schuko",
+              "count": 8,
+              "portType": "outlet_schuko",
+              "x": 0.07,
+              "w": 0.82,
+              "y": 0.08,
+              "h": 0.84
+            },
+            {
+              "type": "switch",
+              "variant": "rocker",
+              "count": 1,
+              "x": 0.92,
+              "y": 0.2,
+              "h": 0.6
+            }
+          ]
+        }
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      }
     },
     {
       "id": "apc-smt1500rm2u",
@@ -260,7 +482,126 @@
       ],
       "sourceUrl": "https://www.se.com/us/en/product/SMT1500RM2U/apc-smartups-line-interactive-1440va-rackmount-2u-120v-6x-nema-515r-outlets-smartslot-avr-lcd/",
       "verified": false,
-      "notes": "Outlets from the APC product page; watt rating and dimensions not shown there (1000 W per APC naming convention, unconfirmed)."
+      "notes": "Outlets from the APC product page; watt rating and dimensions not shown there (1000 W per APC naming convention, unconfirmed).",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://www.se.com/us/en/product/SMT1500RM2U/apc-smartups-line-interactive-1440va-rackmount-2u-120v-6x-nema-515r-outlets-smartslot-avr-lcd/"
+        ],
+        "notes": "LCD, buttons, outlet count/type and USB/serial/SmartSlot interfaces from APC data; positions estimated.",
+        "front": {
+          "style": "ups",
+          "regions": [
+            {
+              "type": "display",
+              "variant": "lcd",
+              "x": 0.03,
+              "w": 0.1,
+              "y": 0.25,
+              "h": 0.5
+            },
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.15,
+              "y": 0.35,
+              "h": 0.3
+            },
+            {
+              "type": "button",
+              "kind": "push",
+              "x": 0.18,
+              "y": 0.38,
+              "h": 0.24
+            },
+            {
+              "type": "button",
+              "kind": "push",
+              "x": 0.21,
+              "y": 0.38,
+              "h": 0.24
+            },
+            {
+              "type": "label",
+              "text": "SMT1500RM2U",
+              "x": 0.27,
+              "y": 0.12,
+              "size": 3.2
+            },
+            {
+              "type": "vent",
+              "pattern": "slots",
+              "x": 0.27,
+              "w": 0.7,
+              "y": 0.35,
+              "h": 0.55
+            },
+            {
+              "type": "ledbar",
+              "color": "#22c55e",
+              "x": 0.03,
+              "w": 0.2,
+              "y": 0.85,
+              "h": 0.04
+            }
+          ]
+        },
+        "rear": {
+          "style": "ups",
+          "regions": [
+            {
+              "type": "fan",
+              "count": 1,
+              "x": 0.03,
+              "w": 0.08
+            },
+            {
+              "type": "outlet_nema",
+              "count": 6,
+              "portType": "outlet_nema",
+              "x": 0.16,
+              "w": 0.5
+            },
+            {
+              "type": "slot",
+              "x": 0.69,
+              "w": 0.08,
+              "y": 0.2,
+              "h": 0.1
+            },
+            {
+              "type": "serial",
+              "count": 1,
+              "portType": "none",
+              "role": "Serial",
+              "x": 0.69,
+              "w": 0.07,
+              "y": 0.45,
+              "h": 0.2
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "none",
+              "role": "USB",
+              "x": 0.78,
+              "w": 0.04,
+              "y": 0.5,
+              "h": 0.12
+            },
+            {
+              "type": "iec_c14",
+              "count": 1,
+              "role": "AC in",
+              "x": 0.86
+            }
+          ]
+        }
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      }
     },
     {
       "id": "apc-smt1500rmi2u",
@@ -302,7 +643,126 @@
       ],
       "sourceUrl": "https://mayflex.com/shop/product/SMT1500RMI2U",
       "verified": false,
-      "notes": "Distributor figures; other listings give 477 mm / 26 kg for close variants."
+      "notes": "Distributor figures; other listings give 477 mm / 26 kg for close variants.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://mayflex.com/shop/product/SMT1500RMI2U"
+        ],
+        "notes": "LCD, buttons, outlet count/type and USB/serial/SmartSlot interfaces from APC data; positions estimated.",
+        "front": {
+          "style": "ups",
+          "regions": [
+            {
+              "type": "display",
+              "variant": "lcd",
+              "x": 0.03,
+              "w": 0.1,
+              "y": 0.25,
+              "h": 0.5
+            },
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.15,
+              "y": 0.35,
+              "h": 0.3
+            },
+            {
+              "type": "button",
+              "kind": "push",
+              "x": 0.18,
+              "y": 0.38,
+              "h": 0.24
+            },
+            {
+              "type": "button",
+              "kind": "push",
+              "x": 0.21,
+              "y": 0.38,
+              "h": 0.24
+            },
+            {
+              "type": "label",
+              "text": "SMT1500RMI2U",
+              "x": 0.27,
+              "y": 0.12,
+              "size": 3.2
+            },
+            {
+              "type": "vent",
+              "pattern": "slots",
+              "x": 0.27,
+              "w": 0.7,
+              "y": 0.35,
+              "h": 0.55
+            },
+            {
+              "type": "ledbar",
+              "color": "#22c55e",
+              "x": 0.03,
+              "w": 0.2,
+              "y": 0.85,
+              "h": 0.04
+            }
+          ]
+        },
+        "rear": {
+          "style": "ups",
+          "regions": [
+            {
+              "type": "fan",
+              "count": 1,
+              "x": 0.03,
+              "w": 0.08
+            },
+            {
+              "type": "iec_c13",
+              "count": 4,
+              "portType": "outlet_c13",
+              "x": 0.16,
+              "w": 0.5
+            },
+            {
+              "type": "slot",
+              "x": 0.69,
+              "w": 0.08,
+              "y": 0.2,
+              "h": 0.1
+            },
+            {
+              "type": "serial",
+              "count": 1,
+              "portType": "none",
+              "role": "Serial",
+              "x": 0.69,
+              "w": 0.07,
+              "y": 0.45,
+              "h": 0.2
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "none",
+              "role": "USB",
+              "x": 0.78,
+              "w": 0.04,
+              "y": 0.5,
+              "h": 0.12
+            },
+            {
+              "type": "iec_c14",
+              "count": 1,
+              "role": "AC in",
+              "x": 0.86
+            }
+          ]
+        }
+      },
+      "powerInput": {
+        "connector": "iec_c14",
+        "adapter": "none"
+      }
     },
     {
       "id": "apc-smt2200rm2u",
@@ -342,7 +802,119 @@
       ],
       "sourceUrl": "https://www.shi.com/product/34616886/APC-Smart-UPS-SMT2200RM2UC",
       "verified": false,
-      "notes": "Figures for the SMT2200RM2UC variant (reseller)."
+      "notes": "Figures for the SMT2200RM2UC variant (reseller).",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://www.shi.com/product/34616886/APC-Smart-UPS-SMT2200RM2UC"
+        ],
+        "notes": "LCD, buttons, outlet count/type and USB/serial/SmartSlot interfaces from APC data; positions estimated.",
+        "front": {
+          "style": "ups",
+          "regions": [
+            {
+              "type": "display",
+              "variant": "lcd",
+              "x": 0.03,
+              "w": 0.1,
+              "y": 0.25,
+              "h": 0.5
+            },
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.15,
+              "y": 0.35,
+              "h": 0.3
+            },
+            {
+              "type": "button",
+              "kind": "push",
+              "x": 0.18,
+              "y": 0.38,
+              "h": 0.24
+            },
+            {
+              "type": "button",
+              "kind": "push",
+              "x": 0.21,
+              "y": 0.38,
+              "h": 0.24
+            },
+            {
+              "type": "label",
+              "text": "SMT2200RM2U",
+              "x": 0.27,
+              "y": 0.12,
+              "size": 3.2
+            },
+            {
+              "type": "vent",
+              "pattern": "slots",
+              "x": 0.27,
+              "w": 0.7,
+              "y": 0.35,
+              "h": 0.55
+            },
+            {
+              "type": "ledbar",
+              "color": "#22c55e",
+              "x": 0.03,
+              "w": 0.2,
+              "y": 0.85,
+              "h": 0.04
+            }
+          ]
+        },
+        "rear": {
+          "style": "ups",
+          "regions": [
+            {
+              "type": "fan",
+              "count": 1,
+              "x": 0.03,
+              "w": 0.08
+            },
+            {
+              "type": "slot",
+              "x": 0.69,
+              "w": 0.08,
+              "y": 0.2,
+              "h": 0.1
+            },
+            {
+              "type": "serial",
+              "count": 1,
+              "portType": "none",
+              "role": "Serial",
+              "x": 0.69,
+              "w": 0.07,
+              "y": 0.45,
+              "h": 0.2
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "none",
+              "role": "USB",
+              "x": 0.78,
+              "w": 0.04,
+              "y": 0.5,
+              "h": 0.12
+            },
+            {
+              "type": "iec_c14",
+              "count": 1,
+              "role": "AC in",
+              "x": 0.86
+            }
+          ]
+        }
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      }
     },
     {
       "id": "cyberpower-cp1500pfcrm2u",
@@ -466,6 +1038,137 @@
       "sourceUrl": "https://www.shi.com/product/27032121/Eaton-5P-1500-RACKMOUNT",
       "verified": false,
       "notes": "Reseller figures."
+    },
+    {
+      "id": "apc-smt750rm1u",
+      "brand": "APC",
+      "model": "SMT750RM1U",
+      "name": "APC Smart-UPS 750VA 1U (120V)",
+      "category": "power",
+      "subcategory": "ups",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 502,
+      "mounting": "full-depth",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 15.8,
+      "ports": {
+        "outlet_nema": 4
+      },
+      "ups": {
+        "capacityW": 600,
+        "capacityVA": 750
+      },
+      "render": {
+        "style": "ups",
+        "body": "black",
+        "accent": "#00a651"
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      },
+      "tags": [
+        "ups",
+        "apc",
+        "smart-ups",
+        "1u",
+        "short-depth"
+      ],
+      "sourceUrl": "https://www.se.com/us/en/product/SMT750RM1U/",
+      "verified": true,
+      "notes": "750 VA / 600 W line-interactive, sine wave. 432 × 502 × 44 mm, 15.8 kg. 4 × NEMA 5-15R, USB, serial and one SmartSlot; LCD console. 120 V.",
+      "layout": {
+        "layoutVerified": true,
+        "sources": [
+          "https://www.se.com/us/en/product/SMT750RM1U/",
+          "https://cdn.blueally.com/apcguard/datasheets/SMT750RM1U_datasheet.pdf"
+        ],
+        "notes": "Feature list from the APC datasheet; positions follow the Smart-UPS 1U chassis.",
+        "front": {
+          "style": "ups",
+          "regions": [
+            {
+              "type": "display",
+              "variant": "lcd",
+              "x": 0.03,
+              "w": 0.1,
+              "y": 0.2,
+              "h": 0.6
+            },
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.15,
+              "y": 0.3,
+              "h": 0.4
+            },
+            {
+              "type": "button",
+              "kind": "push",
+              "x": 0.185,
+              "y": 0.33,
+              "h": 0.34
+            },
+            {
+              "type": "vent",
+              "pattern": "slots",
+              "x": 0.25,
+              "w": 0.72,
+              "y": 0.15,
+              "h": 0.7
+            }
+          ]
+        },
+        "rear": {
+          "style": "ups",
+          "regions": [
+            {
+              "type": "outlet_nema",
+              "count": 4,
+              "portType": "outlet_nema",
+              "x": 0.04,
+              "w": 0.4
+            },
+            {
+              "type": "slot",
+              "x": 0.5,
+              "w": 0.1,
+              "y": 0.3,
+              "h": 0.12
+            },
+            {
+              "type": "serial",
+              "count": 1,
+              "portType": "none",
+              "role": "Serial",
+              "x": 0.63,
+              "w": 0.07
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "none",
+              "role": "USB",
+              "x": 0.72,
+              "w": 0.04
+            },
+            {
+              "type": "fan",
+              "count": 1,
+              "x": 0.8,
+              "w": 0.08
+            }
+          ]
+        }
+      }
     }
   ]
 }

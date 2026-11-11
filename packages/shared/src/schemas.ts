@@ -202,7 +202,7 @@ export const CONNECTORS = [
 export const ConnectorSchema = z.enum(CONNECTORS);
 export type Connector = z.infer<typeof ConnectorSchema>;
 
-export const PoeLevelSchema = z.enum(['poe', 'poe+', 'poe++', 'passive']);
+export const PoeLevelSchema = z.enum(['poe', 'poe+', 'poe++', 'poe+++', 'passive']);
 export type PoeLevel = z.infer<typeof PoeLevelSchema>;
 
 const frac = z.number().min(0).max(1);

@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 2,
+  "version": 7,
   "title": "Rack NAS & storage",
   "description": "Synology RackStation and QNAP rack NAS. Specs from synology.com and qnap.com spec pages (fetched 2026-11-02); typical power is the vendor's access/operating figure with drives installed.",
   "parts": [
@@ -1014,7 +1014,9 @@
       },
       "weightKg": 4.38,
       "ports": {
-        "rj45_1g": 2
+        "rj45_1g": 2,
+        "usb": 1,
+        "console": 1
       },
       "driveBays": [
         {
@@ -1034,7 +1036,100 @@
       ],
       "sourceUrl": "https://www.synology.com/en-global/products/RS422+#specs",
       "verified": true,
-      "notes": "Depth includes handles. 100 W PSU. Typical power is Synology's \"Access\" figure with drives installed."
+      "notes": "Depth includes handles. 100 W PSU. Typical power is Synology's \"Access\" figure with drives installed.",
+      "powerInput": {
+        "connector": "iec_c14",
+        "adapter": "none",
+        "notes": "Single 100 W PSU, 100–240 V AC."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://www.synology.com/en-global/products/RS422+#specs"
+        ],
+        "notes": "Bays, ports (2 × 1GbE, USB 3.2, console), network upgrade slot, 100 W PSU and three 40 mm fans from the spec page; which face each sits on, and positions, are estimated.",
+        "front": {
+          "style": "synology",
+          "regions": [
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.015,
+              "y": 0.2,
+              "h": 0.22
+            },
+            {
+              "type": "leds",
+              "count": 2,
+              "x": 0.012,
+              "w": 0.04,
+              "y": 0.6,
+              "h": 0.12
+            },
+            {
+              "type": "bays",
+              "count": 4,
+              "size": "3.5",
+              "x": 0.07,
+              "w": 0.84,
+              "rows": 1
+            },
+            {
+              "type": "label",
+              "text": "RS422+",
+              "x": 0.925,
+              "y": 0.15,
+              "size": 3
+            }
+          ]
+        },
+        "rear": {
+          "style": "synology",
+          "regions": [
+            {
+              "type": "fan",
+              "count": 3,
+              "x": 0.02,
+              "w": 0.3
+            },
+            {
+              "type": "pcie",
+              "count": 1,
+              "x": 0.35,
+              "w": 0.08,
+              "y": 0.15,
+              "h": 0.7
+            },
+            {
+              "type": "rj45",
+              "count": 2,
+              "portType": "rj45_1g",
+              "x": 0.46
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "usb"
+            },
+            {
+              "type": "console",
+              "count": 1,
+              "portType": "console",
+              "role": "Console"
+            },
+            {
+              "type": "button",
+              "kind": "pinhole"
+            },
+            {
+              "type": "iec_c14",
+              "count": 1,
+              "role": "AC in",
+              "x": 0.86
+            }
+          ]
+        }
+      }
     },
     {
       "id": "synology-rs822-plus",
@@ -1079,7 +1174,85 @@
       "sourceUrl": "https://nascompares.com/news/synology-rs822-rs822rp4-bay-1u-rackmount-nas/",
       "verified": false,
       "notes": "Discontinued; specs from a secondary source. Typical power is Synology's \"Access\" figure with drives installed.",
-      "legacy": true
+      "legacy": true,
+      "powerInput": {
+        "connector": "iec_c14",
+        "adapter": "none"
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://www.synology.com/en-global/products/RS822+#specs"
+        ],
+        "notes": "Four 3.5\" bays and four 1GbE ports per the catalog entry (Synology's spec page could not be loaded); rear positions estimated from the RS422+ chassis.",
+        "front": {
+          "style": "synology",
+          "regions": [
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.015,
+              "y": 0.2,
+              "h": 0.22
+            },
+            {
+              "type": "leds",
+              "count": 2,
+              "x": 0.012,
+              "w": 0.04,
+              "y": 0.6,
+              "h": 0.12
+            },
+            {
+              "type": "bays",
+              "count": 4,
+              "size": "3.5",
+              "x": 0.07,
+              "w": 0.84,
+              "rows": 1
+            },
+            {
+              "type": "label",
+              "text": "RS822+",
+              "x": 0.925,
+              "y": 0.15,
+              "size": 3
+            }
+          ]
+        },
+        "rear": {
+          "style": "synology",
+          "regions": [
+            {
+              "type": "fan",
+              "count": 3,
+              "x": 0.02,
+              "w": 0.3
+            },
+            {
+              "type": "pcie",
+              "count": 1,
+              "x": 0.35,
+              "w": 0.08,
+              "y": 0.15,
+              "h": 0.7
+            },
+            {
+              "type": "rj45",
+              "count": 4,
+              "portType": "rj45_1g",
+              "grouping": 4,
+              "x": 0.46
+            },
+            {
+              "type": "iec_c14",
+              "count": 1,
+              "role": "AC in",
+              "x": 0.86
+            }
+          ]
+        }
+      }
     },
     {
       "id": "synology-rs826-plus",

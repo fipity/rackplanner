@@ -65,3 +65,12 @@
 - Most of the frame work landed with phase 1 (frames, cage-nut holes, empty-U hints, LOD, tooltips). This phase adds: LOD for home thumbnails (mid) and catalog thumbnails (by pixel size), frame memoised on rack + empty slots, print page and exports always full detail with an LED on/off (print style) option in the Export menu and print view.
 - Measured with a fully populated 32U rack (31 × 48-port switches/servers/patch panels) in headless Chromium: dragging a device holds 60 fps (median and p95 frame 16.7–16.8 ms; one ~100 ms frame when the drag starts).
 - Checked every frame style in light and dark mode.
+
+## Phase 3: detailed catalog layouts ✅ (2026-11-11)
+- `scripts/research/build_layouts.py` (idempotent) adds layouts and power inputs:
+  - UniFi: 98 entries (rack gateways, switches, NVRs, UNAS, patch/brush/vented panels; desktop gateways and switches) generated from the cached techspecs data: port counts by speed, PoE class split per port group (PoE/PoE+/PoE++/PoE+++), WAN port, console/MGMT, LCM display, NVR/NAS bays, AC/RPS/dual PSU inputs. Positions follow each family's panel convention, so `layoutVerified: false` (all listed in UNVERIFIED.md). UXG-Pro skipped (spec port list disagrees with the catalog).
+  - Dell R630/R730/R740: port list from the R740 technical guide (front iDRAC Direct USB, USB, VGA; rear 4-port NDC, iDRAC, VGA, serial, 2 × USB, PCIe risers, 2 PSUs); ports in the catalog updated to match.
+  - Synology RS422+ (spec page: 2 × 1GbE, USB 3.2, console, upgrade slot, 3 fans) and RS822+ (page wouldn't load; estimated).
+  - APC SMT1500RM2U/RMI2U/SMT2200RM2U layouts; new APC SMT750RM1U (1U, verified from APC's datasheet).
+  - Generic 1U PDUs, patch (keystone/punch-down/angled/HD/2U/0.5U), brush, blank and vented panels.
+- Engine: PoE+++ level.

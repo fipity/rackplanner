@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 2,
+  "version": 7,
   "title": "Patch panels, blanks & passive 19\"",
   "description": "Generic passive rack gear with typical dimensions.",
   "parts": [
@@ -137,7 +137,28 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "thumbscrew",
+              "x": 0.02,
+              "y": 0.4,
+              "h": 0.2
+            },
+            {
+              "type": "thumbscrew",
+              "x": 0.96,
+              "y": 0.4,
+              "h": 0.2
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-blank-2u-19",
@@ -170,7 +191,28 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "thumbscrew",
+              "x": 0.02,
+              "y": 0.4,
+              "h": 0.1
+            },
+            {
+              "type": "thumbscrew",
+              "x": 0.96,
+              "y": 0.4,
+              "h": 0.1
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-vented-blank-1u-19",
@@ -204,7 +246,24 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "vent",
+              "pattern": "holes",
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.12,
+              "h": 0.76
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-vented-blank-2u-19",
@@ -238,7 +297,24 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "vent",
+              "pattern": "holes",
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.12,
+              "h": 0.76
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-brush-1u-19",
@@ -272,7 +348,24 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "brush-panel",
+          "regions": [
+            {
+              "type": "brush",
+              "x": 0.04,
+              "w": 0.92,
+              "y": 0.3,
+              "h": 0.4
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-brush-2u-19",
@@ -306,7 +399,24 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "brush-panel",
+          "regions": [
+            {
+              "type": "brush",
+              "x": 0.04,
+              "w": 0.92,
+              "y": 0.25,
+              "h": 0.5
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-cable-manager-1u-19",
@@ -445,7 +555,76 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 24,
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "colors": [
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937"
+              ],
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.05,
+              "h": 0.72
+            },
+            {
+              "type": "label_strip",
+              "x": 0.05,
+              "w": 0.9,
+              "y": 0.82,
+              "h": 0.1
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "punchdown",
+              "count": 24,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-fibre-panel-12-lc-1u",
@@ -556,7 +735,50 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 12,
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.05,
+              "h": 0.72
+            },
+            {
+              "type": "label_strip",
+              "x": 0.05,
+              "w": 0.9,
+              "y": 0.82,
+              "h": 0.1
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "coupler",
+              "count": 12,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-patch-16-cat6-1u",
@@ -593,7 +815,50 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 16,
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.05,
+              "h": 0.72
+            },
+            {
+              "type": "label_strip",
+              "x": 0.05,
+              "w": 0.9,
+              "y": 0.82,
+              "h": 0.1
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "coupler",
+              "count": 16,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-patch-24-cat6-half-u",
@@ -631,7 +896,43 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 24,
+              "numbers": false,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.08,
+              "h": 0.84
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "coupler",
+              "count": 24,
+              "portType": "none",
+              "numbers": false,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-patch-24-cat6-keystone-1u",
@@ -668,7 +969,50 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 24,
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.05,
+              "h": 0.72
+            },
+            {
+              "type": "label_strip",
+              "x": 0.05,
+              "w": 0.9,
+              "y": 0.82,
+              "h": 0.1
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "coupler",
+              "count": 24,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-patch-24-cat6a-keystone-1u",
@@ -705,7 +1049,50 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 24,
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.05,
+              "h": 0.72
+            },
+            {
+              "type": "label_strip",
+              "x": 0.05,
+              "w": 0.9,
+              "y": 0.82,
+              "h": 0.1
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "coupler",
+              "count": 24,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-patch-24-cat6-punch-1u",
@@ -742,7 +1129,85 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 24,
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "colors": [
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937"
+              ],
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.05,
+              "h": 0.72
+            },
+            {
+              "type": "label_strip",
+              "x": 0.05,
+              "w": 0.9,
+              "y": 0.82,
+              "h": 0.1
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "punchdown",
+              "count": 24,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.03,
+              "h": 0.78
+            },
+            {
+              "type": "cable_bar",
+              "x": 0.02,
+              "w": 0.96,
+              "y": 0.85,
+              "h": 0.12
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-patch-48-cat6-1u-hd",
@@ -779,7 +1244,109 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 48,
+              "numbers": true,
+              "grouping": 6,
+              "rows": 2,
+              "colors": [
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937"
+              ],
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.05,
+              "h": 0.72
+            },
+            {
+              "type": "label_strip",
+              "x": 0.05,
+              "w": 0.9,
+              "y": 0.82,
+              "h": 0.1
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "punchdown",
+              "count": 48,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 2,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.03,
+              "h": 0.78
+            },
+            {
+              "type": "cable_bar",
+              "x": 0.02,
+              "w": 0.96,
+              "y": 0.85,
+              "h": 0.12
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-patch-48-cat6-2u",
@@ -816,7 +1383,109 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic item; typical dimensions."
+      "notes": "Generic item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 48,
+              "numbers": true,
+              "grouping": 6,
+              "rows": 2,
+              "colors": [
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937"
+              ],
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.05,
+              "h": 0.72
+            },
+            {
+              "type": "label_strip",
+              "x": 0.05,
+              "w": 0.9,
+              "y": 0.82,
+              "h": 0.05
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "punchdown",
+              "count": 48,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 2,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.03,
+              "h": 0.78
+            },
+            {
+              "type": "cable_bar",
+              "x": 0.02,
+              "w": 0.96,
+              "y": 0.85,
+              "h": 0.12
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-shelf-1u-fixed-4post-19",
