@@ -177,6 +177,8 @@ The **Stats** tab, next to the device details, updates live:
 | JSON | Full design plus the custom parts it uses (re-importable) |
 | Printable view | Light layout with both views, stats and the parts list. Print from the browser |
 
+Images and PDFs always use full detail, whatever the editor's zoom. Tick **Print style (LEDs off)** in the Export menu (or use the LED button on the printable view) for a cleaner look without lit status LEDs.
+
 ## Catalog
 
 ~300 parts in versioned JSON files under [`catalog/`](catalog/):
@@ -205,7 +207,7 @@ On first start the catalog is loaded into the SQLite database in `./data`. When 
 
 ### Custom parts
 
-Use the **+** button in the catalog to build your own device, with a live faceplate preview. The **copy** icon on any catalog part (or *Customise a copy* in the inspector) starts from an existing part. Custom parts are stored in the database, appear under *My custom parts*, and are never overwritten by catalog updates.
+Use the **+** button in the catalog to build your own device, with a live front and rear faceplate preview. Pick a style preset, then tick **Custom layout** to place regions yourself (ports, SFP cages, drive bays, display, vents, fans, PSUs, labels…) with % positions, or press **Start from generated layout** to begin from what the app would draw. The builder warns when the layout's ports don't match the port list or regions overlap. The **copy** icon on any catalog part (or *Customise a copy* in the inspector) starts from an existing part. Custom parts are stored in the database, appear under *My custom parts*, and are never overwritten by catalog updates.
 
 ### Regenerating the researched catalog
 
@@ -283,6 +285,15 @@ npm run screenshots               # builds, starts a scratch server, captures, o
 It starts the built server on a temporary database (the example designs in `examples/` seed themselves), drives Chromium, writes palette-optimised PNGs, the drag-and-drop GIF and the device SVGs, and fails if `docs/images/` grows past 15 MB. If the browser runs under a different Node version from the server (for example inside the `mcr.microsoft.com/playwright` image), start the server yourself on an empty `DATA_DIR` and pass `BASE_URL=http://127.0.0.1:<port>`.
 
 `npm run examples` rebuilds `examples/*.json` from the catalog, checking every placement and cable.
+
+### Visual tests
+
+`tests/visual` holds Playwright snapshot tests: one reference device per style preset (see `/_faceplates`), front and rear, in light and dark mode, plus checks for port tooltips and self-contained SVG exports. Snapshots are rendered in the `mcr.microsoft.com/playwright:v1.64.0-noble` image:
+
+```bash
+BASE_URL=http://127.0.0.1:8097 npm run test:visual            # against a server on a scratch DATA_DIR
+BASE_URL=http://127.0.0.1:8097 npm run test:visual -- --update-snapshots
+```
 
 ### GitHub social preview
 

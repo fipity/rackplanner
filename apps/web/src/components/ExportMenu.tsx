@@ -1,5 +1,5 @@
 import { Download, FileJson, FileSpreadsheet, FileText, Image, Printer } from 'lucide-react';
-import { useState, type ComponentType } from 'react';
+import { useRef, useState, type ComponentType } from 'react';
 import { designPath, navigate } from '../lib/router';
 import { toast } from '../lib/toast';
 import { useCatalogStore } from '../store/catalogStore';
@@ -12,6 +12,8 @@ export function ExportMenu() {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [printStyle, setPrintStyle] = useState(false);
+  const [alignLeft, setAlignLeft] = useState(false);
+  const anchor = useRef<HTMLDivElement>(null);
   const o = () => ({ leds: !printStyle });
 
   const withExport = (fn: (m: typeof import('../lib/export')) => Promise<void> | void) => async () => {
@@ -53,15 +55,27 @@ export function ExportMenu() {
   ];
 
   return (
-    <div className="relative">
-      <Button aria-label="Export" aria-haspopup="menu" aria-expanded={open} title="Export & print" onClick={() => setOpen((o) => !o)} disabled={busy}>
+    <div className="relative" ref={anchor}>
+      <Button
+        aria-label="Export"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        title="Export & print"
+        onClick={() => {
+          // Open towards whichever side has room for the 16rem menu.
+          const r = anchor.current?.getBoundingClientRect();
+          setAlignLeft(!!r && r.right < 272);
+          setOpen((o) => !o);
+        }}
+        disabled={busy}
+      >
         <Download className={cx('size-4', busy && 'animate-pulse')} />
         <span className="max-sm:hidden">{busy ? 'Exporting…' : 'Export'}</span>
       </Button>
       {open && (
         <>
           <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
-          <div role="menu" className="absolute right-0 z-40 mt-1 w-64 rounded-lg border border-zinc-200 bg-white p-1 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+          <div role="menu" className={cx('absolute z-40 mt-1 w-64', alignLeft ? 'left-0' : 'right-0', ' rounded-lg border border-zinc-200 bg-white p-1 shadow-xl dark:border-zinc-700 dark:bg-zinc-900')}>
             <label className="flex items-center gap-2 rounded px-2 py-1.5 text-sm text-zinc-600 dark:text-zinc-300">
               <input type="checkbox" checked={printStyle} onChange={(e) => setPrintStyle(e.target.checked)} className="accent-blue-600" />
               Print style (LEDs off)

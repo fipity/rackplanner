@@ -7,8 +7,14 @@
 import {
   PORT_TYPES,
   PORT_TYPE_LABELS,
+  LAYERED_KINDS,
   PartSchema,
   U_MM,
+  layoutPortCounts,
+  overlaps,
+  partWidthMm,
+  resolveFace,
+  type StylePreset,
   type BodyFinish,
   type Mounting,
   type Part,
@@ -24,6 +30,7 @@ import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
 import { useUiStore } from '../../store/uiStore';
 import { PartThumb } from '../faceplates/PartThumb';
+import { FaceplateEditor, draftToRegion, regionToDraft, type FaceKey, type RegionDraft } from './FaceplateEditor';
 import { Button, cx, inputClass, selectClass } from '../ui';
 
 type WidthKind = '19in' | '10in' | 'half-19in' | 'mm';
@@ -58,6 +65,9 @@ interface Draft {
   style: RenderStyle;
   body: BodyFinish;
   accent: string;
+  preset: StylePreset | '';
+  customLayout: boolean;
+  regions: Record<FaceKey, RegionDraft[]>;
   tags: string;
   notes: string;
   sourceUrl: string;
@@ -78,7 +88,7 @@ function emptyDraft(): Draft {
     widthKind: '19in', widthMm: '200', depthMm: '', mounting: 'front', rack19: true, rack10: false,
     typicalW: '', maxW: '', poeBudgetW: '', weightKg: '', ports: [{ type: 'rj45_1g', count: '8' }], bays: [],
     isShelf: false, shelfW: '430', shelfD: '250', isUps: false, upsW: '', upsVA: '',
-    style: 'switch', body: 'black', accent: '#3b82f6', tags: '', notes: '', sourceUrl: '',
+    style: 'switch', body: 'black', accent: '#3b82f6', preset: '', customLayout: false, regions: { front: [], rear: [] }, tags: '', notes: '', sourceUrl: '',
   };
 }
 
@@ -95,8 +105,17 @@ function fromPart(p: Part): Draft {
     isShelf: !!p.shelf, shelfW: s(p.shelf?.usableWidthMm ?? 430), shelfD: s(p.shelf?.usableDepthMm ?? 250),
     isUps: !!p.ups, upsW: s(p.ups?.capacityW), upsVA: s(p.ups?.capacityVA),
     style: p.render.style, body: p.render.body ?? 'black', accent: p.render.accent ?? '#3b82f6',
+    preset: p.render.preset ?? '', customLayout: !!(p.layout?.front || p.layout?.rear),
+    regions: { front: (p.layout?.front?.regions ?? []).map(regionToDraft), rear: (p.layout?.rear?.regions ?? []).map(regionToDraft) },
     tags: p.tags.join(', '), notes: p.notes ?? '', sourceUrl: p.sourceUrl ?? '',
   };
+}
+
+/** Preview width: up to 620 px, narrower for tall parts so both faces fit. */
+function previewWidth(p: Part): number {
+  const w = partWidthMm(p) + (p.formFactor === 'rack' ? 32 : 0);
+  const h = p.heightU * U_MM;
+  return Math.max(120, Math.min(560, Math.round((78 * w) / h)));
 }
 
 const num = (v: string): number | null => (v.trim() === '' ? null : Number(v));
@@ -125,7 +144,7 @@ function toInput(d: Draft): Record<string, unknown> {
     power: { typicalW: num(d.typicalW), maxW: num(d.maxW) },
     weightKg: num(d.weightKg),
     ports,
-    render: { style: desktop ? 'desktop' : d.style, body: d.body, accent: d.accent },
+    render: { style: desktop ? 'desktop' : d.style, body: d.body, accent: d.accent, ...(d.preset ? { preset: d.preset } : {}) },
     tags: ['custom', ...d.tags.split(',').map((t) => t.trim()).filter(Boolean)].filter((t, i, a) => a.indexOf(t) === i),
   };
   if (desktop) out.heightMm = num(d.heightMm);
@@ -134,6 +153,10 @@ function toInput(d: Draft): Record<string, unknown> {
   if (bays.length) out.driveBays = bays;
   if (d.isShelf && !desktop) out.shelf = { usableWidthMm: num(d.shelfW), usableDepthMm: num(d.shelfD) };
   if (d.isUps) out.ups = { capacityW: num(d.upsW), capacityVA: num(d.upsVA) };
+  if (d.customLayout) {
+    const face = (f: FaceKey) => ({ ...(d.preset ? { style: d.preset } : {}), regions: d.regions[f].map(draftToRegion) });
+    out.layout = { layoutVerified: false, sources: [], front: face('front'), rear: face('rear') };
+  }
   if (d.notes.trim()) out.notes = d.notes.trim();
   out.sourceUrl = d.sourceUrl.trim() || null;
   return out;
@@ -184,6 +207,7 @@ export function CustomPartBuilder() {
   /** Errors stay hidden until the user edits something (name: until it's touched) or tries to save. */
   const [touched, setTouched] = useState<{ any: boolean; name: boolean; submitted: boolean }>({ any: false, name: false, submitted: false });
   const [saving, setSaving] = useState(false);
+  const [faceTab, setFaceTab] = useState<FaceKey>('front');
   const ref = useRef<HTMLDialogElement>(null);
   const lastGood = useRef<Part | null>(null);
 
@@ -215,6 +239,24 @@ export function CustomPartBuilder() {
     const show = touched.submitted || (touched.any && (k !== 'name' || touched.name));
     return show ? errors[k] : undefined;
   };
+
+  // Custom layouts: every catalog port drawn once, nothing overlapping.
+  const layoutProblems = useMemo(() => {
+    if (!draft.customLayout || !preview) return [];
+    const out: string[] = [];
+    const drawn = layoutPortCounts(preview);
+    for (const [t, n] of Object.entries(preview.ports) as [PortType, number][]) {
+      if (n && (drawn[t] ?? 0) !== n) out.push(`${PORT_TYPE_LABELS[t]}: ${n} in the port list, ${drawn[t] ?? 0} in the layout.`);
+    }
+    for (const t of Object.keys(drawn) as PortType[]) if (!preview.ports[t]) out.push(`The layout draws ${PORT_TYPE_LABELS[t]} ports that aren't in the port list.`);
+    const w = partWidthMm(preview);
+    const h = preview.formFactor === 'desktop' && preview.heightMm ? Math.min(preview.heightMm, preview.heightU * U_MM) : preview.heightU * U_MM;
+    for (const f of ['front', 'rear'] as const) {
+      const els = resolveFace(preview, f, w, h).elements.filter((e) => !LAYERED_KINDS.has(e.kind));
+      if (els.some((a, i) => els.some((b, j) => j > i && overlaps(a, b)))) out.push(`Some ${f} regions overlap: adjust x / w.`);
+    }
+    return out;
+  }, [draft.customLayout, preview]);
 
   const categories = useMemo(() => [...new Set(parts.map((p) => p.category))].sort(), [parts]);
 
@@ -266,8 +308,19 @@ export function CustomPartBuilder() {
         </Button>
       </header>
 
-      <div className="flex min-h-24 items-center justify-center border-b border-zinc-200 bg-zinc-100 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-950">
-        {preview ? <PartThumb part={preview} rackWidth={draft.rack19 ? '19in' : '10in'} width={560} /> : <span className="text-sm text-zinc-500">Fill in the form to see a preview</span>}
+      <div className="flex min-h-24 shrink-0 items-center justify-center border-b border-zinc-200 bg-zinc-100 px-5 py-3 dark:border-zinc-800 dark:bg-zinc-950">
+        {preview ? (
+          <div className="flex w-full flex-wrap items-end justify-center gap-x-6 gap-y-2" aria-label="Faceplate preview">
+            {(['front', 'rear'] as const).map((v) => (
+              <figure key={v} className="flex flex-col items-center gap-0.5">
+                <PartThumb part={preview} rackWidth={draft.rack19 ? '19in' : '10in'} width={previewWidth(preview)} view={v} lod="high" />
+                <figcaption className="text-[10px] tracking-wide text-zinc-500 uppercase">{v}</figcaption>
+              </figure>
+            ))}
+          </div>
+        ) : (
+          <span className="text-sm text-zinc-500">Fill in the form to see a preview</span>
+        )}
       </div>
 
       <form
@@ -498,6 +551,21 @@ export function CustomPartBuilder() {
               <input className={cx(inputClass, 'p-1')} type="color" value={draft.accent} onChange={(e) => set('accent', e.target.value)} />
             </Field>
           </div>
+        </Section>
+
+        <Section title="Faceplate layout">
+          <FaceplateEditor
+            face={faceTab}
+            setFace={setFaceTab}
+            preset={draft.preset}
+            setPreset={(v) => set('preset', v)}
+            custom={draft.customLayout}
+            setCustom={(v) => set('customLayout', v)}
+            regions={draft.regions}
+            setRegions={(f, list) => setDraft((d) => ({ ...d, regions: { ...d.regions, [f]: list } }))}
+            preview={preview}
+            problems={layoutProblems}
+          />
         </Section>
 
         <Section title="Notes">

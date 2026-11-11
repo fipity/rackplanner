@@ -148,6 +148,8 @@ for (const scheme of ['light', 'dark']) {
   await page.waitForTimeout(300);
   await page.getByLabel('Customise a copy of UniFi Switch Lite 8 PoE', { exact: true }).first().dispatchEvent('click');
   await page.waitForSelector('dialog[open]');
+  await page.locator('dialog[open] legend', { hasText: 'Faceplate layout' }).scrollIntoViewIfNeeded();
+  await page.locator('dialog[open] form').evaluate((f) => f.scrollBy(0, 160));
   await page.waitForTimeout(400);
   await save('custom-part-builder.png', await page.locator('dialog[open]').first().screenshot());
   await page.context().close();
@@ -164,7 +166,9 @@ for (const scheme of ['light', 'dark']) {
   const svg = rackSvg(page);
   const ib = await item.boundingBox();
   const sb = await svg.boundingBox();
-  const clip = { x: 0, y: 70, width: 1280, height: 640 };
+  // Below the toolbar: catalog, rack and stats only.
+  const top = Math.round((await page.locator('aside').first().boundingBox()).y);
+  const clip = { x: 0, y: top, width: 1280, height: 760 - top };
   const frames = [];
   const grab = async () => frames.push(await page.screenshot({ clip, type: 'png' }));
   const glide = async (from, to, steps) => {

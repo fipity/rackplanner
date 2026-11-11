@@ -7,6 +7,7 @@ import { Button, cx } from './components/ui';
 import { navigate, useRoute } from './lib/router';
 import { useToastStore } from './lib/toast';
 import { EditorPage } from './pages/EditorPage';
+import { FaceplateGallery } from './pages/FaceplateGallery';
 import { HomePage } from './pages/HomePage';
 import { PrintPage } from './pages/PrintPage';
 import { useCatalogStore } from './store/catalogStore';
@@ -71,6 +72,8 @@ export function App() {
     page = <EditorPage key={route.id} id={route.id} />;
   } else if (route.name === 'print') {
     page = <PrintPage key={route.id} id={route.id} />;
+  } else if (route.name === 'gallery') {
+    page = <FaceplateGallery />;
   } else if (route.name === 'home') {
     page = <HomePage />;
   } else {

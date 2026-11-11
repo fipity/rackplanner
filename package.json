@@ -20,7 +20,8 @@
     "catalog:schema": "tsx scripts/gen-catalog-schema.ts",
     "screenshots": "npm run build && node scripts/screenshots/run.mjs",
     "render:devices": "tsx --tsconfig scripts/tsconfig.json scripts/screenshots/render-devices.tsx",
-    "examples": "tsx scripts/build-examples.ts"
+    "examples": "tsx scripts/build-examples.ts",
+    "test:visual": "playwright test"
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",

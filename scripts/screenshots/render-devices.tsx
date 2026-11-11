@@ -7,11 +7,12 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { RACK_OPENING_MM, STYLE_PRESETS, U_MM, isFullWidth, partWidthMm, resolvePreset, type Part, type StylePreset } from '@rackplanner/shared';
+import { RACK_OPENING_MM, STYLE_PRESETS, U_MM, isFullWidth, partWidthMm, type Part, type StylePreset } from '@rackplanner/shared';
 import { loadCatalogDir } from '../../apps/server/src/catalog.js';
 import { Faceplate, bodyHeight } from '../../apps/web/src/components/faceplates/Faceplate';
 import { FaceplateDefs } from '../../apps/web/src/components/faceplates/Defs';
 import { RAIL } from '../../apps/web/src/components/rack/geometry';
+import { referencePart as refPart } from '../../apps/web/src/components/faceplates/reference';
 import { resolveCssVars } from '../../apps/web/src/lib/export/palette';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -21,31 +22,7 @@ const byId = new Map(parts.map((p) => [p.id, p]));
 
 /** My RackMate T1 build, then one reference device per style preset. */
 export const BUILD = ['raspberry-pi-4-case', 'ubiquiti-ucg-ultra', 'ubiquiti-usw-lite-8-poe', 'ubiquiti-unvr-instant', 'deskpi-rackmate-patch-12-keystone-1u'];
-export const PRESET_REFERENCE: Record<StylePreset, string[]> = {
-  'unifi-silver': ['ubiquiti-usw-pro-max-24-poe', 'ubiquiti-usw-pro-24-poe'],
-  'unifi-black': ['ubiquiti-usw-enterprise-24-poe', 'ubiquiti-udm-pro-max'],
-  'unifi-white': ['ubiquiti-ucg-ultra'],
-  'dell-bezel': ['dell-poweredge-r740'],
-  hpe: [],
-  synology: ['synology-rs822-plus'],
-  mikrotik: [],
-  'generic-black': ['generic-switch-8p-10in'],
-  'generic-silver': [],
-  'patch-panel': ['generic-patch-24-cat6-keystone-1u'],
-  'brush-panel': ['generic-brush-1u-19'],
-  shelf: ['deskpi-rackmate-shelf-1u'],
-  pdu: ['generic-pdu-1u-8-c13'],
-  ups: ['apc-smt1500rmi2u'],
-  'rpi-case': ['raspberry-pi-4-case'],
-};
-
-export function referencePart(preset: StylePreset): Part | undefined {
-  for (const id of PRESET_REFERENCE[preset]) {
-    const p = byId.get(id);
-    if (p && resolvePreset(p) === preset) return p;
-  }
-  return parts.find((p) => resolvePreset(p) === preset && p.render.style !== 'shelf') ?? parts.find((p) => resolvePreset(p) === preset);
-}
+export const referencePart = (preset: StylePreset): Part | undefined => refPart(parts, preset);
 
 export function faceSvg(part: Part, view: 'front' | 'rear', leds = true): string {
   const rackWidth = part.rackWidths.includes('19in') && part.width !== '10in' ? '19in' : '10in';

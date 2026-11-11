@@ -74,3 +74,10 @@
   - APC SMT1500RM2U/RMI2U/SMT2200RM2U layouts; new APC SMT750RM1U (1U, verified from APC's datasheet).
   - Generic 1U PDUs, patch (keystone/punch-down/angled/HD/2U/0.5U), brush, blank and vented panels.
 - Engine: PoE+++ level.
+
+## Phase 4: custom builder, exports, visual tests ✅ (2026-11-11)
+- Custom part builder: style preset picker, "Custom layout" region editor per face (type, count, x/w/y/h %, rows, PoE, counts-as), "Start from generated layout", live front + rear preview, warnings for port-count mismatches and overlapping regions. Fields the table doesn't edit (poePorts, grouping, colours…) survive edits.
+- Exports: PNG/SVG/PDF always full detail; "Print style (LEDs off)" option. Export menu now opens towards the side with room (it opened off-screen at ~1400 px widths).
+- `/_faceplates` gallery route; Playwright visual tests (`tests/visual`, 60 snapshots: 15 presets × front/rear × light/dark) plus port-tooltip and self-contained-SVG-export checks. Run with `~/.cache/rackplanner-research/bin/visual`.
+- README: builder, exports, visual tests, social preview instructions. Docker image builds (265 MB) and seeds the examples.
+- Tests: 190 unit/API + 62 Playwright.
