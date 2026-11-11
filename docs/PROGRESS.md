@@ -60,3 +60,8 @@
 - Examples (`examples/*.json`, built by `npm run examples`) seeded once via a `meta` table (migration 3): "My RackMate T1" and "Homelab 24U (example)".
 - Images: `npm run screenshots` (Playwright + sharp + gifenc) writes docs/images (hero, build front/rear/shelves, 24U, light/dark, catalog, builder, GIF, device SVGs, social preview). Locally run with `~/.cache/rackplanner-research/bin/shots` (Node 22 server container + Playwright image with BASE_URL).
 - Tests: 187 (layout engine, catalog layout bounds/overlap/port counts, migration, example seeding).
+
+## Phase 2: rack frame detail, LOD, performance ✅ (2026-11-11)
+- Most of the frame work landed with phase 1 (frames, cage-nut holes, empty-U hints, LOD, tooltips). This phase adds: LOD for home thumbnails (mid) and catalog thumbnails (by pixel size), frame memoised on rack + empty slots, print page and exports always full detail with an LED on/off (print style) option in the Export menu and print view.
+- Measured with a fully populated 32U rack (31 × 48-port switches/servers/patch panels) in headless Chromium: dragging a device holds 60 fps (median and p95 frame 16.7–16.8 ms; one ~100 ms frame when the drag starts).
+- Checked every frame style in light and dark mode.

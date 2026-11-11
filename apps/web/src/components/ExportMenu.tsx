@@ -11,6 +11,8 @@ type Action = { label: string; icon: ComponentType<{ className?: string }>; run:
 export function ExportMenu() {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [printStyle, setPrintStyle] = useState(false);
+  const o = () => ({ leds: !printStyle });
 
   const withExport = (fn: (m: typeof import('../lib/export')) => Promise<void> | void) => async () => {
     setOpen(false);
@@ -28,14 +30,14 @@ export function ExportMenu() {
   const c = () => useCatalogStore.getState().catalog;
 
   const actions: Action[] = [
-    { label: 'PDF (views + parts list)', icon: FileText, run: withExport((m) => m.exportPdf(d(), c())) },
+    { label: 'PDF (views + parts list)', icon: FileText, run: withExport((m) => m.exportPdf(d(), c(), o())) },
     'sep',
-    { label: 'PNG: front + rear', icon: Image, run: withExport((m) => m.exportPng(d(), c(), 'both')) },
-    { label: 'PNG: front', icon: Image, run: withExport((m) => m.exportPng(d(), c(), 'front')) },
-    { label: 'PNG: rear', icon: Image, run: withExport((m) => m.exportPng(d(), c(), 'rear')) },
-    { label: 'SVG: front + rear', icon: Image, run: withExport((m) => m.exportSvg(d(), c(), 'both')) },
-    { label: 'SVG: front', icon: Image, run: withExport((m) => m.exportSvg(d(), c(), 'front')) },
-    { label: 'SVG: rear', icon: Image, run: withExport((m) => m.exportSvg(d(), c(), 'rear')) },
+    { label: 'PNG: front + rear', icon: Image, run: withExport((m) => m.exportPng(d(), c(), 'both', o())) },
+    { label: 'PNG: front', icon: Image, run: withExport((m) => m.exportPng(d(), c(), 'front', o())) },
+    { label: 'PNG: rear', icon: Image, run: withExport((m) => m.exportPng(d(), c(), 'rear', o())) },
+    { label: 'SVG: front + rear', icon: Image, run: withExport((m) => m.exportSvg(d(), c(), 'both', o())) },
+    { label: 'SVG: front', icon: Image, run: withExport((m) => m.exportSvg(d(), c(), 'front', o())) },
+    { label: 'SVG: rear', icon: Image, run: withExport((m) => m.exportSvg(d(), c(), 'rear', o())) },
     'sep',
     { label: 'CSV bill of materials', icon: FileSpreadsheet, run: withExport((m) => m.exportCsv(d(), c())) },
     { label: 'JSON (full design)', icon: FileJson, run: withExport((m) => m.exportJson(d(), c())) },
@@ -59,7 +61,13 @@ export function ExportMenu() {
       {open && (
         <>
           <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
-          <div role="menu" className="absolute right-0 z-40 mt-1 w-60 rounded-lg border border-zinc-200 bg-white p-1 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+          <div role="menu" className="absolute right-0 z-40 mt-1 w-64 rounded-lg border border-zinc-200 bg-white p-1 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+            <label className="flex items-center gap-2 rounded px-2 py-1.5 text-sm text-zinc-600 dark:text-zinc-300">
+              <input type="checkbox" checked={printStyle} onChange={(e) => setPrintStyle(e.target.checked)} className="accent-blue-600" />
+              Print style (LEDs off)
+            </label>
+            <p className="px-2 pb-1 text-xs text-zinc-500">Images and PDFs always use full detail.</p>
+            <div className="my-1 h-px bg-zinc-200 dark:bg-zinc-800" />
             {actions.map((a, i) =>
               a === 'sep' ? (
                 <div key={i} className="my-1 h-px bg-zinc-200 dark:bg-zinc-800" />

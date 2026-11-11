@@ -29,13 +29,18 @@ export function download(blob: Blob, filename: string): void {
 
 const viewsFor = (which: View | 'both'): View[] => (which === 'both' ? ['front', 'rear'] : [which]);
 
-export function exportSvg(design: Design, catalog: Catalog, which: View | 'both'): void {
-  const doc = renderSheet(design, catalog, viewsFor(which));
+export interface ExportOptions {
+  /** Status LEDs lit; false gives the clean print style. */
+  leds?: boolean;
+}
+
+export function exportSvg(design: Design, catalog: Catalog, which: View | 'both', opts: ExportOptions = {}): void {
+  const doc = renderSheet(design, catalog, viewsFor(which), { leds: opts.leds ?? true });
   download(new Blob([doc.svg], { type: 'image/svg+xml' }), `${fileStem(design)}-${which}.svg`);
 }
 
-export async function exportPng(design: Design, catalog: Catalog, which: View | 'both'): Promise<void> {
-  const doc = renderSheet(design, catalog, viewsFor(which));
+export async function exportPng(design: Design, catalog: Catalog, which: View | 'both', opts: ExportOptions = {}): Promise<void> {
+  const doc = renderSheet(design, catalog, viewsFor(which), { leds: opts.leds ?? true });
   download(await svgToPng(doc, 3), `${fileStem(design)}-${which}.png`);
 }
 
@@ -49,10 +54,10 @@ export function exportJson(design: Design, catalog: Catalog): void {
 }
 
 /** PDF: page 1 front + rear views, then the parts list, stats and warnings. */
-export async function exportPdf(design: Design, catalog: Catalog): Promise<void> {
+export async function exportPdf(design: Design, catalog: Catalog, opts: ExportOptions = {}): Promise<void> {
   const [{ jsPDF }, { autoTable }] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
   // Views are rasterised at high resolution: reliable across viewers and printers.
-  const sheet = renderSheet(design, catalog, ['front', 'rear']);
+  const sheet = renderSheet(design, catalog, ['front', 'rear'], { leds: opts.leds ?? true });
   // Short racks make a wide sheet: use landscape for the drawing page.
   const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: sheet.width > sheet.height ? 'landscape' : 'portrait' });
   const pageW = doc.internal.pageSize.getWidth();

@@ -1,5 +1,5 @@
 import { PORT_TYPE_LABELS, buildBom, computeStats, type Design, type PortType } from '@rackplanner/shared';
-import { ArrowLeft, Printer } from 'lucide-react';
+import { ArrowLeft, Lightbulb, LightbulbOff, Printer } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { RackView } from '../components/rack/RackView';
 import { Button } from '../components/ui';
@@ -7,6 +7,7 @@ import { getDesign } from '../lib/api';
 import { exportPaletteStyle } from '../lib/export/palette';
 import { designPath, navigate } from '../lib/router';
 import { useCatalogStore } from '../store/catalogStore';
+import { useUiStore } from '../store/uiStore';
 
 /** Print-friendly page: both views, stats and the parts list. Always light. */
 export function PrintPage({ id }: { id: string }) {
@@ -14,6 +15,8 @@ export function PrintPage({ id }: { id: string }) {
   const [error, setError] = useState('');
   const catalog = useCatalogStore((s) => s.catalog);
   const ready = useCatalogStore((s) => s.status === 'ready');
+  const leds = useUiStore((s) => s.leds);
+  const setLeds = useUiStore((s) => s.setLeds);
 
   useEffect(() => {
     getDesign(id).then(
@@ -38,6 +41,9 @@ export function PrintPage({ id }: { id: string }) {
         <Button variant="primary" onClick={() => window.print()}>
           <Printer className="size-4" /> Print
         </Button>
+        <Button className="text-zinc-700 hover:bg-zinc-100" aria-pressed={leds} onClick={() => setLeds(!leds)}>
+          {leds ? <Lightbulb className="size-4" /> : <LightbulbOff className="size-4" />} {leds ? 'LEDs on' : 'LEDs off (print style)'}
+        </Button>
       </div>
       <article className="mx-auto max-w-5xl space-y-6 p-6 print:max-w-none print:p-0">
         <header>
@@ -52,7 +58,7 @@ export function PrintPage({ id }: { id: string }) {
           {(['front', 'rear'] as const).map((v) => (
             <figure key={v} className="text-center">
               <figcaption className="mb-1 text-sm font-semibold">{v === 'front' ? 'Front' : 'Rear'}</figcaption>
-              <RackView design={design} catalog={catalog} view={v} cables={design.cables} className="mx-auto h-auto max-h-[80vh] w-full print:max-h-[22cm]" />
+              <RackView design={design} catalog={catalog} view={v} cables={design.cables} lod="high" leds={leds} className="mx-auto h-auto max-h-[80vh] w-full print:max-h-[22cm]" />
             </figure>
           ))}
         </section>
