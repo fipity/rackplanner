@@ -7,6 +7,7 @@ import { Fragment, type ComponentType, type ReactNode, type Ref } from 'react';
 import {
   PORT_TYPE_LABELS,
   occupancyOf,
+  overlaps,
   type Cable,
   type CableEnd,
   type Catalog,
@@ -113,6 +114,7 @@ export function RackView({
   };
 
   const visible = items.filter((i) => i.occ.faces.includes(view));
+  const visibleBoxes = onPortClick ? items.filter((i) => i.occ.faces.includes(view)).map(({ p, part, occ }) => boxOf(p, part, occ)) : [];
   const otherFace = items.filter((i) => !i.occ.faces.includes(view));
   // Shelves before their contents so children draw on top.
   const byLayer = (a: (typeof items)[number], b: (typeof items)[number]) => Number(a.p.parentId !== undefined) - Number(b.p.parentId !== undefined);
@@ -294,9 +296,14 @@ export function RackView({
 
       {onPortClick && (
         <g aria-label="Ports">
-          {visible.map(({ p, part, occ }) => {
+          {items.map(({ p, part, occ }) => {
             const box = boxOf(p, part, occ);
+            // Gear mounted on the other face shows its back through the rack;
+            // its ports are reachable unless something on this face covers them.
+            const behind = !occ.faces.includes(view);
+            const covering = behind ? visibleBoxes.filter((b) => overlaps(b, box)) : [];
             return portPositions(part, box.w, box.h, box.ears, faceSeen(occ.faces, view)).map((sl) => {
+              if (covering.some((b) => overlaps(b, { x: box.x + sl.x, y: box.y + sl.y, w: sl.w, h: sl.h }))) return null;
               const end: CableEnd = { placementId: p.id, port: { type: sl.type, index: sl.index } };
               const used = cables.some((c) => [c.a, c.b].some((e) => e.placementId === p.id && e.port?.type === sl.type && e.port.index === sl.index));
               const pending = pendingEnd?.placementId === p.id && pendingEnd.port?.type === sl.type && pendingEnd.port.index === sl.index;

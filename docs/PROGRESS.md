@@ -81,3 +81,9 @@
 - `/_faceplates` gallery route; Playwright visual tests (`tests/visual`, 60 snapshots: 15 presets × front/rear × light/dark) plus port-tooltip and self-contained-SVG-export checks. Run with `~/.cache/rackplanner-research/bin/visual`.
 - README: builder, exports, visual tests, social preview instructions. Docker image builds (265 MB) and seeds the examples.
 - Tests: 190 unit/API + 62 Playwright.
+
+## Rear cabling (2026-11-11)
+
+- In the rear view, cable mode now offers the rear ports of front-mounted gear (and the front ports of rear-mounted gear in the front view), unless gear on the viewed face covers them. Start a cable on one side, switch views, and finish it on the other.
+- Cable port indexes are unique per device across faces (front ports first, then rear, then top), so a front USB 1 and a rear USB 1 no longer share a key. No existing design or example cable was affected.
+- Test: tests/visual/cables.spec.ts.

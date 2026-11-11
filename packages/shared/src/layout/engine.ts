@@ -372,9 +372,9 @@ function layoutBays(r: Extract<FeatureRegion, { type: 'bays' }>, box: Box, out: 
 }
 
 /** Resolve a face layout into positioned elements. W × H is the face area in mm (ears excluded). */
-export function resolveLayout(layout: FaceLayout, W: number, H: number): FaceElement[] {
+export function resolveLayout(layout: FaceLayout, W: number, H: number, indexOffsets: Partial<Record<PortType, number>> = {}): FaceElement[] {
   const boxes = regionBoxes(layout.regions, W, H);
-  const counters: Counters = { family: new Map(), type: new Map() };
+  const counters: Counters = { family: new Map(), type: new Map(Object.entries(indexOffsets) as [PortType, number][]) };
   const out: FaceElement[] = [];
   layout.regions.forEach((r, i) => {
     const box = boxes[i]!;
@@ -411,7 +411,7 @@ export function resolveFace(part: Part, face: FaceName, w: number, h: number): R
     preset: layout.style ?? resolvePreset(part),
     w,
     h,
-    elements: resolveLayout(layout, w, h),
+    elements: resolveLayout(layout, w, h, portIndexOffsets(part, face)),
     auto,
   };
   if (!byPart) cache.set(part, (byPart = new Map()));
@@ -426,9 +426,23 @@ export function facePorts(part: Part, face: FaceName, w: number, h: number): Por
 }
 
 /** Ports per catalog type declared by a layout (front, rear and top), for consistency checks. */
+const FACE_ORDER: readonly FaceName[] = ['front', 'rear', 'top'];
+
+/**
+ * Cable indexes are unique per device: front ports come first, then rear,
+ * then top. This is how many ports of each type the faces before `face` hold.
+ */
+export function portIndexOffsets(part: Part, face: FaceName): Partial<Record<PortType, number>> {
+  return portCountsOn(part, FACE_ORDER.slice(0, FACE_ORDER.indexOf(face)));
+}
+
 export function layoutPortCounts(part: Part): Partial<Record<PortType, number>> {
+  return portCountsOn(part, FACE_ORDER);
+}
+
+function portCountsOn(part: Part, faces: readonly FaceName[]): Partial<Record<PortType, number>> {
   const counts: Partial<Record<PortType, number>> = {};
-  for (const face of ['front', 'rear', 'top'] as const) {
+  for (const face of faces) {
     const { layout } = faceLayoutFor(part, face);
     for (const r of layout.regions) {
       if (!isPortRegion(r)) continue;

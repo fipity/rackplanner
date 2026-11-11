@@ -107,7 +107,7 @@ export function RackCanvas() {
     >
       {cableMode && (
         <div className="pointer-events-none sticky top-2 z-10 mx-auto w-fit rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-zinc-950 shadow">
-          {pendingEnd ? 'Click the other end: a port or device (Esc to cancel)' : 'Cable mode: click a port or device to start a cable (Esc to finish)'}
+          {pendingEnd ? 'Click the other end: a port or device (Esc to cancel)' : `Cable mode: click a port or device to start a cable — switch to ${view === 'front' ? 'Rear' : 'Front'} view for the other side (Esc to finish)`}
         </div>
       )}
       {plan ? (

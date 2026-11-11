@@ -161,6 +161,22 @@ describe('port grouping and numbering', () => {
   });
 });
 
+describe('cable indexes across faces', () => {
+  it('numbers rear ports after the front ones of the same type', () => {
+    const part = mk({
+      ports: { usb: 4, rj45_1g: 1 },
+      layout: {
+        layoutVerified: false,
+        front: { regions: [{ type: 'usb_a', count: 2 }] },
+        rear: { regions: [{ type: 'usb_a', count: 2 }, { type: 'rj45', count: 1 }] },
+      },
+    });
+    const idx = (face: 'front' | 'rear') => ports(resolveFace(part, face, 400, 40).elements).map((p) => `${p.portType}:${p.index}`);
+    expect(idx('front')).toEqual(['usb:1', 'usb:2']);
+    expect(idx('rear')).toEqual(['usb:3', 'usb:4', 'rj45_1g:1']);
+  });
+});
+
 describe('regressions', () => {
   it('stacks 16 ports in two rows on a 1U face (no float rounding to one row)', () => {
     const part = mk({ ports: { rj45_1g: 16, rj45_2_5g: 8, sfp_plus: 2 }, poeBudgetW: 400 });
