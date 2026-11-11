@@ -78,6 +78,24 @@ describe('DesignSchema', () => {
   it('accepts a valid design', () => {
     expect(DesignSchema.parse(design).expectedPoeLoadW).toBeNull();
   });
+  it('migrates v1 designs to v2 with a frame style by width', () => {
+    const v2 = DesignSchema.parse(design);
+    expect(v2.schemaVersion).toBe(2);
+    expect(v2.rack.frame).toBe('open-4post');
+    expect(v2.rack.glassDoor).toBe(false);
+    const mini = DesignSchema.parse({ ...design, rack: { ...design.rack, width: '10in' } });
+    expect(mini.rack.frame).toBe('mini-10in');
+    // Re-parsing a migrated design is a no-op.
+    expect(DesignSchema.parse(v2)).toEqual(v2);
+  });
+  it('keeps per-port colours and rejects bad keys', () => {
+    const p = { ...design.placements[0], portColors: { 'keystone:3': '#ff0000' } };
+    expect(DesignSchema.parse({ ...design, placements: [p] }).placements[0]!.portColors).toEqual({ 'keystone:3': '#ff0000' });
+    expect(DesignSchema.safeParse({ ...design, placements: [{ ...p, portColors: { bad: '#ff0000' } }] }).success).toBe(false);
+  });
+  it('rejects unknown future versions', () => {
+    expect(DesignSchema.safeParse({ ...design, schemaVersion: 3 }).success).toBe(false);
+  });
   it.each([[0], [33], [6.5]])('rejects rack height %s', (h) => {
     expect(DesignSchema.safeParse({ ...design, rack: { ...design.rack, heightU: h } }).success).toBe(false);
   });

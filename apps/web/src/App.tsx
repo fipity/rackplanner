@@ -1,6 +1,7 @@
 import { DndContext, MouseSensor, TouchSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core';
 import { useEffect } from 'react';
 import { CustomPartBuilder } from './components/catalog/CustomPartBuilder';
+import { GlobalFaceplateDefs } from './components/faceplates/Defs';
 import { handleDragCancel, handleDragEnd, handleDragMove, handleDragStart } from './components/rack/dnd';
 import { Button, cx } from './components/ui';
 import { navigate, useRoute } from './lib/router';
@@ -92,6 +93,7 @@ export function App() {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
+      <GlobalFaceplateDefs />
       <div className="flex h-full flex-col">{page}</div>
       {builder && <CustomPartBuilder key={`${builder.mode}:${builder.partId ?? ''}`} />}
       <Toasts />

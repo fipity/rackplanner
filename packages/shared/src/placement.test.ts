@@ -53,7 +53,7 @@ const parts = [
 ];
 const catalog: Catalog = new Map(parts.map((p) => [p.id, p]));
 
-const rack19: Rack = { width: '19in', heightU: 12, depthMm: null, numbering: 'bottom-up' };
+const rack19: Rack = { width: '19in', heightU: 12, depthMm: null, numbering: 'bottom-up', frame: 'open-4post', glassDoor: false };
 const pp = (p: Partial<PlacedPart> & Pick<PlacedPart, 'id' | 'partId'>): PlacedPart => ({
   bottomU: 1,
   xMm: 0,

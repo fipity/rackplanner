@@ -45,6 +45,10 @@ interface UiState {
   pendingEnd: CableEnd | null;
   selectedCableId: string | null;
   showCables: boolean;
+  /** Status LEDs drawn lit; off gives a cleaner print look. */
+  leds: boolean;
+  /** Rack drawing mode: device faces, or a top-down plan of the shelves. */
+  plan: boolean;
   /** Right panel tab. */
   rightTab: 'details' | 'stats';
   /** On narrow screens the right panel is an overlay; this opens it without a selection. */
@@ -63,6 +67,8 @@ interface UiState {
   setPendingEnd: (e: CableEnd | null) => void;
   selectCable: (id: string | null) => void;
   setShowCables: (v: boolean) => void;
+  setLeds: (v: boolean) => void;
+  setPlan: (v: boolean) => void;
   setPanelOpen: (v: boolean) => void;
   setFilters: (patch: Partial<CatalogFilters>) => void;
   resetFilters: () => void;
@@ -77,6 +83,7 @@ export function applyTheme(theme: Theme): void {
 }
 
 const savedTheme = readLocal(THEME_KEY);
+const LEDS_KEY = 'rackplanner.leds';
 
 export const useUiStore = create<UiState>()((set, get) => ({
   selectedId: null,
@@ -89,6 +96,8 @@ export const useUiStore = create<UiState>()((set, get) => ({
   pendingEnd: null,
   selectedCableId: null,
   showCables: true,
+  leds: readLocal(LEDS_KEY) !== 'off',
+  plan: false,
   rightTab: 'stats',
   panelOpen: false,
   filters: DEFAULT_FILTERS,
@@ -113,6 +122,11 @@ export const useUiStore = create<UiState>()((set, get) => ({
   setPendingEnd: (pendingEnd) => set({ pendingEnd }),
   selectCable: (selectedCableId) => set(selectedCableId ? { selectedCableId, selectedId: null, rightTab: 'details' } : { selectedCableId }),
   setShowCables: (showCables) => set({ showCables }),
+  setLeds: (leds) => {
+    writeLocal(LEDS_KEY, leds ? 'on' : 'off');
+    set({ leds });
+  },
+  setPlan: (plan) => set({ plan }),
   setPanelOpen: (panelOpen) => set({ panelOpen }),
   setFilters: (patch) => set({ filters: { ...get().filters, ...patch } }),
   resetFilters: () => set({ filters: DEFAULT_FILTERS }),

@@ -1,21 +1,65 @@
 # RackPlanner
 
-A self-hosted visual designer for home-lab server racks. Pick a 19″ or 10″ rack (1–32U), drag hardware from a researched catalog of ~300 parts into it, put desktop gear on shelves, and check the totals: power vs UPS capacity, PoE budget, weight and ports. Export the result as PNG, SVG, PDF, CSV or JSON.
+![The RackPlanner editor in dark mode with the "My RackMate T1" design: catalog on the left, an 8U 10-inch DeskPi RackMate T1 with a patch panel, UniFi switch, Raspberry Pi, gateway, power board and NVR in the middle, and power, PoE and warning stats on the right](docs/images/hero.png)
+
+A self-hosted visual designer for home-lab server racks. Pick a 19″ or 10″ rack (1–32U), drag hardware from a researched catalog of ~340 parts into it, put desktop gear on shelves, and check the totals: power vs UPS capacity, PoE budget, mains outlets, weight and ports. Export the result as PNG, SVG, PDF, CSV or JSON.
 
 Runs as a single Docker container with a SQLite database. No accounts and no cloud; it's built for your LAN.
 
 ## Features
 
-- **Rack editor:** 19″ / 10″, 1–32U, optional depth, U numbers bottom-up or top-down, front and rear views.
-- **Placement:** drag and drop with whole-U snapping. Collisions are blocked, with an explanation. Front, rear and full-depth mounting are supported, and front + rear devices too deep for the rack are blocked.
-- **Partial width and shelves:** 10″ and half-width gear placed left / centre / right, and desktop gear (mini PCs, NAS, Flex switches, Raspberry Pis) standing on shelves.
-- **Cables:** connect ports (or whole devices) with colour-coded patch cables, with types, labels and suggested lengths. Cables appear in the stats, the CSV shopping list and the exports.
-- **Faceplates:** generated from catalog data (ports, SFP cages, drive bays, displays, outlets), with no brand artwork.
-- **Catalog:** full UniFi lineup plus MikroTik, Synology, QNAP, UGREEN, TP-Link, Netgear, Cisco, Dell, HPE, Supermicro, APC, CyberPower, Eaton, DeskPi, Raspberry Pi and generic passive gear. Includes search, filters and a **custom part builder**.
-- **Designs:** multiple designs with autosave, thumbnails, rename / duplicate / delete, undo / redo.
-- **Stats:** U used, typical and max power, **measured power** per device, UPS capacity, PoE budget vs expected load, weight, ports, and a warnings list.
-- **Exports:** PNG / SVG (front, rear or both), PDF (views + parts list + summary), CSV bill of materials, JSON. Plus import and a printable view.
-- **Themes:** dark and light. Works on tablets.
+- **Detailed faceplates, front and rear:** every device is drawn as SVG from catalog data: RJ45 jacks with link/activity LEDs and latch notches, metallic SFP/QSFP cages, USB, HDMI, IEC and AU/NZ power, keystones, drive trays, displays, vents, fans and PSUs. Popular gear has a researched, sourced layout; everything else gets a sensible generated one. No logos or product photos.
+- **Style presets:** UniFi-style silver/white/black, server bezel, NAS grey, PDU, UPS, patch and brush panels and more, all fine in light and dark mode. Lit LEDs, or switch them off for a clean print look.
+- **Rack frames:** 2-post, 4-post, enclosed cabinet (with glass door) and 10″ mini racks including the **DeskPi RackMate T1 / T2**, with rails, cage-nut holes at EIA spacing and free-slot hints.
+- **Shelf plans:** a top-down view of every shelf showing how devices fit side by side, with overhangs flagged.
+- **Placement:** drag and drop with U snapping, collision checks, front / rear / full-depth mounting, partial-width gear and desktop gear on shelves. Warns when something is too wide, deep or tall for its shelf.
+- **Power sources:** USB-C, DC adapters, plug-packs and IEC inlets per device, checked against the outlets your power boards provide.
+- **Cables:** colour-coded port-to-port patch cables, with tooltips on every port ("Port 17 — 1 GbE (PoE+)").
+- **Zoom-aware detail:** simplified blocks when zoomed out and full detail up close, so a full 32U rack stays smooth.
+- **Catalog:** full UniFi lineup plus MikroTik, Synology, QNAP, UGREEN, TP-Link, Netgear, Cisco, Dell, HPE, Supermicro, APC, CyberPower, Eaton, DeskPi, Raspberry Pi and generic passive gear, with search, filters and a **custom part builder**.
+- **Designs, stats and exports:** autosave, undo / redo, power / UPS / PoE / weight totals with warnings, and PNG / SVG / PDF / CSV / JSON exports.
+
+## Gallery
+
+| | |
+|---|---|
+| ![Front view of the My RackMate T1 build: 12-port keystone patch panel, Lite 8 PoE switch and Raspberry Pi 4 on a shelf, Cloud Gateway Ultra, AU power board, vented panel and the NVR Instant at the bottom](docs/images/rackmate-t1-front.png) | ![Rear view of the same build: punch-down backs of the patch panel, the gateway's network ports and USB-C power, and the NVR's ports](docs/images/rackmate-t1-rear.png) |
+| **My RackMate T1, front:** a 10″ 8U DeskPi RackMate T1 with desktop UniFi gear on shelves. | **And the rear:** each device's rear panel, seen through the open back. |
+| ![A populated 24U 19-inch cabinet with a UniFi gateway, switches, patch panels, NVR, UNAS, Synology NAS, Dell servers, a PDU and an APC UPS](docs/images/full-19in-rack.png) | ![Top-down shelf plans showing the switch and Raspberry Pi side by side, the gateway, and the NVR overhanging its shelf in red](docs/images/rackmate-t1-shelves.png) |
+| **A full 24U 19″ cabinet:** UniFi, servers, NAS, patch panels, PDU and UPS. | **Shelf plans:** how desktop gear fits on each shelf, with overhangs hatched red. |
+| ![The editor in light mode showing the 24U homelab rack](docs/images/light-mode.png) | ![The same editor view in dark mode](docs/images/dark-mode.png) |
+| **Light mode** | **Dark mode** |
+| ![The catalog sidebar filtered to Ubiquiti PoE switches with a search term](docs/images/catalog.png) | ![The custom part builder dialog with a live faceplate preview](docs/images/custom-part-builder.png) |
+| **Catalog** with search and filters. | **Custom part builder** with a live preview. |
+| ![Animation: a switch is dragged from the catalog into an empty rack, then moved down to another slot](docs/images/drag-and-drop.gif) | |
+| **Drag and drop** from the catalog, then rearrange. | |
+
+## Device renders
+
+Front faceplates exported as SVG, straight from the renderer.
+
+| | |
+|---|---|
+| ![Raspberry Pi 4 in the official red and white case: USB 2.0 pair, USB 3.0 pair and Ethernet](docs/images/devices/raspberry-pi-4-case.svg) | ![UniFi Cloud Gateway Ultra front with its small status display](docs/images/devices/ubiquiti-ucg-ultra.svg) |
+| Raspberry Pi 4 (official case) | UniFi Cloud Gateway Ultra |
+| ![UniFi Switch Lite 8 PoE: eight ports, PoE markers on ports 1 to 4](docs/images/devices/ubiquiti-usw-lite-8-poe.svg) | ![UniFi NVR Instant front with its display](docs/images/devices/ubiquiti-unvr-instant.svg) |
+| UniFi Switch Lite 8 PoE | UniFi NVR Instant |
+| ![DeskPi 10-inch 1U 12-port keystone patch panel with a label strip](docs/images/devices/deskpi-rackmate-patch-12-keystone-1u.svg) | ![UniFi-style silver 24-port PoE switch with SFP+ cages](docs/images/devices/preset-unifi-silver.svg) |
+| DeskPi 10″ 12-port keystone panel | Preset: UniFi silver |
+| ![Black server bezel style: 2U server with eight 3.5-inch drive trays](docs/images/devices/preset-dell-bezel.svg) | ![Dark grey NAS style: 1U rack NAS with four drive bays](docs/images/devices/preset-synology.svg) |
+| Preset: server bezel | Preset: NAS grey |
+| ![Dark server style with a green accent: 1U server with ports and vents](docs/images/devices/preset-hpe.svg) | ![Light metal style with a red accent: router with ports and SFP cages](docs/images/devices/preset-mikrotik.svg) |
+| Preset: dark server | Preset: light metal |
+| ![UniFi-style black device](docs/images/devices/preset-unifi-black.svg) | ![Generic black 10-inch switch](docs/images/devices/preset-generic-black.svg) |
+| Preset: UniFi black | Preset: generic black |
+| ![24-port keystone patch panel](docs/images/devices/preset-patch-panel.svg) | ![1U brush panel with its bristle strip](docs/images/devices/preset-brush-panel.svg) |
+| Preset: patch panel | Preset: brush panel |
+| ![1U horizontal PDU with eight C13 outlets and a power switch](docs/images/devices/preset-pdu.svg) | ![2U UPS with a status display, buttons and a status bar](docs/images/devices/preset-ups.svg) |
+| Preset: PDU | Preset: UPS |
+| ![10-inch rack shelf with side lips](docs/images/devices/preset-shelf.svg) | ![Generic silver desktop computer](docs/images/devices/preset-generic-silver.svg) |
+| Preset: shelf | Preset: generic silver |
+
+All images are generated by `npm run screenshots` (see [Development](#development)); none are hand-edited, and none are manufacturer photos or logos.
 
 ## Install on Ubuntu
 
@@ -175,6 +219,34 @@ python3 scripts/research/build_misc.py       # servers, storage, switching, powe
 python3 scripts/research/gen_unverified.py   # -> catalog/UNVERIFIED.md
 ```
 
+## Faceplate layouts
+
+Each catalog entry can describe its front, rear and top faces declaratively; the renderer places the parts:
+
+```json
+"layout": {
+  "layoutVerified": false,
+  "sources": ["https://techspecs.ui.com/unifi/cloud-gateways/ucg-ultra"],
+  "front": { "style": "unifi-white", "regions": [ { "type": "display", "x": 0.41, "w": 0.18 } ] },
+  "rear": {
+    "regions": [
+      { "type": "usb_c", "count": 1, "portType": "none", "role": "Power in", "x": 0.05 },
+      { "type": "rj45", "count": 4, "portType": "rj45_1g", "x": 0.25 },
+      { "type": "rj45", "count": 1, "portType": "rj45_2_5g", "start": 5, "uplink": true, "role": "WAN", "x": 0.78 }
+    ]
+  }
+}
+```
+
+- Positions (`x`, `w`, `y`, `h`) are fractions of the face, so the same layout works on 19″, 10″ and half-width gear. A region without `x` follows the previous one, and one without `w` takes its natural size (scaled down to fit, never overlapping the next placed region).
+- Port regions (`rj45`, `sfp_plus`, `qsfp28`, `usb_a`, `usb_c`, `hdmi`, `iec_c14`, `outlet_au`, `keystone`, `punchdown`, `lc`…) take `count`, `rows`, `grouping`, `poe` / `poePorts`, `uplink`, `colors` and `numbers`. Two-row blocks number switch-style (odd on top, even below); `portType` ties them to the entry's `ports` for cables and stats (`"none"` for pass-through backs).
+- Feature regions: `bays`, `display`, `vent`, `leds`, `ledbar`, `button`, `label`, `psu`, `fan`, `pcie`, `io_shield`, `ground`, `label_strip`, `cable_bar`, `brush`, `handle`, `thumbscrew`, `switch`, `breaker`, `slot`, `d_ring`, `panel`.
+- `style` picks a preset: `unifi-silver`, `unifi-white`, `unifi-black`, `dell-bezel`, `hpe`, `synology`, `mikrotik`, `generic-black`, `generic-silver`, `patch-panel`, `brush-panel`, `shelf`, `pdu`, `ups`, `rpi-case`.
+- Entries without a layout get one generated from their ports, bays and category.
+- `npm run validate:catalog` checks every layout against the schema, that it stays inside its face without overlaps at each rack width, and that it draws each catalog port exactly once. Layouts with `layoutVerified: false` are listed in [`catalog/UNVERIFIED.md`](catalog/UNVERIFIED.md) with what couldn't be confirmed.
+
+`powerInput` records how a device is powered (`usb_c`, `dc_barrel`, `iec_c14`, `poe`…, via a plug-pack or brick), which feeds the outlet check in the stats.
+
 ## API
 
 | Method | Path | |
@@ -199,14 +271,33 @@ There's no Node on the host? `./dev.sh` runs npm inside a `node:22` container:
 ./dev.sh run dev            # API on :8085, Vite on :5173 (proxying /api)
 ```
 
+### Screenshots and README images
+
+Every image in `docs/images/` is produced by the app itself:
+
+```bash
+npx playwright install chromium   # once
+npm run screenshots               # builds, starts a scratch server, captures, optimises
+```
+
+It starts the built server on a temporary database (the example designs in `examples/` seed themselves), drives Chromium, writes palette-optimised PNGs, the drag-and-drop GIF and the device SVGs, and fails if `docs/images/` grows past 15 MB. If the browser runs under a different Node version from the server (for example inside the `mcr.microsoft.com/playwright` image), start the server yourself on an empty `DATA_DIR` and pass `BASE_URL=http://127.0.0.1:<port>`.
+
+`npm run examples` rebuilds `examples/*.json` from the catalog, checking every placement and cable.
+
+### GitHub social preview
+
+GitHub can't take the social preview image from the repository. Upload `docs/images/social-preview.png` (1280 × 640) under **Settings → General → Social preview → Edit → Upload an image**.
+
 Layout:
 
 ```
-packages/shared   zod schemas, placement engine, stats, import/export + BOM (shared by web + server)
+packages/shared   zod schemas, placement engine, faceplate layout engine, stats, power, import/export + BOM
 apps/server       Fastify API (SQLite via better-sqlite3 + Drizzle) + static hosting of the built web app
 apps/web          React + Vite + Tailwind editor (SVG rendering, dnd-kit, zustand + zundo, jsPDF)
-catalog/          parts catalog JSON seed files
-scripts/          catalog validator and research/build scripts
+catalog/          parts catalog JSON seed files (+ UNVERIFIED.md)
+examples/         example designs, added to the design list once
+scripts/          catalog validator, example builder, screenshot pipeline, research scripts
+docs/images/      generated README images
 ```
 
 ## Licence

@@ -49,19 +49,25 @@ function parseBody<T>(schema: z.ZodType<T>, body: unknown): T {
   return r.data;
 }
 
+/** Stored designs may predate the current schema version: upgrade them on read. */
+function upgrade(data: Design): Design {
+  const r = DesignSchema.safeParse(data);
+  return r.success ? r.data : data;
+}
+
 export function listDesigns(db: Db): StoredDesign[] {
   return db
     .select({ data: designs.data, revision: designs.revision })
     .from(designs)
     .orderBy(desc(designs.updatedAt))
     .all()
-    .map((r) => ({ design: r.data, revision: r.revision }));
+    .map((r) => ({ design: upgrade(r.data), revision: r.revision }));
 }
 
 export function getDesign(db: Db, id: string): StoredDesign {
   const row = db.select({ data: designs.data, revision: designs.revision }).from(designs).where(eq(designs.id, id)).get();
   if (!row) throw new DesignError(404, 'Design not found');
-  return { design: row.data, revision: row.revision };
+  return { design: upgrade(row.data), revision: row.revision };
 }
 
 function insert(db: Db, design: Design): StoredDesign {

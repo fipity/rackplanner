@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 2,
+  "id": "example-homelab-24u",
+  "name": "Homelab 24U (example)",
+  "rack": {
+    "width": "19in",
+    "heightU": 24,
+    "depthMm": 1000,
+    "numbering": "bottom-up",
+    "frame": "cabinet",
+    "glassDoor": false
+  },
+  "expectedPoeLoadW": null,
+  "placements": [
+    {
+      "id": "p1",
+      "partId": "ubiquiti-udm-pro-max",
+      "bottomU": 24,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p2",
+      "partId": "generic-cable-manager-1u-19",
+      "bottomU": 23,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p3",
+      "partId": "ubiquiti-uacc-rack-panel-patch-blank-24",
+      "bottomU": 22,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p4",
+      "partId": "ubiquiti-usw-pro-max-24-poe",
+      "bottomU": 21,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p5",
+      "partId": "ubiquiti-usw-aggregation",
+      "bottomU": 20,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p6",
+      "partId": "generic-patch-24-cat6-keystone-1u",
+      "bottomU": 19,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p7",
+      "partId": "ubiquiti-usw-pro-max-48-poe",
+      "bottomU": 18,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p8",
+      "partId": "generic-cable-manager-1u-finger",
+      "bottomU": 17,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p9",
+      "partId": "generic-brush-1u-19",
+      "bottomU": 16,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p10",
+      "partId": "ubiquiti-unvr",
+      "bottomU": 15,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p11",
+      "partId": "ubiquiti-unas-pro",
+      "bottomU": 13,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p12",
+      "partId": "generic-vented-blank-1u-19",
+      "bottomU": 12,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p13",
+      "partId": "synology-rs822-plus",
+      "bottomU": 11,
+      "xMm": 0,
+      "mounting": "full-depth"
+    },
+    {
+      "id": "p14",
+      "partId": "synology-rs422-plus",
+      "bottomU": 10,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p15",
+      "partId": "generic-blank-1u-19",
+      "bottomU": 9,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p16",
+      "partId": "dell-poweredge-r740",
+      "bottomU": 7,
+      "xMm": 0,
+      "mounting": "full-depth"
+    },
+    {
+      "id": "p17",
+      "partId": "dell-poweredge-r630",
+      "bottomU": 6,
+      "xMm": 0,
+      "mounting": "full-depth"
+    },
+    {
+      "id": "p18",
+      "partId": "generic-blank-1u-19",
+      "bottomU": 5,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p19",
+      "partId": "generic-vented-blank-1u-19",
+      "bottomU": 4,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p20",
+      "partId": "generic-pdu-1u-6-au",
+      "bottomU": 3,
+      "xMm": 0,
+      "mounting": "rear"
+    },
+    {
+      "id": "p21",
+      "partId": "apc-smt1500rmi2u",
+      "bottomU": 1,
+      "xMm": 0,
+      "mounting": "full-depth"
+    }
+  ],
+  "cables": [
+    {
+      "id": "c1",
+      "a": {
+        "placementId": "p4",
+        "port": {
+          "type": "rj45_2_5g",
+          "index": 1
+        }
+      },
+      "b": {
+        "placementId": "p3",
+        "port": {
+          "type": "keystone",
+          "index": 1
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c2",
+      "a": {
+        "placementId": "p4",
+        "port": {
+          "type": "rj45_2_5g",
+          "index": 2
+        }
+      },
+      "b": {
+        "placementId": "p3",
+        "port": {
+          "type": "keystone",
+          "index": 2
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c3",
+      "a": {
+        "placementId": "p4",
+        "port": {
+          "type": "rj45_2_5g",
+          "index": 3
+        }
+      },
+      "b": {
+        "placementId": "p3",
+        "port": {
+          "type": "keystone",
+          "index": 3
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c4",
+      "a": {
+        "placementId": "p4",
+        "port": {
+          "type": "rj45_2_5g",
+          "index": 4
+        }
+      },
+      "b": {
+        "placementId": "p3",
+        "port": {
+          "type": "keystone",
+          "index": 4
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c5",
+      "a": {
+        "placementId": "p4",
+        "port": {
+          "type": "rj45_2_5g",
+          "index": 5
+        }
+      },
+      "b": {
+        "placementId": "p3",
+        "port": {
+          "type": "keystone",
+          "index": 5
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c6",
+      "a": {
+        "placementId": "p4",
+        "port": {
+          "type": "rj45_2_5g",
+          "index": 6
+        }
+      },
+      "b": {
+        "placementId": "p3",
+        "port": {
+          "type": "keystone",
+          "index": 6
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c7",
+      "a": {
+        "placementId": "p7",
+        "port": {
+          "type": "rj45_1g",
+          "index": 1
+        }
+      },
+      "b": {
+        "placementId": "p6",
+        "port": {
+          "type": "keystone",
+          "index": 1
+        }
+      },
+      "type": "copper",
+      "color": "#22c55e",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c8",
+      "a": {
+        "placementId": "p7",
+        "port": {
+          "type": "rj45_1g",
+          "index": 2
+        }
+      },
+      "b": {
+        "placementId": "p6",
+        "port": {
+          "type": "keystone",
+          "index": 2
+        }
+      },
+      "type": "copper",
+      "color": "#22c55e",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c9",
+      "a": {
+        "placementId": "p7",
+        "port": {
+          "type": "rj45_1g",
+          "index": 3
+        }
+      },
+      "b": {
+        "placementId": "p6",
+        "port": {
+          "type": "keystone",
+          "index": 3
+        }
+      },
+      "type": "copper",
+      "color": "#22c55e",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c10",
+      "a": {
+        "placementId": "p7",
+        "port": {
+          "type": "rj45_1g",
+          "index": 4
+        }
+      },
+      "b": {
+        "placementId": "p6",
+        "port": {
+          "type": "keystone",
+          "index": 4
+        }
+      },
+      "type": "copper",
+      "color": "#22c55e",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c11",
+      "a": {
+        "placementId": "p7",
+        "port": {
+          "type": "rj45_1g",
+          "index": 5
+        }
+      },
+      "b": {
+        "placementId": "p6",
+        "port": {
+          "type": "keystone",
+          "index": 5
+        }
+      },
+      "type": "copper",
+      "color": "#22c55e",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c12",
+      "a": {
+        "placementId": "p7",
+        "port": {
+          "type": "rj45_1g",
+          "index": 6
+        }
+      },
+      "b": {
+        "placementId": "p6",
+        "port": {
+          "type": "keystone",
+          "index": 6
+        }
+      },
+      "type": "copper",
+      "color": "#22c55e",
+      "lengthM": 0.3
+    }
+  ],
+  "createdAt": "2026-11-10T00:00:00.000Z",
+  "updatedAt": "2026-11-10T00:00:00.000Z"
+}

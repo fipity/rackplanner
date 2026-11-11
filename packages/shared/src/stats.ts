@@ -17,11 +17,13 @@ import {
   descendantsOf,
   displayName,
   occupancyOf,
+  partWidthMm,
   type Catalog,
 } from './placement.js';
 import { cableProblems } from './cables.js';
+import { powerSupplySummary, type PowerSupplySummary } from './power.js';
 import type { CableType, Design, Part, PlacedPart, PortType } from './schemas.js';
-import { EPS } from './units.js';
+import { EPS, U_MM } from './units.js';
 
 export const PASSIVE_CATEGORIES: ReadonlySet<string> = new Set([
   'blank',
@@ -43,7 +45,12 @@ export type WarningCode =
   | 'poe-overload'
   | 'no-poe-source'
   | 'unknown-power'
-  | 'cable';
+  | 'cable'
+  | 'shelf-too-narrow'
+  | 'too-tall'
+  | 'power-outlets'
+  | 'plug-pack-socket'
+  | 'plug-packs';
 
 export interface StatsWarning {
   code: WarningCode;
@@ -74,6 +81,7 @@ export interface DesignStats {
   weight: { totalKg: number; unknownIds: string[] };
   ports: Partial<Record<PortType, number>>;
   cables: { count: number; byType: Partial<Record<CableType, number>>; totalLengthM: number; withoutLength: number };
+  powerSupply: PowerSupplySummary;
   warnings: StatsWarning[];
 }
 
@@ -203,6 +211,26 @@ export function computeStats(
           placementIds: [p.id],
         });
       }
+      if (shelfPart?.shelf && partWidthMm(part) > shelfPart.shelf.usableWidthMm + EPS) {
+        warnings.push({
+          code: 'shelf-too-narrow',
+          severity: 'error',
+          message: `${name} (${partWidthMm(part)} mm wide) is wider than ${displayName(shelf!, shelfPart)} (${shelfPart.shelf.usableWidthMm} mm usable); it won't sit flat between the side lips`,
+          placementIds: [p.id],
+        });
+      }
+      if (shelfPart && part.heightMm !== undefined) {
+        // Room above the tray within the U span the item reserves.
+        const room = part.heightU * U_MM - Math.min(4, shelfPart.heightU * U_MM * 0.12);
+        if (part.heightMm > room + EPS) {
+          warnings.push({
+            code: 'too-tall',
+            severity: 'warning',
+            message: `${name} is ${part.heightMm} mm tall; ${part.heightU}U on a shelf leaves about ${Math.round(room)} mm`,
+            placementIds: [p.id],
+          });
+        }
+      }
     } else if (part.formFactor === 'desktop') {
       desktopLoose.push(p.id);
     }
@@ -285,6 +313,38 @@ export function computeStats(
     warnings.push({ code: 'cable', severity: 'warning', message: pr.message, placementIds: [c.a.placementId, c.b.placementId].filter((id) => placements.some((p) => p.id === id)) });
   }
 
+  const supply = powerSupplySummary(design, catalog);
+  if (supply.relevant) {
+    const outlets = supply.mainsSockets + supply.iecOutlets;
+    const powered = supply.needs.filter((n) => n.outlets > 0).map((n) => n.placementId);
+    if (supply.outletsNeeded > outlets) {
+      warnings.push({
+        code: 'power-outlets',
+        severity: 'warning',
+        message: outlets
+          ? `Devices need ${supply.outletsNeeded} mains outlets; the rack's power boards provide ${outlets}`
+          : `Devices need ${supply.outletsNeeded} mains outlets; add a power board or PDU`,
+        placementIds: powered,
+      });
+    }
+    if (supply.socketsNeeded > supply.mainsSockets && supply.socketsNeeded > 0) {
+      warnings.push({
+        code: 'plug-pack-socket',
+        severity: 'warning',
+        message: `${supply.socketsNeeded} plug-pack adapter${supply.socketsNeeded === 1 ? '' : 's'} need a mains socket (IEC C13 outlets can't take them without an adapter lead); the rack has ${supply.mainsSockets}`,
+        placementIds: supply.plugPackIds,
+      });
+    }
+    if (supply.plugPackIds.length) {
+      warnings.push({
+        code: 'plug-packs',
+        severity: 'info',
+        message: `${list(supply.plugPackIds)} use${supply.plugPackIds.length === 1 ? 's' : ''} a plug-pack; bulky adapters can cover the next outlet, so leave a gap or use short extension leads`,
+        placementIds: supply.plugPackIds,
+      });
+    }
+  }
+
   const usedU = occupied.size / 2;
   return {
     rackU: rack.heightU,
@@ -307,6 +367,7 @@ export function computeStats(
     weight: { totalKg: round(weightKg, 2), unknownIds: unknownWeight },
     ports,
     cables: { count: cables.length, byType, totalLengthM: round(totalLengthM, 2), withoutLength },
+    powerSupply: supply,
     warnings,
   };
 }

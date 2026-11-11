@@ -46,3 +46,17 @@
 - Image size: consider an alpine runtime in Phase 4 (better-sqlite3 has musl prebuilds).
 - `/data` is owned by `node` (uid 1000) in the image; a host bind mount `./data` needs to be writable by uid 1000 once SQLite lands (Phase 3).
 - Shelf placement UI (drop onto a shelf) is Phase 4; the engine and tests already support it.
+
+# Faceplate realism upgrade (4 phases, started 2026-11-10)
+
+## Phase 1: component library, style presets, auto-generation, priority build ✅ (2026-11-11)
+- Shared layout engine (`packages/shared/src/layout`): declarative front/rear/top `layout` per part (fractional regions; ports, bays, display, vents, LEDs, PSUs, fans, PCIe, label strips, cable bars, brushes…), switch-style zigzag numbering, grouping, PoE/uplink, per-port colours, memoised `resolveFace`, auto-generated layouts from ports/bays/category for every entry without one.
+- Schema: `layout` (+ `layoutVerified`, `sources`), `powerInput`, `render.preset`, new port types (USB-C, HDMI, micro HDMI, DP, VGA, serial, SC, DC out). Design v2: `rack.frame`, `rack.glassDoor`, `placement.portColors`; v1 designs migrate on parse (client, import and server read).
+- Web renderer: SVG `<symbol>` component library (RJ45 with LED pair and latch notch, SFP/QSFP cages, USB-A/C, HDMI, DP, D-sub, IEC C13/C14/C19/C20/C6/C8, AU/NEMA/Schuko/UK outlets, keystones, punch-downs, LC/SC, screws, cage holes), 15 style presets, bevels, rail shadows, lit/unlit LEDs toggle, LOD (low/mid/high by zoom), port tooltips, rear views of every device (front-mounted gear seen through the rack).
+- Rack frames: open 2-post, 4-post, cabinet (+ glass door), generic 10" and DeskPi RackMate T1/T2 (dimensions from wiki.deskpi.com), EIA cage-nut holes, empty-U hints.
+- Shelf plans ("Shelves" view): top-down footprint of each shelf, overhangs hatched. Shelf overhang now a warning (centred) instead of a blocked drop; too-tall and too-narrow warnings; power-source summary (outlets needed vs available, plug-pack warnings).
+- Priority catalog: Pi 4 in official case, UCG-Ultra, USW-Lite-8-PoE, UNVR-Instant (front/rear/top, power inputs, sources); DeskPi shelves/panels/patch panels (DP-0031/0041/0056/0034/0086/0060/0043/0044/0032/0045/0051/0063/0073/0058/0042), 3D-printed Mauker mounts, PA-PDU6X and generic 10" AU boards, generic 10" punch-down panel. No DeskPi 8-port 0.5U panel exists (DP-0034 is 12-port 0.5U).
+- Finding: UNVR-Instant (220 × 220 × 47 mm) is wider than the 212 mm RackMate shelves and deeper than their 200 mm tray; the example shows it with that warning.
+- Examples (`examples/*.json`, built by `npm run examples`) seeded once via a `meta` table (migration 3): "My RackMate T1" and "Homelab 24U (example)".
+- Images: `npm run screenshots` (Playwright + sharp + gifenc) writes docs/images (hero, build front/rear/shelves, 24U, light/dark, catalog, builder, GIF, device SVGs, social preview). Locally run with `~/.cache/rackplanner-research/bin/shots` (Node 22 server container + Playwright image with BASE_URL).
+- Tests: 187 (layout engine, catalog layout bounds/overlap/port counts, migration, example seeding).

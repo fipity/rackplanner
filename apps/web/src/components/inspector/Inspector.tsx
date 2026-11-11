@@ -1,6 +1,8 @@
 import {
   PORT_TYPE_LABELS,
   alignedX,
+  describePowerInput,
+  partWidthMm,
   allowedMountings,
   cablesAt,
   canAlign,
@@ -96,6 +98,9 @@ function Specs({ part }: { part: Part }) {
   if (part.poeBudgetW) rows.push(['PoE budget', `${part.poeBudgetW} W`]);
   if (part.ups) rows.push(['UPS capacity', `${part.ups.capacityW} W${part.ups.capacityVA ? ` / ${part.ups.capacityVA} VA` : ''}`]);
   if (part.driveBays?.length) rows.push(['Drive bays', part.driveBays.map((b) => `${b.count}× ${b.size}″`).join(', ')]);
+  if (part.formFactor === 'desktop' && part.heightMm) rows.push(['Size (W × D × H)', `${partWidthMm(part)} × ${part.depthMm ?? '—'} × ${part.heightMm} mm`]);
+  if (part.powerInput) rows.push(['Power input', describePowerInput(part.powerInput)]);
+  if (part.layout) rows.push(['Faceplate layout', part.layout.layoutVerified ? 'Verified' : 'Partly estimated']);
   return (
     <div className="space-y-2">
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
@@ -106,6 +111,7 @@ function Specs({ part }: { part: Part }) {
           </div>
         ))}
       </dl>
+      {part.powerInput?.notes && <p className="text-xs text-zinc-500">{part.powerInput.notes}</p>}
       {ports.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {ports.map(([k, n]) => (

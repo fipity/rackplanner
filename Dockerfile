@@ -9,6 +9,7 @@ COPY package.json package-lock.json ./
 COPY packages/shared/package.json packages/shared/
 COPY apps/server/package.json apps/server/
 COPY apps/web/package.json apps/web/
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 RUN npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build
@@ -34,12 +35,14 @@ ENV NODE_ENV=production \
     PORT=8085 \
     DATA_DIR=/data \
     CATALOG_DIR=/app/catalog \
+    EXAMPLES_DIR=/app/examples \
     WEB_DIST=/app/web
 WORKDIR /app
 COPY --from=deps /deps/node_modules ./node_modules
 COPY --from=build /app/apps/server/dist ./server
 COPY --from=build /app/apps/web/dist ./web
 COPY catalog ./catalog
+COPY examples ./examples
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN mkdir -p /data && chown node:node /data \
  && find ./web -name '*.map' -delete \

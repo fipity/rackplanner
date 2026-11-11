@@ -208,7 +208,15 @@
                 "outlet_nema",
                 "outlet_schuko",
                 "outlet_au",
-                "outlet_uk"
+                "outlet_uk",
+                "usb_c",
+                "hdmi",
+                "micro_hdmi",
+                "displayport",
+                "vga",
+                "serial",
+                "sc_duplex",
+                "dc_out"
               ]
             },
             "additionalProperties": {
@@ -323,10 +331,3969 @@
               "accent": {
                 "type": "string",
                 "pattern": "^#[0-9a-fA-F]{6}$"
+              },
+              "preset": {
+                "type": "string",
+                "enum": [
+                  "unifi-silver",
+                  "unifi-black",
+                  "unifi-white",
+                  "dell-bezel",
+                  "hpe",
+                  "synology",
+                  "mikrotik",
+                  "generic-black",
+                  "generic-silver",
+                  "patch-panel",
+                  "brush-panel",
+                  "shelf",
+                  "pdu",
+                  "ups",
+                  "rpi-case"
+                ]
               }
             },
             "required": [
               "style"
+            ],
+            "additionalProperties": false
+          },
+          "layout": {
+            "type": "object",
+            "properties": {
+              "front": {
+                "type": "object",
+                "properties": {
+                  "style": {
+                    "type": "string",
+                    "enum": [
+                      "unifi-silver",
+                      "unifi-black",
+                      "unifi-white",
+                      "dell-bezel",
+                      "hpe",
+                      "synology",
+                      "mikrotik",
+                      "generic-black",
+                      "generic-silver",
+                      "patch-panel",
+                      "brush-panel",
+                      "shelf",
+                      "pdu",
+                      "ups",
+                      "rpi-case"
+                    ]
+                  },
+                  "regions": {
+                    "maxItems": 64,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "rj45",
+                                "console",
+                                "sfp",
+                                "sfp_plus",
+                                "sfp28",
+                                "qsfp",
+                                "qsfp28",
+                                "usb_a",
+                                "usb_c",
+                                "micro_usb",
+                                "hdmi",
+                                "micro_hdmi",
+                                "vga",
+                                "displayport",
+                                "serial",
+                                "audio",
+                                "microsd",
+                                "iec_c13",
+                                "iec_c14",
+                                "iec_c19",
+                                "iec_c20",
+                                "iec_c6",
+                                "iec_c8",
+                                "dc_barrel",
+                                "outlet_au",
+                                "outlet_nema",
+                                "outlet_schuko",
+                                "outlet_uk",
+                                "keystone",
+                                "coupler",
+                                "punchdown",
+                                "lc",
+                                "sc"
+                              ]
+                            },
+                            "count": {
+                              "default": 1,
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 96
+                            },
+                            "rows": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 4
+                            },
+                            "grouping": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "portType": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "rj45_100m",
+                                    "rj45_1g",
+                                    "rj45_2_5g",
+                                    "rj45_5g",
+                                    "rj45_10g",
+                                    "sfp",
+                                    "sfp_plus",
+                                    "sfp28",
+                                    "qsfp_plus",
+                                    "qsfp28",
+                                    "keystone",
+                                    "lc_duplex",
+                                    "usb",
+                                    "console",
+                                    "outlet_c13",
+                                    "outlet_c19",
+                                    "outlet_nema",
+                                    "outlet_schuko",
+                                    "outlet_au",
+                                    "outlet_uk",
+                                    "usb_c",
+                                    "hdmi",
+                                    "micro_hdmi",
+                                    "displayport",
+                                    "vga",
+                                    "serial",
+                                    "sc_duplex",
+                                    "dc_out"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "const": "none"
+                                }
+                              ]
+                            },
+                            "start": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "order": {
+                              "type": "string",
+                              "enum": [
+                                "zigzag",
+                                "row"
+                              ]
+                            },
+                            "poe": {
+                              "anyOf": [
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "poe",
+                                    "poe+",
+                                    "poe++",
+                                    "passive"
+                                  ]
+                                }
+                              ]
+                            },
+                            "poePorts": {
+                              "type": "array",
+                              "items": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "uplink": {
+                              "type": "boolean"
+                            },
+                            "speed": {
+                              "type": "string",
+                              "maxLength": 24
+                            },
+                            "colors": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^#[0-9a-fA-F]{6}$"
+                              }
+                            },
+                            "numbers": {
+                              "type": "boolean"
+                            },
+                            "role": {
+                              "type": "string",
+                              "maxLength": 48
+                            },
+                            "x": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "w": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "y": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "h": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "align": {
+                              "type": "string",
+                              "enum": [
+                                "start",
+                                "center",
+                                "end"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "bays"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 60
+                                },
+                                "size": {
+                                  "default": "3.5",
+                                  "type": "string",
+                                  "enum": [
+                                    "2.5",
+                                    "3.5",
+                                    "m2",
+                                    "e1s"
+                                  ]
+                                },
+                                "orientation": {
+                                  "type": "string",
+                                  "enum": [
+                                    "horizontal",
+                                    "vertical"
+                                  ]
+                                },
+                                "rows": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 6
+                                },
+                                "start": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "count"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "display"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "variant": {
+                                  "default": "lcd",
+                                  "type": "string",
+                                  "enum": [
+                                    "lcd",
+                                    "touch",
+                                    "segment"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "vent"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "pattern": {
+                                  "type": "string",
+                                  "enum": [
+                                    "honeycomb",
+                                    "slots",
+                                    "mesh",
+                                    "holes"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "leds"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 48
+                                },
+                                "colors": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "pattern": "^#[0-9a-fA-F]{6}$"
+                                  }
+                                },
+                                "labels": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "maxLength": 8
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "ledbar"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "button"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "kind": {
+                                  "default": "push",
+                                  "type": "string",
+                                  "enum": [
+                                    "power",
+                                    "reset",
+                                    "pinhole",
+                                    "push"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "label"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "maxLength": 60
+                                },
+                                "size": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 12
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "psu"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 4
+                                },
+                                "inlet": {
+                                  "default": "iec_c14",
+                                  "type": "string",
+                                  "enum": [
+                                    "iec_c14",
+                                    "iec_c20"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "fan"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 12
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "pcie"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 8
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "io_shield"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "ground"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "label_strip"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "cable_bar"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "brush"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "handle"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "thumbscrew"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "switch"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "variant": {
+                                  "default": "rocker",
+                                  "type": "string",
+                                  "enum": [
+                                    "rocker",
+                                    "toggle"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 12
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "breaker"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "slot"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "d_ring"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 3,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 8
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "panel"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                },
+                                "radius": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 40
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "regions"
+                ],
+                "additionalProperties": false
+              },
+              "rear": {
+                "type": "object",
+                "properties": {
+                  "style": {
+                    "type": "string",
+                    "enum": [
+                      "unifi-silver",
+                      "unifi-black",
+                      "unifi-white",
+                      "dell-bezel",
+                      "hpe",
+                      "synology",
+                      "mikrotik",
+                      "generic-black",
+                      "generic-silver",
+                      "patch-panel",
+                      "brush-panel",
+                      "shelf",
+                      "pdu",
+                      "ups",
+                      "rpi-case"
+                    ]
+                  },
+                  "regions": {
+                    "maxItems": 64,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "rj45",
+                                "console",
+                                "sfp",
+                                "sfp_plus",
+                                "sfp28",
+                                "qsfp",
+                                "qsfp28",
+                                "usb_a",
+                                "usb_c",
+                                "micro_usb",
+                                "hdmi",
+                                "micro_hdmi",
+                                "vga",
+                                "displayport",
+                                "serial",
+                                "audio",
+                                "microsd",
+                                "iec_c13",
+                                "iec_c14",
+                                "iec_c19",
+                                "iec_c20",
+                                "iec_c6",
+                                "iec_c8",
+                                "dc_barrel",
+                                "outlet_au",
+                                "outlet_nema",
+                                "outlet_schuko",
+                                "outlet_uk",
+                                "keystone",
+                                "coupler",
+                                "punchdown",
+                                "lc",
+                                "sc"
+                              ]
+                            },
+                            "count": {
+                              "default": 1,
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 96
+                            },
+                            "rows": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 4
+                            },
+                            "grouping": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "portType": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "rj45_100m",
+                                    "rj45_1g",
+                                    "rj45_2_5g",
+                                    "rj45_5g",
+                                    "rj45_10g",
+                                    "sfp",
+                                    "sfp_plus",
+                                    "sfp28",
+                                    "qsfp_plus",
+                                    "qsfp28",
+                                    "keystone",
+                                    "lc_duplex",
+                                    "usb",
+                                    "console",
+                                    "outlet_c13",
+                                    "outlet_c19",
+                                    "outlet_nema",
+                                    "outlet_schuko",
+                                    "outlet_au",
+                                    "outlet_uk",
+                                    "usb_c",
+                                    "hdmi",
+                                    "micro_hdmi",
+                                    "displayport",
+                                    "vga",
+                                    "serial",
+                                    "sc_duplex",
+                                    "dc_out"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "const": "none"
+                                }
+                              ]
+                            },
+                            "start": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "order": {
+                              "type": "string",
+                              "enum": [
+                                "zigzag",
+                                "row"
+                              ]
+                            },
+                            "poe": {
+                              "anyOf": [
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "poe",
+                                    "poe+",
+                                    "poe++",
+                                    "passive"
+                                  ]
+                                }
+                              ]
+                            },
+                            "poePorts": {
+                              "type": "array",
+                              "items": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "uplink": {
+                              "type": "boolean"
+                            },
+                            "speed": {
+                              "type": "string",
+                              "maxLength": 24
+                            },
+                            "colors": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^#[0-9a-fA-F]{6}$"
+                              }
+                            },
+                            "numbers": {
+                              "type": "boolean"
+                            },
+                            "role": {
+                              "type": "string",
+                              "maxLength": 48
+                            },
+                            "x": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "w": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "y": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "h": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "align": {
+                              "type": "string",
+                              "enum": [
+                                "start",
+                                "center",
+                                "end"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "bays"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 60
+                                },
+                                "size": {
+                                  "default": "3.5",
+                                  "type": "string",
+                                  "enum": [
+                                    "2.5",
+                                    "3.5",
+                                    "m2",
+                                    "e1s"
+                                  ]
+                                },
+                                "orientation": {
+                                  "type": "string",
+                                  "enum": [
+                                    "horizontal",
+                                    "vertical"
+                                  ]
+                                },
+                                "rows": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 6
+                                },
+                                "start": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "count"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "display"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "variant": {
+                                  "default": "lcd",
+                                  "type": "string",
+                                  "enum": [
+                                    "lcd",
+                                    "touch",
+                                    "segment"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "vent"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "pattern": {
+                                  "type": "string",
+                                  "enum": [
+                                    "honeycomb",
+                                    "slots",
+                                    "mesh",
+                                    "holes"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "leds"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 48
+                                },
+                                "colors": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "pattern": "^#[0-9a-fA-F]{6}$"
+                                  }
+                                },
+                                "labels": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "maxLength": 8
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "ledbar"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "button"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "kind": {
+                                  "default": "push",
+                                  "type": "string",
+                                  "enum": [
+                                    "power",
+                                    "reset",
+                                    "pinhole",
+                                    "push"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "label"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "maxLength": 60
+                                },
+                                "size": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 12
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "psu"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 4
+                                },
+                                "inlet": {
+                                  "default": "iec_c14",
+                                  "type": "string",
+                                  "enum": [
+                                    "iec_c14",
+                                    "iec_c20"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "fan"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 12
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "pcie"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 8
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "io_shield"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "ground"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "label_strip"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "cable_bar"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "brush"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "handle"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "thumbscrew"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "switch"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "variant": {
+                                  "default": "rocker",
+                                  "type": "string",
+                                  "enum": [
+                                    "rocker",
+                                    "toggle"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 12
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "breaker"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "slot"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "d_ring"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 3,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 8
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "panel"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                },
+                                "radius": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 40
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "regions"
+                ],
+                "additionalProperties": false
+              },
+              "top": {
+                "type": "object",
+                "properties": {
+                  "style": {
+                    "type": "string",
+                    "enum": [
+                      "unifi-silver",
+                      "unifi-black",
+                      "unifi-white",
+                      "dell-bezel",
+                      "hpe",
+                      "synology",
+                      "mikrotik",
+                      "generic-black",
+                      "generic-silver",
+                      "patch-panel",
+                      "brush-panel",
+                      "shelf",
+                      "pdu",
+                      "ups",
+                      "rpi-case"
+                    ]
+                  },
+                  "regions": {
+                    "maxItems": 64,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "rj45",
+                                "console",
+                                "sfp",
+                                "sfp_plus",
+                                "sfp28",
+                                "qsfp",
+                                "qsfp28",
+                                "usb_a",
+                                "usb_c",
+                                "micro_usb",
+                                "hdmi",
+                                "micro_hdmi",
+                                "vga",
+                                "displayport",
+                                "serial",
+                                "audio",
+                                "microsd",
+                                "iec_c13",
+                                "iec_c14",
+                                "iec_c19",
+                                "iec_c20",
+                                "iec_c6",
+                                "iec_c8",
+                                "dc_barrel",
+                                "outlet_au",
+                                "outlet_nema",
+                                "outlet_schuko",
+                                "outlet_uk",
+                                "keystone",
+                                "coupler",
+                                "punchdown",
+                                "lc",
+                                "sc"
+                              ]
+                            },
+                            "count": {
+                              "default": 1,
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 96
+                            },
+                            "rows": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 4
+                            },
+                            "grouping": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "portType": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "rj45_100m",
+                                    "rj45_1g",
+                                    "rj45_2_5g",
+                                    "rj45_5g",
+                                    "rj45_10g",
+                                    "sfp",
+                                    "sfp_plus",
+                                    "sfp28",
+                                    "qsfp_plus",
+                                    "qsfp28",
+                                    "keystone",
+                                    "lc_duplex",
+                                    "usb",
+                                    "console",
+                                    "outlet_c13",
+                                    "outlet_c19",
+                                    "outlet_nema",
+                                    "outlet_schuko",
+                                    "outlet_au",
+                                    "outlet_uk",
+                                    "usb_c",
+                                    "hdmi",
+                                    "micro_hdmi",
+                                    "displayport",
+                                    "vga",
+                                    "serial",
+                                    "sc_duplex",
+                                    "dc_out"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "const": "none"
+                                }
+                              ]
+                            },
+                            "start": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "order": {
+                              "type": "string",
+                              "enum": [
+                                "zigzag",
+                                "row"
+                              ]
+                            },
+                            "poe": {
+                              "anyOf": [
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "poe",
+                                    "poe+",
+                                    "poe++",
+                                    "passive"
+                                  ]
+                                }
+                              ]
+                            },
+                            "poePorts": {
+                              "type": "array",
+                              "items": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "uplink": {
+                              "type": "boolean"
+                            },
+                            "speed": {
+                              "type": "string",
+                              "maxLength": 24
+                            },
+                            "colors": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^#[0-9a-fA-F]{6}$"
+                              }
+                            },
+                            "numbers": {
+                              "type": "boolean"
+                            },
+                            "role": {
+                              "type": "string",
+                              "maxLength": 48
+                            },
+                            "x": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "w": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "y": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "h": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "align": {
+                              "type": "string",
+                              "enum": [
+                                "start",
+                                "center",
+                                "end"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "bays"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 60
+                                },
+                                "size": {
+                                  "default": "3.5",
+                                  "type": "string",
+                                  "enum": [
+                                    "2.5",
+                                    "3.5",
+                                    "m2",
+                                    "e1s"
+                                  ]
+                                },
+                                "orientation": {
+                                  "type": "string",
+                                  "enum": [
+                                    "horizontal",
+                                    "vertical"
+                                  ]
+                                },
+                                "rows": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 6
+                                },
+                                "start": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "count"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "display"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "variant": {
+                                  "default": "lcd",
+                                  "type": "string",
+                                  "enum": [
+                                    "lcd",
+                                    "touch",
+                                    "segment"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "vent"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "pattern": {
+                                  "type": "string",
+                                  "enum": [
+                                    "honeycomb",
+                                    "slots",
+                                    "mesh",
+                                    "holes"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "leds"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 48
+                                },
+                                "colors": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "pattern": "^#[0-9a-fA-F]{6}$"
+                                  }
+                                },
+                                "labels": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "maxLength": 8
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "ledbar"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "button"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "kind": {
+                                  "default": "push",
+                                  "type": "string",
+                                  "enum": [
+                                    "power",
+                                    "reset",
+                                    "pinhole",
+                                    "push"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "label"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "maxLength": 60
+                                },
+                                "size": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 12
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "psu"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 4
+                                },
+                                "inlet": {
+                                  "default": "iec_c14",
+                                  "type": "string",
+                                  "enum": [
+                                    "iec_c14",
+                                    "iec_c20"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "fan"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 12
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "pcie"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 8
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "io_shield"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "ground"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "label_strip"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "cable_bar"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "brush"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "handle"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "thumbscrew"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "switch"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "variant": {
+                                  "default": "rocker",
+                                  "type": "string",
+                                  "enum": [
+                                    "rocker",
+                                    "toggle"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 1,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 12
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "breaker"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "slot"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "d_ring"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "count": {
+                                  "default": 3,
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 8
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "panel"
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "w": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "h": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "start",
+                                    "center",
+                                    "end"
+                                  ]
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^#[0-9a-fA-F]{6}$"
+                                },
+                                "radius": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 40
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "regions"
+                ],
+                "additionalProperties": false
+              },
+              "layoutVerified": {
+                "type": "boolean"
+              },
+              "sources": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000
+              }
+            },
+            "required": [
+              "layoutVerified"
+            ],
+            "additionalProperties": false
+          },
+          "powerInput": {
+            "type": "object",
+            "properties": {
+              "connector": {
+                "type": "string",
+                "enum": [
+                  "iec_c14",
+                  "iec_c20",
+                  "iec_c8",
+                  "iec_c6",
+                  "ac_inlet",
+                  "usb_c",
+                  "dc_barrel",
+                  "poe",
+                  "hardwired"
+                ]
+              },
+              "voltageV": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 400
+              },
+              "currentA": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 100
+              },
+              "adapter": {
+                "default": "none",
+                "type": "string",
+                "enum": [
+                  "none",
+                  "wall",
+                  "brick"
+                ]
+              },
+              "adapterW": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 5000
+              },
+              "adapterIncluded": {
+                "type": "boolean"
+              },
+              "inputs": {
+                "default": 1,
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 4
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 400
+              }
+            },
+            "required": [
+              "connector"
             ],
             "additionalProperties": false
           },

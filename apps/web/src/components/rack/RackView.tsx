@@ -6,7 +6,6 @@
 import { Fragment, type ComponentType, type ReactNode, type Ref } from 'react';
 import {
   PORT_TYPE_LABELS,
-  U_MM,
   occupancyOf,
   type Cable,
   type CableEnd,
@@ -16,9 +15,11 @@ import {
   type Part,
   type PlacedPart,
 } from '@rackplanner/shared';
-import { Faceplate, portPositions } from '../faceplates/Faceplate';
+import { Faceplate, bodyHeight, portPositions, type Lod } from '../faceplates/Faceplate';
+import { FaceplateDefs } from '../faceplates/Defs';
+import { GlassDoor, RackFrame } from './RackFrame';
 import { cableEndPoint, cablePath } from './cableGeometry';
-import { FRAME, GUTTER, RAIL, deviceBox, rackLayout, shelfTrayMm, uTopToY, type DeviceBox, type RackLayout, type View } from './geometry';
+import { deviceBox, faceSeen, rackLayout, shelfTrayMm, type DeviceBox, type View } from './geometry';
 
 export interface PlacementWrapperProps {
   placement: PlacedPart;
@@ -56,9 +57,15 @@ export interface RackViewProps {
   /** First end of a cable being drawn, and the pointer (SVG mm) for the rubber band. */
   pendingEnd?: CableEnd | null;
   pointer?: { x: number; y: number } | null;
+  /** Level of detail; exports always use 'high'. */
+  lod?: Lod;
+  /** Status LEDs lit (off = print style). */
+  leds?: boolean;
+  /** Include the shared <defs> (standalone SVG exports). */
+  embedDefs?: boolean;
+  /** Hover tooltips on ports ("Port 17 — 1 GbE PoE+"). */
+  portTooltips?: boolean;
 }
-
-const HOLE_OFFSETS = [6.35, 22.225, 38.1];
 
 export function RackView({
   design,
@@ -78,6 +85,10 @@ export function RackView({
   onPortClick,
   pendingEnd,
   pointer,
+  lod = 'high',
+  leds = true,
+  embedDefs = false,
+  portTooltips = false,
 }: RackViewProps) {
   const layout = rackLayout(design.rack);
   const { placements } = design;
@@ -104,7 +115,30 @@ export function RackView({
   const visible = items.filter((i) => i.occ.faces.includes(view));
   const otherFace = items.filter((i) => !i.occ.faces.includes(view));
   // Shelves before their contents so children draw on top.
-  visible.sort((a, b) => Number(a.p.parentId !== undefined) - Number(b.p.parentId !== undefined));
+  const byLayer = (a: (typeof items)[number], b: (typeof items)[number]) => Number(a.p.parentId !== undefined) - Number(b.p.parentId !== undefined);
+  visible.sort(byLayer);
+  otherFace.sort(byLayer);
+
+  // U slots with nothing mounted on this face: drawn as subtle "free" hints.
+  const filled = new Set<number>();
+  for (const { occ } of visible) for (let u = Math.floor(occ.u0); u < occ.u1 - 1e-6; u++) filled.add(u);
+  const emptyUs = Array.from({ length: design.rack.heightU }, (_, i) => i + 1).filter((u) => !filled.has(u));
+
+  const face = (p: PlacedPart, part: Part, occ: Occupancy, box: DeviceBox, extra: { label?: string | undefined; color?: string | undefined } = {}) => (
+    <Faceplate
+      part={part}
+      w={box.w}
+      h={box.h}
+      ears={box.ears}
+      view={faceSeen(occ.faces, view)}
+      lod={lod}
+      leds={leds}
+      portColors={p.portColors}
+      tooltips={portTooltips}
+      label={extra.label}
+      color={extra.color}
+    />
+  );
 
   let ghostNode: ReactNode = null;
   if (ghost) {
@@ -117,7 +151,7 @@ export function RackView({
       ghostNode = (
         <g pointerEvents="none">
           <g transform={`translate(${box.x} ${box.y})`} opacity={0.72}>
-            <Faceplate part={part} w={box.w} h={box.h} ears={box.ears} view={view} />
+            {face(ghost.candidate, part, occ, box)}
           </g>
           <rect
             x={box.x - 0.8}
@@ -146,32 +180,33 @@ export function RackView({
       role="img"
       aria-label={`${design.rack.heightU}U ${design.rack.width} rack, ${view} view`}
     >
-      <RackFrame layout={layout} />
+      {embedDefs && <FaceplateDefs />}
+      <RackFrame layout={layout} lod={lod} emptyKey={emptyUs.join(',')} />
 
+      {/* Gear mounted on the other face, seen through the rack. */}
       {otherFace.map(({ p, part, occ }) => {
         const box = boxOf(p, part, occ);
         return (
-          <rect
-            key={`o-${p.id}`}
-            x={box.x + 1}
-            y={box.y + 1}
-            width={box.w - 2}
-            height={box.h - 2}
-            rx={1}
-            fill="rgba(148,163,184,0.06)"
-            stroke="rgba(148,163,184,0.35)"
-            strokeWidth={0.6}
-            strokeDasharray="3 2"
-            pointerEvents="none"
-          />
+          <g key={`o-${p.id}`} transform={`translate(${box.x} ${box.y})`} opacity={0.78} pointerEvents="none">
+            {face(p, part, occ, box)}
+          </g>
         );
       })}
 
+      {/* Soft shadow where devices meet the rails and the gear below. */}
+      {lod !== 'low' &&
+        visible.map(({ p, part, occ }) => {
+          if (part.render.style === 'shelf') return null;
+          const box = boxOf(p, part, occ);
+          const bh = bodyHeight(part, box.h);
+          return <rect key={`s-${p.id}`} x={box.x + 0.8} y={box.y + box.h - 0.3} width={box.w - 1.6} height={Math.min(3, bh * 0.2)} fill="url(#rp-rail-shadow)" pointerEvents="none" />;
+        })}
+
       {visible.map(({ p, part, occ }) => {
         const box = boxOf(p, part, occ);
-        const face = (
+        const drawn = (
           <g transform={`translate(${box.x} ${box.y})`} opacity={draggingId === p.id ? 0.3 : 1}>
-            <Faceplate part={part} w={box.w} h={box.h} ears={box.ears} view={view} label={p.label} color={p.color} />
+            {face(p, part, occ, box, { label: p.label, color: p.color })}
           </g>
         );
         const collided = ghost && !ghost.ok && ghost.collisionIds.includes(p.id);
@@ -179,10 +214,10 @@ export function RackView({
           <Fragment key={p.id}>
             {Wrapper ? (
               <Wrapper placement={p} part={part} box={box} occupancy={occ}>
-                {face}
+                {drawn}
               </Wrapper>
             ) : (
-              face
+              drawn
             )}
             {selectedId === p.id && (
               <rect
@@ -261,10 +296,11 @@ export function RackView({
         <g aria-label="Ports">
           {visible.map(({ p, part, occ }) => {
             const box = boxOf(p, part, occ);
-            return portPositions(part, box.w, box.h, box.ears, view).map((sl) => {
+            return portPositions(part, box.w, box.h, box.ears, faceSeen(occ.faces, view)).map((sl) => {
               const end: CableEnd = { placementId: p.id, port: { type: sl.type, index: sl.index } };
               const used = cables.some((c) => [c.a, c.b].some((e) => e.placementId === p.id && e.port?.type === sl.type && e.port.index === sl.index));
               const pending = pendingEnd?.placementId === p.id && pendingEnd.port?.type === sl.type && pendingEnd.port.index === sl.index;
+              const title = `${sl.title}${used ? ' · in use' : ''}`;
               return (
                 <rect
                   key={`${p.id}-${sl.type}-${sl.index}`}
@@ -283,7 +319,7 @@ export function RackView({
                     onPortClick(end);
                   }}
                 >
-                  <title>{`${PORT_TYPE_LABELS[sl.type]} ${sl.index}${used ? ' (in use)' : ''}`}</title>
+                  <title>{title}</title>
                 </rect>
               );
             });
@@ -296,53 +332,8 @@ export function RackView({
         return a ? <path d={`M${a.x} ${a.y} L${pointer.x} ${pointer.y}`} stroke="#eab308" strokeWidth={1.6} strokeDasharray="4 3" pointerEvents="none" /> : null;
       })()}
 
+      {design.rack.frame === 'cabinet' && design.rack.glassDoor && view === 'front' && <GlassDoor layout={layout} />}
       {ghostNode}
     </svg>
-  );
-}
-
-function RackFrame({ layout }: { layout: RackLayout }) {
-  const { rack, width, height, innerX, opening } = layout;
-  const units = Array.from({ length: rack.heightU }, (_, i) => i + 1);
-  const label = (u: number) => (rack.numbering === 'top-down' ? rack.heightU - u + 1 : u);
-  const fontSize = 7;
-  return (
-    <g>
-      <rect x={GUTTER - 6} y={0} width={width - (GUTTER - 6) * 2} height={height} rx={4} fill="var(--rack-frame)" stroke="var(--rack-frame-edge)" strokeWidth={1} />
-      <rect x={innerX} y={FRAME} width={opening} height={rack.heightU * U_MM} fill="var(--rack-interior)" />
-      {units.slice(1).map((u) => (
-        <line key={`l${u}`} x1={innerX} x2={innerX + opening} y1={uTopToY(layout, u)} y2={uTopToY(layout, u)} stroke="var(--rack-slot-line)" strokeWidth={0.4} />
-      ))}
-      {[GUTTER, innerX + opening].map((rx) => (
-        <g key={rx}>
-          <rect x={rx} y={FRAME} width={RAIL} height={rack.heightU * U_MM} fill="var(--rack-rail)" />
-          {units.flatMap((u) =>
-            HOLE_OFFSETS.map((off) => (
-              <rect
-                key={`${rx}-${u}-${off}`}
-                x={rx + RAIL / 2 - 1.6}
-                y={uTopToY(layout, u) - off - 1.6}
-                width={3.2}
-                height={3.2}
-                fill="var(--rack-hole)"
-              />
-            )),
-          )}
-        </g>
-      ))}
-      {units.map((u) => {
-        const y = uTopToY(layout, u + 1) + U_MM / 2 + fontSize * 0.35;
-        return (
-          <Fragment key={`n${u}`}>
-            <text x={GUTTER - 10} y={y} fontSize={fontSize} textAnchor="middle" fill="var(--rack-label)" fontFamily="ui-monospace, monospace">
-              {label(u)}
-            </text>
-            <text x={width - GUTTER + 10} y={y} fontSize={fontSize} textAnchor="middle" fill="var(--rack-label)" fontFamily="ui-monospace, monospace">
-              {label(u)}
-            </text>
-          </Fragment>
-        );
-      })}
-    </g>
   );
 }

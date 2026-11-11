@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 2,
+  "version": 3,
   "title": "10-inch mini-rack",
   "description": "DeskPi RackMate accessories and generic 10\" panels, shelves, mounts and PDUs.",
   "parts": [
@@ -41,13 +41,8 @@
     {
       "id": "deskpi-rackmate-blank-1u",
       "brand": "DeskPi",
-      "model": "RackMate 1U Blank Panel",
-      "name": "DeskPi RackMate 10\" 1U blank panel",
-      "category": "blank",
       "formFactor": "rack",
-      "heightU": 1,
       "width": "10in",
-      "depthMm": 5,
       "mounting": "front",
       "rackWidths": [
         "10in"
@@ -58,20 +53,24 @@
       },
       "weightKg": null,
       "ports": {},
+      "verified": true,
+      "model": "DP-0032",
+      "name": "DeskPi RackMate 10\" 1U blank panel",
+      "category": "blank",
+      "heightU": 1,
+      "depthMm": 5,
       "render": {
         "style": "blank",
         "body": "black"
       },
       "tags": [
-        "deskpi",
-        "blank",
         "10in",
+        "blank",
         "deskpi",
         "passive"
       ],
-      "sourceUrl": "https://thepihut.com/collections/project-enclosures/products/1u-10-blank-panel-for-deskpi-rackmate",
-      "verified": false,
-      "notes": "Metal blank panel."
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0032-1u-blank-panel",
+      "notes": "Solid blank panel for airflow control."
     },
     {
       "id": "generic-blank-1u-10in",
@@ -423,14 +422,8 @@
     {
       "id": "deskpi-rackmate-patch-12-half-u",
       "brand": "DeskPi",
-      "model": "RackMate 0.5U 12-port Cat6 Patch Panel",
-      "name": "DeskPi 10\" 0.5U 12-port Cat6 patch panel",
-      "category": "patch-panel",
-      "subcategory": "keystone",
       "formFactor": "rack",
-      "heightU": 0.5,
       "width": "10in",
-      "depthMm": 40,
       "mounting": "front",
       "rackWidths": [
         "10in"
@@ -443,27 +436,67 @@
       "ports": {
         "keystone": 12
       },
+      "verified": true,
+      "model": "DP-0034",
+      "name": "DeskPi RackMate 10\" 0.5U 12-port Cat6 patch panel (couplers)",
+      "category": "patch-panel",
+      "subcategory": "coupler",
+      "heightU": 0.5,
+      "depthMm": 29,
       "render": {
         "style": "patch-panel",
         "body": "black"
       },
       "tags": [
-        "deskpi",
-        "patch-panel",
         "10in",
-        "deskpi",
         "cat6",
-        "passive"
+        "coupler",
+        "deskpi",
+        "passive",
+        "patch-panel"
       ],
-      "sourceUrl": "https://thepihut.com/collections/deskpi-rackmate-and-accessories",
-      "verified": false,
-      "notes": "Depth assumed."
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0034-12-port-cat6-patch-panel",
+      "notes": "255 × 29 × 23 mm (0.5U). Twelve inline female-to-female Cat6 couplers, numbered 1–12 front and rear; plug patch cords straight into the back.",
+      "layout": {
+        "layoutVerified": true,
+        "sources": [
+          "https://wiki.deskpi.com/rackmate/accessories/dp-0034-12-port-cat6-patch-panel"
+        ],
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "coupler",
+              "count": 12,
+              "portType": "keystone",
+              "numbers": true,
+              "grouping": 6,
+              "x": 0.03,
+              "w": 0.94
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "coupler",
+              "count": 12,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "x": 0.03,
+              "w": 0.94
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-patch-12-cat6-10in",
       "brand": "Generic",
       "model": "PP-12-C6-10",
-      "name": "10\" 12-port Cat6 patch panel 1U",
+      "name": "Generic 10\" 1U 12-port Cat6 keystone patch panel",
       "category": "patch-panel",
       "subcategory": "keystone",
       "formFactor": "rack",
@@ -495,7 +528,47 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Generic 10\" item; typical dimensions."
+      "notes": "Generic 10\" item; typical dimensions.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 12,
+              "numbers": true,
+              "grouping": 6,
+              "x": 0.04,
+              "w": 0.92,
+              "y": 0.1,
+              "h": 0.62
+            },
+            {
+              "type": "label_strip",
+              "x": 0.06,
+              "w": 0.88,
+              "y": 0.78,
+              "h": 0.12
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "punchdown",
+              "count": 12,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "x": 0.04,
+              "w": 0.92
+            }
+          ]
+        }
+      }
     },
     {
       "id": "generic-patch-8-cat6-10in",
@@ -650,14 +723,8 @@
     {
       "id": "deskpi-rackmate-shelf-1u",
       "brand": "DeskPi",
-      "model": "RackMate 1U Rack Shelf",
-      "name": "DeskPi RackMate 10\" 1U shelf",
-      "category": "shelf",
-      "subcategory": "shelf",
       "formFactor": "rack",
-      "heightU": 1,
       "width": "10in",
-      "depthMm": 200,
       "mounting": "front",
       "rackWidths": [
         "10in"
@@ -668,36 +735,35 @@
       },
       "weightKg": null,
       "ports": {},
+      "verified": true,
+      "model": "DP-0031",
+      "name": "DeskPi RackMate 10\" 1U rack shelf (vented)",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "heightU": 1,
+      "depthMm": 200,
       "shelf": {
-        "usableWidthMm": 210,
-        "usableDepthMm": 195
+        "usableWidthMm": 212,
+        "usableDepthMm": 200
       },
       "render": {
         "style": "shelf",
         "body": "black"
       },
       "tags": [
+        "10in",
         "deskpi",
         "shelf",
-        "10in",
-        "shelf",
-        "deskpi"
+        "vented"
       ],
-      "sourceUrl": "https://thepihut.com/products/1u-10-rack-shelf-for-deskpi-rackmate",
-      "verified": false,
-      "notes": "Depth assumed to match the RackMate frame (200 mm)."
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0031-1u-rack-shelf",
+      "notes": "250 mm overall, 212 mm internal width, 200 mm deep, 43 mm tall. Perforated slotted floor, rear support brackets. Not compatible with the RackMate T2."
     },
     {
       "id": "deskpi-rackmate-shelf-half-u",
       "brand": "DeskPi",
-      "model": "RackMate 0.5U Rack Shelf",
-      "name": "DeskPi RackMate 10\" 0.5U shelf",
-      "category": "shelf",
-      "subcategory": "shelf",
       "formFactor": "rack",
-      "heightU": 0.5,
       "width": "10in",
-      "depthMm": 200,
       "mounting": "front",
       "rackWidths": [
         "10in"
@@ -708,30 +774,35 @@
       },
       "weightKg": null,
       "ports": {},
+      "verified": true,
+      "model": "DP-0041",
+      "name": "DeskPi RackMate 10\" 0.5U rack shelf (vented)",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "heightU": 0.5,
+      "depthMm": 200,
       "shelf": {
-        "usableWidthMm": 210,
-        "usableDepthMm": 195
+        "usableWidthMm": 212,
+        "usableDepthMm": 200
       },
       "render": {
         "style": "shelf",
         "body": "black"
       },
       "tags": [
+        "10in",
         "deskpi",
         "shelf",
-        "10in",
-        "shelf",
-        "deskpi"
+        "vented"
       ],
-      "sourceUrl": "https://thepihut.com/products/0-5u-10-rack-shelf-for-deskpi-rackmate",
-      "verified": false,
-      "notes": "214 × 200 × 21 mm per retailer."
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0041-05u-rack-shelf",
+      "notes": "Platform 212 × 200 mm, 250 mm overall, 19 mm tall. Slotted floor. Not compatible with the RackMate T2."
     },
     {
       "id": "generic-shelf-1u-10in",
       "brand": "Generic",
       "model": "SHELF-1U-10",
-      "name": "10\" shelf 1U",
+      "name": "10\" shelf (solid) 1U",
       "category": "shelf",
       "subcategory": "shelf",
       "formFactor": "rack",
@@ -757,10 +828,10 @@
         "body": "black"
       },
       "tags": [
+        "10in",
         "generic",
         "shelf",
-        "10in",
-        "shelf"
+        "solid"
       ],
       "sourceUrl": null,
       "verified": false,
@@ -770,7 +841,7 @@
       "id": "generic-shelf-2u-10in",
       "brand": "Generic",
       "model": "SHELF-2U-10",
-      "name": "10\" shelf 2U (lipped)",
+      "name": "10\" shelf (solid) 2U (lipped)",
       "category": "shelf",
       "subcategory": "shelf",
       "formFactor": "rack",
@@ -796,10 +867,10 @@
         "body": "black"
       },
       "tags": [
+        "10in",
         "generic",
         "shelf",
-        "10in",
-        "shelf"
+        "solid"
       ],
       "sourceUrl": null,
       "verified": false,
@@ -841,6 +912,977 @@
       "sourceUrl": null,
       "verified": false,
       "notes": "Generic 10\" item; typical dimensions."
+    },
+    {
+      "id": "deskpi-rackmate-shelf-hd-half-u",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "verified": false,
+      "model": "DP-0056",
+      "name": "DeskPi RackMate 10\" 0.5U heavy-duty shelf",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "heightU": 0.5,
+      "depthMm": 200,
+      "shelf": {
+        "usableWidthMm": 212,
+        "usableDepthMm": 200
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "deskpi",
+        "shelf",
+        "solid"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0056-heavy-duty-rack-shelf",
+      "notes": "Reinforced shelf for switches and routers. Dimensions not published; assumed to match the DP-0041 platform (212 × 200 mm)."
+    },
+    {
+      "id": "deskpi-rackmate-patch-12-keystone-1u",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 12
+      },
+      "verified": true,
+      "model": "DP-0086",
+      "name": "DeskPi RackMate 10\" 1U 12-port Cat6 keystone patch panel",
+      "category": "patch-panel",
+      "subcategory": "keystone",
+      "heightU": 1,
+      "depthMm": 97,
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "cat6",
+        "deskpi",
+        "keystone",
+        "passive",
+        "patch-panel"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0086-12-port-cat6-patch-panel",
+      "notes": "254 × 97 × 44 mm. Twelve replaceable keystone jacks (Cat5e/6/6a), front labelling area, rear cable-management bar.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://wiki.deskpi.com/rackmate/accessories/dp-0086-12-port-cat6-patch-panel"
+        ],
+        "notes": "Port count, label area and rear bar are from the product page; their exact positions are estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 12,
+              "numbers": true,
+              "grouping": 6,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.12,
+              "h": 0.6
+            },
+            {
+              "type": "label_strip",
+              "x": 0.05,
+              "w": 0.9,
+              "y": 0.78,
+              "h": 0.12
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "punchdown",
+              "count": 12,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.06,
+              "h": 0.66
+            },
+            {
+              "type": "cable_bar",
+              "x": 0.02,
+              "w": 0.96,
+              "y": 0.8,
+              "h": 0.14
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "deskpi-rackmate-keystone-blank-12",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 12
+      },
+      "verified": false,
+      "model": "DP-0060",
+      "name": "DeskPi RackMate 10\" 12-port blank keystone patch panel",
+      "category": "patch-panel",
+      "subcategory": "keystone",
+      "heightU": 1,
+      "depthMm": 30,
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "deskpi",
+        "keystone",
+        "passive",
+        "patch-panel"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0060-12-port-blank-keystone-patch-panel",
+      "notes": "Twelve numbered keystone positions, no jacks included. Height and depth not published; 1U assumed."
+    },
+    {
+      "id": "deskpi-rackmate-cable-entry-half-u",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "verified": true,
+      "model": "DP-0043",
+      "name": "DeskPi RackMate 10\" 0.5U cable entry (brush) panel",
+      "category": "cable-management",
+      "subcategory": "brush",
+      "heightU": 0.5,
+      "depthMm": 10,
+      "render": {
+        "style": "brush",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "brush",
+        "deskpi",
+        "passive"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0043-05u-cable-entry-panel",
+      "notes": "Nylon brush strip for cable pass-through."
+    },
+    {
+      "id": "deskpi-rackmate-dring-half-u",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "verified": true,
+      "model": "DP-0044",
+      "name": "DeskPi RackMate 10\" 0.5U cable management panel (3 D-rings)",
+      "category": "cable-management",
+      "subcategory": "d-ring",
+      "heightU": 0.5,
+      "depthMm": 40,
+      "render": {
+        "style": "cable-manager",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "cable-management",
+        "deskpi",
+        "passive"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0044-cable-management-3-d-rings",
+      "layout": {
+        "layoutVerified": true,
+        "sources": [
+          "https://wiki.deskpi.com/rackmate/accessories/dp-0044-cable-management-3-d-rings"
+        ],
+        "front": {
+          "regions": [
+            {
+              "type": "d_ring",
+              "count": 3,
+              "x": 0.08,
+              "w": 0.84
+            }
+          ]
+        }
+      },
+      "notes": "Three D-rings for patch cord slack."
+    },
+    {
+      "id": "deskpi-rackmate-blank-2u",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "verified": true,
+      "model": "DP-0051",
+      "name": "DeskPi RackMate 10\" 2U blank panel",
+      "category": "blank",
+      "heightU": 2,
+      "depthMm": 5,
+      "render": {
+        "style": "blank",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "blank",
+        "deskpi",
+        "passive"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0051-2u-blank-panel",
+      "notes": "Solid blank cover."
+    },
+    {
+      "id": "deskpi-rackmate-vent-1u",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "verified": true,
+      "model": "DP-0045",
+      "name": "DeskPi RackMate 10\" 1U venting blank panel",
+      "category": "blank",
+      "heightU": 1,
+      "depthMm": 5,
+      "render": {
+        "style": "vented",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "blank",
+        "deskpi",
+        "passive",
+        "vented"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0045-1u-venting-blank-panel",
+      "notes": "Perforated panel; takes up to four 40 mm fans."
+    },
+    {
+      "id": "deskpi-rackmate-pi-mount-2u",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "verified": false,
+      "model": "DP-0063",
+      "name": "DeskPi RackMate 10\" 2U Raspberry Pi rackmount",
+      "category": "mount",
+      "subcategory": "sbc",
+      "heightU": 2,
+      "depthMm": 88,
+      "render": {
+        "style": "server",
+        "body": "black",
+        "accent": "#c51a4a"
+      },
+      "tags": [
+        "10in",
+        "deskpi",
+        "mount",
+        "raspberry-pi"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0063-2u-raspberry-pi-rackmount",
+      "notes": "Holds bare Raspberry Pi 5 / 4B boards (not boards in the official case). 250 × 88 mm as shown on the product page. The number of boards isn't stated; NVMe expansion doesn't work with a Pi 4B."
+    },
+    {
+      "id": "deskpi-rackmate-minipc-tray-1u",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "verified": false,
+      "model": "DP-0073",
+      "name": "DeskPi RackMate 10\" 1U mini-PC tray",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "heightU": 1,
+      "depthMm": 200,
+      "shelf": {
+        "usableWidthMm": 212,
+        "usableDepthMm": 200
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "deskpi",
+        "shelf",
+        "vented"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0073-mini-pc-tray",
+      "notes": "Fits mini-ITX boards and NUC-style PCs. Usable area assumed to match the 1U rack shelf."
+    },
+    {
+      "id": "deskpi-rackmate-drawer-2u",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "verified": false,
+      "model": "DP-0058",
+      "name": "DeskPi RackMate 10\" 2U rackmount drawer",
+      "category": "accessory",
+      "subcategory": "drawer",
+      "heightU": 2,
+      "depthMm": 200,
+      "render": {
+        "style": "drawer",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "deskpi",
+        "drawer",
+        "passive"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0058-2u-rackmount-drawer",
+      "notes": "Lockable drawer with rear cable holes. Depth assumed."
+    },
+    {
+      "id": "deskpi-dc-pdu-lite-7ch",
+      "brand": "DeskPi",
+      "formFactor": "rack",
+      "width": "10in",
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "dc_out": 7
+      },
+      "verified": true,
+      "model": "DP-0042",
+      "name": "DeskPi DC PDU Lite 7-CH (0.5U)",
+      "category": "power",
+      "subcategory": "pdu",
+      "heightU": 0.5,
+      "depthMm": 64,
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "10in",
+        "dc",
+        "deskpi",
+        "pdu",
+        "power"
+      ],
+      "sourceUrl": "https://wiki.deskpi.com/rackmate/accessories/dp-0042-dc-pdu-lite",
+      "powerInput": {
+        "connector": "dc_barrel",
+        "voltageV": 24,
+        "adapter": "brick",
+        "notes": "0–24 V DC in, 8 A total. Outputs equal the input voltage: don't feed 5 V SBCs from a 12/24 V supply."
+      },
+      "notes": "250 × 64 × 21 mm. Seven switched DC channels (3 A each, 8 A total), DC jacks front and rear per channel. DC only: it can't power mains plug-packs, and its output voltage equals its input.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://wiki.deskpi.com/rackmate/accessories/dp-0042-dc-pdu-lite"
+        ],
+        "notes": "Channel count and front switches from the product page; jack size and spacing estimated.",
+        "front": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "switch",
+              "variant": "toggle",
+              "count": 7,
+              "x": 0.06,
+              "w": 0.48
+            },
+            {
+              "type": "dc_barrel",
+              "count": 7,
+              "portType": "dc_out",
+              "x": 0.56,
+              "w": 0.4
+            }
+          ]
+        },
+        "rear": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "dc_barrel",
+              "count": 7,
+              "portType": "none",
+              "x": 0.06,
+              "w": 0.4
+            },
+            {
+              "type": "dc_barrel",
+              "count": 1,
+              "role": "DC in",
+              "x": 0.85
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "mauker-ucg-ultra-10in-mount",
+      "brand": "Mauker (3D printed)",
+      "model": "UCG-Ultra 10\" mount",
+      "name": "10\" 1U mount for UCG-Ultra / UCG-Max / UXG-Max",
+      "category": "mount",
+      "subcategory": "device-mount",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 130,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "shelf": {
+        "usableWidthMm": 142,
+        "usableDepthMm": 128
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black",
+        "preset": "generic-black"
+      },
+      "tags": [
+        "mount",
+        "3d-printed",
+        "unifi",
+        "10in"
+      ],
+      "sourceUrl": "https://www.tindie.com/products/mauker/unifi-ucg-ultra-uxg-max-ucg-max-10i-rack-mount/",
+      "verified": false,
+      "notes": "Unofficial 3D-printed faceplate that holds the gateway; optional version with two keystone jacks. Sold on Tindie (design files on Printables). U height not stated; 1U assumed from the 30 mm device. Place the UCG-Ultra on it.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://www.tindie.com/products/mauker/unifi-ucg-ultra-uxg-max-ucg-max-10i-rack-mount/"
+        ],
+        "front": {
+          "style": "generic-black",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 2,
+              "portType": "none",
+              "x": 0.82,
+              "w": 0.15,
+              "y": 0.15,
+              "h": 0.7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "mauker-usw-lite-8-poe-10in-mount",
+      "brand": "Mauker (3D printed)",
+      "model": "USW-Lite-8-PoE 10\" mount",
+      "name": "10\" 1U mount for USW-Lite-8-PoE",
+      "category": "mount",
+      "subcategory": "device-mount",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 165,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "shelf": {
+        "usableWidthMm": 100,
+        "usableDepthMm": 164
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black",
+        "preset": "generic-black"
+      },
+      "tags": [
+        "mount",
+        "3d-printed",
+        "unifi",
+        "10in"
+      ],
+      "sourceUrl": "https://www.tindie.com/products/mauker/unifi-usw-lite-8-poe-10-inch-rack-mount/",
+      "verified": false,
+      "notes": "Unofficial 3D-printed 10\" mount, black or white. U height not stated; 1U assumed from the 31.7 mm switch. Place the switch on it.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://www.tindie.com/products/mauker/unifi-usw-lite-8-poe-10-inch-rack-mount/"
+        ],
+        "front": {
+          "style": "generic-black",
+          "regions": [
+            {
+              "type": "vent",
+              "pattern": "honeycomb",
+              "x": 0.04,
+              "w": 0.24
+            },
+            {
+              "type": "vent",
+              "pattern": "honeycomb",
+              "x": 0.72,
+              "w": 0.24
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "power-automatix-pa-pdu6x",
+      "brand": "Power Automatix",
+      "model": "PA-PDU6X",
+      "name": "Power Automatix 10\" 1RU power board, 4 × AU outlets",
+      "category": "power",
+      "subcategory": "pdu",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": null,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_au": 4
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none",
+        "notes": "1.8 m lead."
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "pdu",
+        "au",
+        "10in",
+        "power"
+      ],
+      "sourceUrl": "https://csd.com.au/products/PA-PDU6X",
+      "verified": false,
+      "notes": "10 A, RCM approved, black powder-coated aluminium, 1.8 m lead. The listing says both 4 and 6 outlets; the feature list says 4. Depth not published.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://csd.com.au/products/PA-PDU6X"
+        ],
+        "front": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "label",
+              "text": "10A",
+              "x": 0.03,
+              "y": 0.3,
+              "size": 3.4
+            },
+            {
+              "type": "outlet_au",
+              "count": 4,
+              "x": 0.12,
+              "w": 0.74,
+              "y": 0.1,
+              "h": 0.8
+            },
+            {
+              "type": "switch",
+              "variant": "rocker",
+              "count": 1,
+              "x": 0.89,
+              "y": 0.2,
+              "h": 0.6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "generic-pdu-10in-4-au",
+      "brand": "Generic",
+      "model": "PDU-10-4-AU",
+      "name": "Generic 10\" 1U power board, 4 × AU/NZ outlets",
+      "category": "power",
+      "subcategory": "pdu",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 50,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_au": 4
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "pdu",
+        "au",
+        "10in",
+        "power",
+        "generic"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Typical 4-way 10 A 10\" board with a switch and fixed lead. Generic sizes."
+    },
+    {
+      "id": "generic-pdu-10in-3-au-usb",
+      "brand": "Generic",
+      "model": "PDU-10-3-AU-USB",
+      "name": "Generic 10\" 1U power board, 3 × AU/NZ + 2 × USB-C PD",
+      "category": "power",
+      "subcategory": "pdu",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 60,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_au": 3,
+        "usb_c": 2
+      },
+      "powerInput": {
+        "connector": "hardwired",
+        "adapter": "none"
+      },
+      "render": {
+        "style": "pdu",
+        "body": "black"
+      },
+      "tags": [
+        "pdu",
+        "au",
+        "10in",
+        "power",
+        "generic",
+        "usb-c"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic power board with USB-C outlets, so 5 V gear (Raspberry Pi, UCG-Ultra) needs no plug-pack. Check the USB-C output can supply 5 V / 3 A per port.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "front": {
+          "style": "pdu",
+          "regions": [
+            {
+              "type": "outlet_au",
+              "count": 3,
+              "x": 0.04,
+              "w": 0.6,
+              "y": 0.1,
+              "h": 0.8
+            },
+            {
+              "type": "usb_c",
+              "count": 2,
+              "portType": "usb_c",
+              "speed": "USB-C PD",
+              "x": 0.68,
+              "w": 0.16
+            },
+            {
+              "type": "switch",
+              "variant": "rocker",
+              "count": 1,
+              "x": 0.88,
+              "y": 0.2,
+              "h": 0.6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "generic-shelf-2u-10in-vented",
+      "brand": "Generic",
+      "model": "SHELF-2U-10-V",
+      "name": "Generic 10\" 2U vented shelf",
+      "category": "shelf",
+      "subcategory": "shelf",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "10in",
+      "depthMm": 200,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "shelf": {
+        "usableWidthMm": 210,
+        "usableDepthMm": 195
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black"
+      },
+      "tags": [
+        "shelf",
+        "vented",
+        "generic",
+        "10in"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Typical 10\" cantilever shelf. Generic sizes."
+    },
+    {
+      "id": "generic-patch-12-cat6-punch-10in",
+      "brand": "Generic",
+      "model": "PP-12-C6-PD-10",
+      "name": "Generic 10\" 1U 12-port Cat6 punch-down patch panel",
+      "category": "patch-panel",
+      "subcategory": "punch-down",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "10in",
+      "depthMm": 60,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 12
+      },
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      },
+      "tags": [
+        "patch-panel",
+        "cat6",
+        "punch-down",
+        "generic",
+        "10in",
+        "passive"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Fixed jacks on a PCB with 110 IDC punch-down blocks at the back. Generic sizes.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 12,
+              "numbers": true,
+              "grouping": 6,
+              "colors": [
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937",
+                "#1f2937"
+              ],
+              "x": 0.04,
+              "w": 0.92,
+              "y": 0.1,
+              "h": 0.62
+            },
+            {
+              "type": "label_strip",
+              "x": 0.06,
+              "w": 0.88,
+              "y": 0.78,
+              "h": 0.12
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "punchdown",
+              "count": 12,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "x": 0.04,
+              "w": 0.92
+            }
+          ]
+        }
+      }
     }
   ]
 }

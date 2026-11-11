@@ -171,6 +171,35 @@ export function StatsPanel() {
         )}
       </Block>
 
+      {stats.powerSupply.relevant && stats.powerSupply.needs.length > 0 && (
+        <Block
+          title="Power sources"
+          aside={
+            <span className="text-xs text-zinc-500">
+              {stats.powerSupply.outletsNeeded} outlet{stats.powerSupply.outletsNeeded === 1 ? '' : 's'} needed · {stats.powerSupply.mainsSockets + stats.powerSupply.iecOutlets} in rack
+            </span>
+          }
+        >
+          <ul className="space-y-1 text-xs">
+            {stats.powerSupply.needs.map((n) => (
+              <li key={n.placementId} className="flex justify-between gap-2">
+                <span className="truncate text-zinc-700 dark:text-zinc-300" title={n.name}>
+                  {n.name}
+                </span>
+                <span className={n.inferred ? 'shrink-0 text-right text-zinc-400 italic' : 'shrink-0 text-right text-zinc-500'} title={n.input.notes ?? n.summary}>
+                  {n.inferred ? 'IEC (assumed)' : n.summary.replace(/ inlet$/, '')}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {stats.powerSupply.plugPackIds.length > 0 && (
+            <p className="text-xs text-zinc-500">
+              {stats.powerSupply.plugPackIds.length} plug-pack{stats.powerSupply.plugPackIds.length === 1 ? '' : 's'}: a 10″ power board with spaced outlets, or one with USB-C outputs, saves room.
+            </p>
+          )}
+        </Block>
+      )}
+
       <Block title="PoE">
         <Row label={`Budget (${poe.sourceCount} source${poe.sourceCount === 1 ? '' : 's'})`} value={fmtW(poe.budgetW)} />
         <PoeInput />

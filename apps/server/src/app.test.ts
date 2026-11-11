@@ -45,6 +45,7 @@ beforeEach(async () => {
     host: '127.0.0.1',
     dataDir: dir,
     catalogDir: dir,
+    examplesDir: path.join(dir, 'no-examples'),
     webDist: path.join(dir, 'nope'),
     logLevel: 'silent',
     basicAuth: null,

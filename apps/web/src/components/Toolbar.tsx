@@ -1,5 +1,5 @@
-import { MAX_RACK_U, MIN_RACK_U, RACK_DEPTH_PRESETS, RACK_HEIGHT_PRESETS, type Rack, type RackChangeResult } from '@rackplanner/shared';
-import { ArrowDown01, ArrowUp01, Cable, Eye, EyeOff, Maximize, Minus, Monitor, Moon, Plus, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
+import { MAX_RACK_U, MIN_RACK_U, RACK_DEPTH_PRESETS, RACK_FRAME_INFO, RACK_HEIGHT_PRESETS, defaultFrame, framesFor, type Rack, type RackChangeResult, type RackFrame } from '@rackplanner/shared';
+import { ArrowDown01, ArrowUp01, Cable, DoorOpen, Eye, EyeOff, Lightbulb, LightbulbOff, Maximize, Minus, Monitor, Moon, Plus, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
 import { useState } from 'react';
 import { commitRackChange, previewRackChange } from '../lib/actions';
 import { useDesignStore, useHistory } from '../store/designStore';
@@ -12,11 +12,17 @@ const ALL_HEIGHTS = Array.from({ length: MAX_RACK_U - MIN_RACK_U + 1 }, (_, i) =
 export function Toolbar() {
   const rack = useDesignStore((s) => s.design.rack);
   const { canUndo, canRedo, undo, redo } = useHistory();
-  const { view, setView, zoom, fitScale, zoomBy, setZoom, theme, setTheme, cableMode, setCableMode, showCables, setShowCables } = useUiStore();
+  const { view, setView, zoom, fitScale, zoomBy, setZoom, theme, setTheme, cableMode, setCableMode, showCables, setShowCables, leds, setLeds, plan, setPlan } = useUiStore();
   const [pending, setPending] = useState<{ rack: Rack; result: RackChangeResult } | null>(null);
 
   const requestRack = (patch: Partial<Rack>) => {
     const next = { ...rack, ...patch };
+    // Product frames fix the size; a frame that doesn't suit the width falls back to the default.
+    if (!framesFor(next.width).includes(next.frame)) next.frame = defaultFrame(next.width);
+    const info = RACK_FRAME_INFO[next.frame];
+    if (patch.frame && info.fixedU) Object.assign(next, { heightU: info.fixedU, depthMm: info.depthMm ?? next.depthMm });
+    if (patch.heightU && info.fixedU && patch.heightU !== info.fixedU) next.frame = defaultFrame(next.width);
+    if (!info.supportsDoor) next.glassDoor = false;
     const result = previewRackChange(next);
     if (result.removed.length) setPending({ rack: next, result });
     else commitRackChange(next, result);
@@ -37,6 +43,25 @@ export function Toolbar() {
           { value: '10in', label: '10″' },
         ]}
       />
+
+      <select
+        aria-label="Rack frame"
+        title="Frame style"
+        className={selectClass}
+        value={rack.frame}
+        onChange={(e) => requestRack({ frame: e.target.value as RackFrame })}
+      >
+        {framesFor(rack.width).map((f) => (
+          <option key={f} value={f}>
+            {RACK_FRAME_INFO[f].label}
+          </option>
+        ))}
+      </select>
+      {RACK_FRAME_INFO[rack.frame].supportsDoor && (
+        <Button aria-label="Glass door" aria-pressed={rack.glassDoor} title="Glass door overlay" active={rack.glassDoor} onClick={() => requestRack({ glassDoor: !rack.glassDoor })} className="px-1.5">
+          <DoorOpen className="size-4" />
+        </Button>
+      )}
 
       <div className="flex items-center gap-1">
         <Button aria-label="Decrease rack height" disabled={rack.heightU <= MIN_RACK_U} onClick={() => requestRack({ heightU: rack.heightU - 1 })} className="px-1.5">
@@ -90,13 +115,23 @@ export function Toolbar() {
 
       <Segmented
         label="View"
-        value={view}
-        onChange={setView}
+        value={plan ? 'top' : view}
+        onChange={(v) => {
+          if (v === 'top') setPlan(true);
+          else {
+            setPlan(false);
+            setView(v);
+          }
+        }}
         options={[
           { value: 'front', label: 'Front' },
           { value: 'rear', label: 'Rear' },
+          { value: 'top', label: 'Shelves' },
         ]}
       />
+      <Button aria-label={leds ? 'Turn status LEDs off' : 'Turn status LEDs on'} aria-pressed={leds} title={leds ? 'LEDs on (click for print style)' : 'LEDs off (print style)'} onClick={() => setLeds(!leds)} className="px-1.5">
+        {leds ? <Lightbulb className="size-4" /> : <LightbulbOff className="size-4" />}
+      </Button>
 
       <div className="flex items-center gap-0.5">
         <Button

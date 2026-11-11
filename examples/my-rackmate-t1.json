@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 2,
+  "id": "example-rackmate-t1",
+  "name": "My RackMate T1",
+  "rack": {
+    "width": "10in",
+    "heightU": 8,
+    "depthMm": 212,
+    "numbering": "bottom-up",
+    "frame": "rackmate-t1",
+    "glassDoor": false
+  },
+  "expectedPoeLoadW": null,
+  "placements": [
+    {
+      "id": "p1",
+      "partId": "deskpi-rackmate-patch-12-keystone-1u",
+      "bottomU": 8,
+      "xMm": 0,
+      "mounting": "front",
+      "label": "Patch",
+      "portColors": {
+        "keystone:1": "#3b82f6",
+        "keystone:2": "#3b82f6",
+        "keystone:3": "#3b82f6",
+        "keystone:4": "#3b82f6",
+        "keystone:5": "#facc15",
+        "keystone:6": "#facc15"
+      }
+    },
+    {
+      "id": "p2",
+      "partId": "deskpi-rackmate-shelf-1u",
+      "bottomU": 7,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p3",
+      "partId": "ubiquiti-usw-lite-8-poe",
+      "bottomU": 7,
+      "xMm": 0,
+      "mounting": "front",
+      "parentId": "p2"
+    },
+    {
+      "id": "p4",
+      "partId": "raspberry-pi-4-case",
+      "bottomU": 7,
+      "xMm": 142,
+      "mounting": "front",
+      "parentId": "p2"
+    },
+    {
+      "id": "p5",
+      "partId": "deskpi-rackmate-shelf-1u",
+      "bottomU": 6,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p6",
+      "partId": "ubiquiti-ucg-ultra",
+      "bottomU": 6,
+      "xMm": 0,
+      "mounting": "front",
+      "parentId": "p5"
+    },
+    {
+      "id": "p7",
+      "partId": "power-automatix-pa-pdu6x",
+      "bottomU": 5,
+      "xMm": 0,
+      "mounting": "front",
+      "label": "Power"
+    },
+    {
+      "id": "p8",
+      "partId": "deskpi-rackmate-vent-1u",
+      "bottomU": 4,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p9",
+      "partId": "deskpi-rackmate-shelf-1u",
+      "bottomU": 1,
+      "xMm": 0,
+      "mounting": "front"
+    },
+    {
+      "id": "p10",
+      "partId": "ubiquiti-unvr-instant",
+      "bottomU": 1,
+      "xMm": 0,
+      "mounting": "front",
+      "parentId": "p9",
+      "notes": "Too wide and deep for the 212 × 200 mm shelf: check the fit, or wall-mount it with the included bracket."
+    }
+  ],
+  "cables": [
+    {
+      "id": "c1",
+      "a": {
+        "placementId": "p3",
+        "port": {
+          "type": "rj45_1g",
+          "index": 1
+        }
+      },
+      "b": {
+        "placementId": "p1",
+        "port": {
+          "type": "keystone",
+          "index": 1
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "label": "PoE 1",
+      "lengthM": 0.2
+    },
+    {
+      "id": "c2",
+      "a": {
+        "placementId": "p3",
+        "port": {
+          "type": "rj45_1g",
+          "index": 2
+        }
+      },
+      "b": {
+        "placementId": "p1",
+        "port": {
+          "type": "keystone",
+          "index": 2
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "label": "PoE 2",
+      "lengthM": 0.2
+    },
+    {
+      "id": "c3",
+      "a": {
+        "placementId": "p3",
+        "port": {
+          "type": "rj45_1g",
+          "index": 3
+        }
+      },
+      "b": {
+        "placementId": "p1",
+        "port": {
+          "type": "keystone",
+          "index": 3
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "label": "PoE 3",
+      "lengthM": 0.2
+    },
+    {
+      "id": "c4",
+      "a": {
+        "placementId": "p3",
+        "port": {
+          "type": "rj45_1g",
+          "index": 4
+        }
+      },
+      "b": {
+        "placementId": "p1",
+        "port": {
+          "type": "keystone",
+          "index": 4
+        }
+      },
+      "type": "copper",
+      "color": "#3b82f6",
+      "label": "PoE 4",
+      "lengthM": 0.2
+    },
+    {
+      "id": "c5",
+      "a": {
+        "placementId": "p4",
+        "port": {
+          "type": "rj45_1g",
+          "index": 1
+        }
+      },
+      "b": {
+        "placementId": "p3",
+        "port": {
+          "type": "rj45_1g",
+          "index": 5
+        }
+      },
+      "type": "copper",
+      "color": "#22c55e",
+      "label": "Pi 4",
+      "lengthM": 0.3
+    },
+    {
+      "id": "c6",
+      "a": {
+        "placementId": "p10",
+        "port": {
+          "type": "rj45_1g",
+          "index": 1
+        }
+      },
+      "b": {
+        "placementId": "p3",
+        "port": {
+          "type": "rj45_1g",
+          "index": 6
+        }
+      },
+      "type": "copper",
+      "color": "#a855f7",
+      "label": "NVR uplink",
+      "lengthM": 0.5
+    },
+    {
+      "id": "c7",
+      "a": {
+        "placementId": "p6",
+        "port": {
+          "type": "rj45_1g",
+          "index": 1
+        }
+      },
+      "b": {
+        "placementId": "p3",
+        "port": {
+          "type": "rj45_1g",
+          "index": 8
+        }
+      },
+      "type": "copper",
+      "color": "#f97316",
+      "label": "Uplink",
+      "lengthM": 0.3
+    }
+  ],
+  "createdAt": "2026-11-10T00:00:00.000Z",
+  "updatedAt": "2026-11-10T00:00:00.000Z"
+}

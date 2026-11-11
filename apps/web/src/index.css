@@ -15,6 +15,10 @@
   --rack-hole: #1b1f24;
   --rack-label: #6b7280;
   --rack-slot-line: rgba(255, 255, 255, 0.05);
+  --rack-post: #4a525d;
+  --rack-acrylic: rgba(148, 163, 184, 0.28);
+  --rack-empty: rgba(255, 255, 255, 0.025);
+  --rack-empty-edge: rgba(255, 255, 255, 0.11);
   color-scheme: light;
 }
 .dark {
@@ -24,6 +28,10 @@
   --rack-rail: #454c56;
   --rack-hole: #0d0f12;
   --rack-label: #8b929c;
+  --rack-post: #343a42;
+  --rack-acrylic: rgba(148, 163, 184, 0.14);
+  --rack-empty: rgba(255, 255, 255, 0.02);
+  --rack-empty-edge: rgba(255, 255, 255, 0.08);
   color-scheme: dark;
 }
 

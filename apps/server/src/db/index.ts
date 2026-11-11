@@ -38,6 +38,10 @@ const MIGRATIONS: string[] = [
      updated_at TEXT NOT NULL
    );
    CREATE INDEX designs_updated_idx ON designs (updated_at);`,
+  `CREATE TABLE meta (
+     key TEXT PRIMARY KEY,
+     value TEXT NOT NULL
+   );`,
 ];
 
 export function migrate(sqlite: Database.Database): number {

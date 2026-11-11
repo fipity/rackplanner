@@ -26,6 +26,21 @@ for f in sorted(glob.glob(os.path.join(CAT, '*.json'))):
                 or (k == 'depth' and v is None)]
         if gaps:
             missing.append((os.path.basename(f), p['id'], ', '.join(sorted(set(gaps)))))
+# Faceplate layouts that couldn't be fully confirmed.
+lay = []
+for f in sorted(glob.glob(os.path.join(CAT, '*.json'))):
+    if f.endswith('schema.json'):
+        continue
+    for p in json.load(open(f))['parts']:
+        L = p.get('layout')
+        if L and not L.get('layoutVerified'):
+            why = (L.get('notes') or 'Positions estimated; not confirmed against a manufacturer drawing.').replace('|', '\\|')
+            src = ', '.join(f'[source]({u})' for u in L.get('sources', [])) or 'none (generic item)'
+            lay.append(f"| `{p['id']}` {p['name']} | {why} | {src} |")
+out += ['## Unverified faceplate layouts', '',
+        'Detailed front/rear/top layouts with `layoutVerified: false`: counts come from the sources, but the face or position of some items '
+        'could not be confirmed from a manufacturer spec sheet or drawing.', '', '| Part | What is not confirmed | Sources |', '|---|---|---|']
+out += lay + ['']
 out += ['## Missing values', '', 'Parts with `null` depth, weight or power (passive items are only listed for missing depth).', '',
         '| File | Part | Missing |', '|---|---|---|']
 out += [f'| {f} | `{i}` | {g} |' for f, i, g in missing]

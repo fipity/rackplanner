@@ -1,4 +1,4 @@
-import { newId, type Cable, type Design, type PlacedPart, type Rack } from '@rackplanner/shared';
+import { DEFAULT_RACK, DESIGN_SCHEMA_VERSION, newId, type Cable, type Design, type PlacedPart, type Rack } from '@rackplanner/shared';
 import { temporal } from 'zundo';
 import { create } from 'zustand';
 import { useStore } from 'zustand';
@@ -7,10 +7,10 @@ import { useCatalogStore } from './catalogStore';
 export function emptyDesign(): Design {
   const now = new Date().toISOString();
   return {
-    schemaVersion: 1,
+    schemaVersion: DESIGN_SCHEMA_VERSION,
     id: newId('d_'),
     name: 'Untitled rack',
-    rack: { width: '19in', heightU: 12, depthMm: null, numbering: 'bottom-up' },
+    rack: { ...DEFAULT_RACK },
     expectedPoeLoadW: null,
     placements: [],
     cables: [],

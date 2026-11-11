@@ -8,6 +8,8 @@ import { handleCableEndClick } from '../../lib/cableActions';
 import { rackSvgRef, type DragData } from './dnd';
 import { rackLayout } from './geometry';
 import { RackView, type PlacementWrapperProps, type RackGhost } from './RackView';
+import { lodForScale } from '../faceplates/Faceplate';
+import { ShelfPlanView } from './ShelfPlanView';
 
 function DraggablePlacement({ placement, box, children }: PlacementWrapperProps) {
   const data: DragData = { kind: 'placement', placementId: placement.id };
@@ -44,7 +46,7 @@ function DraggablePlacement({ placement, box, children }: PlacementWrapperProps)
 export function RackCanvas() {
   const design = useDesignStore((s) => s.design);
   const catalog = useCatalogStore((s) => s.catalog);
-  const { view, zoom, selectedId, select, setFitScale, zoomBy, cableMode, pendingEnd, selectedCableId, showCables, selectCable } = useUiStore();
+  const { view, zoom, selectedId, select, setFitScale, zoomBy, cableMode, pendingEnd, selectedCableId, showCables, selectCable, leds, plan } = useUiStore();
   const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   const drag = useDragStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -108,6 +110,11 @@ export function RackCanvas() {
           {pendingEnd ? 'Click the other end: a port or device (Esc to cancel)' : 'Cable mode: click a port or device to start a cable (Esc to finish)'}
         </div>
       )}
+      {plan ? (
+        <div className="flex min-h-full w-full justify-center">
+          <ShelfPlanView design={design} catalog={catalog} leds={leds} />
+        </div>
+      ) : (
       <div className="flex min-h-full min-w-full items-center justify-center p-6" style={{ width: 'max-content', minWidth: '100%' }}>
         <RackView
           svgRef={(el) => {
@@ -128,9 +135,13 @@ export function RackCanvas() {
           onPortClick={cableMode ? handleCableEndClick : undefined}
           pendingEnd={pendingEnd}
           pointer={pendingEnd ? pointer : null}
-          className="no-touch-scroll drop-shadow-xl select-none"
+          lod={lodForScale(scale)}
+          leds={leds}
+          portTooltips={!cableMode && !drag.active}
+          className="no-touch-scroll select-none"
         />
       </div>
+      )}
     </div>
   );
 }

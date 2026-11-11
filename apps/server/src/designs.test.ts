@@ -13,7 +13,7 @@ let app: FastifyInstance;
 beforeEach(async () => {
   dir = mkdtempSync(path.join(tmpdir(), 'rp-d-'));
   writeFileSync(path.join(dir, 'x.json'), JSON.stringify({ version: 1, title: 'x', parts: [] }));
-  const config: Config = { port: 0, host: '127.0.0.1', dataDir: dir, catalogDir: dir, webDist: path.join(dir, 'nope'), logLevel: 'silent', basicAuth: null };
+  const config: Config = { port: 0, host: '127.0.0.1', dataDir: dir, catalogDir: dir, examplesDir: path.join(dir, 'none'), webDist: path.join(dir, 'nope'), logLevel: 'silent', basicAuth: null };
   app = await buildApp({ config, db: openDb(':memory:') });
 });
 afterEach(async () => {

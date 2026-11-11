@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 2,
+  "version": 3,
   "title": "Desktop gear (shelf-mounted)",
   "description": "Mini PCs, SBCs, desktop NAS (UGREEN NASync), modems and other devices that sit on a rack shelf.",
   "parts": [
@@ -737,42 +737,211 @@
       "id": "raspberry-pi-4-case",
       "brand": "Raspberry Pi",
       "model": "Raspberry Pi 4 Model B (official case)",
-      "name": "Raspberry Pi 4 Model B in official case",
+      "name": "Raspberry Pi 4 in official case (red/white)",
       "category": "sbc",
       "formFactor": "desktop",
       "heightU": 1,
-      "heightMm": 30,
+      "heightMm": 25,
       "width": {
-        "mm": 90
+        "mm": 70
       },
-      "depthMm": 60,
+      "depthMm": 97,
       "mounting": "front",
       "rackWidths": [
         "19in",
         "10in"
       ],
       "power": {
-        "typicalW": null,
-        "maxW": 15.0
+        "typicalW": 3.0,
+        "maxW": 15.3
       },
       "weightKg": null,
       "ports": {
         "rj45_1g": 1,
-        "usb": 4
+        "usb": 4,
+        "usb_c": 1,
+        "micro_hdmi": 2
       },
       "render": {
         "style": "desktop",
         "body": "white",
-        "accent": "#c51a4a"
+        "accent": "#c51a4a",
+        "preset": "rpi-case"
       },
       "tags": [
         "raspberry-pi",
         "sbc",
-        "needs-shelf"
+        "needs-shelf",
+        "usb-c-power",
+        "rpi-case"
       ],
-      "sourceUrl": "https://datasheets.raspberrypi.com/rpi4/raspberry-pi-4-product-brief.pdf",
+      "sourceUrl": "https://www.raspberrypi.com/products/raspberry-pi-4-case/",
       "verified": false,
-      "notes": "Case size 90 × 60 × 30 mm per retailers (some list 97 × 70 × 25 mm). Max W is the 5 V / 3 A supply rating."
+      "notes": "Placed with the USB/Ethernet end facing the front, so the footprint is 70 mm wide × 97 mm deep. Case size 97 × 70 × 25 mm per RS Components (Raspberry Pi doesn't publish case dimensions). Power: 600 mA typical bare-board draw (3 W), 3.0 A supply recommended, up to 1.2 A for USB peripherals. USB-C power, two micro HDMI and audio are on the long left side, microSD and the power/activity LEDs at the far end.",
+      "powerInput": {
+        "connector": "usb_c",
+        "voltageV": 5.1,
+        "currentA": 3,
+        "adapter": "wall",
+        "adapterW": 15.3,
+        "adapterIncluded": false,
+        "notes": "Needs a 5.1 V / 3 A USB-C supply (official 15.3 W PSU recommended); not included with the board."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://www.raspberrypi.com/products/raspberry-pi-4-case/",
+          "https://www.raspberrypi.com/documentation/computers/raspberry-pi.html",
+          "https://au.rs-online.com/web/p/products/1876751"
+        ],
+        "notes": "Port order on the end face (USB 2.0 pair, USB 3.0 pair, Ethernet) follows the Pi 4 board; exact offsets in the case are estimated. The top view shows the side connectors (USB-C power, micro HDMI 0/1, audio) on the left long side, spaced as on the Pi 4 board.",
+        "front": {
+          "style": "rpi-case",
+          "regions": [
+            {
+              "type": "panel",
+              "x": 0,
+              "w": 1,
+              "y": 0,
+              "h": 0.36,
+              "color": "#f3f4f6",
+              "radius": 3
+            },
+            {
+              "type": "usb_a",
+              "count": 2,
+              "rows": 2,
+              "portType": "usb",
+              "colors": [
+                "#111827",
+                "#111827"
+              ],
+              "speed": "USB 2.0",
+              "x": 0.05,
+              "y": 0.4,
+              "h": 0.56
+            },
+            {
+              "type": "usb_a",
+              "count": 2,
+              "rows": 2,
+              "portType": "usb",
+              "colors": [
+                "#2563eb",
+                "#2563eb"
+              ],
+              "speed": "USB 3.0"
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_1g",
+              "speed": "1 GbE",
+              "start": 1,
+              "x": 0.72,
+              "y": 0.4,
+              "h": 0.56
+            }
+          ]
+        },
+        "rear": {
+          "style": "rpi-case",
+          "regions": [
+            {
+              "type": "panel",
+              "x": 0,
+              "w": 1,
+              "y": 0,
+              "h": 0.36,
+              "color": "#f3f4f6",
+              "radius": 3
+            },
+            {
+              "type": "leds",
+              "count": 2,
+              "colors": [
+                "#ef4444",
+                "#22c55e"
+              ],
+              "labels": [
+                "PWR",
+                "ACT"
+              ],
+              "x": 0.08,
+              "y": 0.55,
+              "h": 0.2
+            },
+            {
+              "type": "microsd",
+              "count": 1,
+              "x": 0.35,
+              "w": 0.3,
+              "y": 0.7,
+              "h": 0.1
+            }
+          ]
+        },
+        "top": {
+          "style": "rpi-case",
+          "regions": [
+            {
+              "type": "panel",
+              "x": 0.04,
+              "w": 0.92,
+              "y": 0.03,
+              "h": 0.94,
+              "color": "#f3f4f6",
+              "radius": 5
+            },
+            {
+              "type": "usb_c",
+              "count": 1,
+              "portType": "usb_c",
+              "role": "Power in",
+              "x": 0.0,
+              "w": 0.14,
+              "y": 0.16,
+              "h": 0.05
+            },
+            {
+              "type": "micro_hdmi",
+              "count": 1,
+              "portType": "micro_hdmi",
+              "start": 0,
+              "x": 0.0,
+              "w": 0.12,
+              "y": 0.31,
+              "h": 0.04
+            },
+            {
+              "type": "micro_hdmi",
+              "count": 1,
+              "portType": "micro_hdmi",
+              "start": 1,
+              "x": 0.0,
+              "w": 0.12,
+              "y": 0.45,
+              "h": 0.04
+            },
+            {
+              "type": "audio",
+              "count": 1,
+              "x": 0.0,
+              "w": 0.1,
+              "y": 0.59,
+              "h": 0.07
+            },
+            {
+              "type": "label",
+              "text": "Pi 4",
+              "x": 0.3,
+              "y": 0.08,
+              "size": 7,
+              "color": "#c51a4a"
+            }
+          ]
+        }
+      }
     },
     {
       "id": "raspberry-pi-4-model-b",

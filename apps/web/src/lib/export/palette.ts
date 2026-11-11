@@ -9,10 +9,14 @@ export const EXPORT_PALETTE: Record<string, string> = {
   '--rack-hole': '#1b1f24',
   '--rack-label': '#4b5563',
   '--rack-slot-line': 'rgba(255,255,255,0.05)',
+  '--rack-post': '#4a525d',
+  '--rack-acrylic': 'rgba(148,163,184,0.28)',
+  '--rack-empty': 'rgba(255,255,255,0.025)',
+  '--rack-empty-edge': 'rgba(255,255,255,0.11)',
 };
 
 export function resolveCssVars(svg: string): string {
-  return svg.replace(/var\((--rack-[a-z-]+)\)/g, (m, name: string) => EXPORT_PALETTE[name] ?? m);
+  return svg.replace(/var\((--rack-[a-z-]+)(?:,[^)]*)?\)/g, (m, name: string) => EXPORT_PALETTE[name] ?? m);
 }
 
 /** Inline style that makes an on-page RackView use the export palette (print view). */

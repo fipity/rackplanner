@@ -166,7 +166,11 @@ export function occupancyOf(
     const parentOcc = occupancyOf(placements, parent, catalog, depth + 1);
     if (!parentOcc) return null;
     const inset = Math.max(0, (parentOcc.x1 - parentOcc.x0 - parentPart.shelf.usableWidthMm) / 2);
-    const x0 = parentOcc.x0 + inset + placement.xMm;
+    // Items wider than the usable area overhang it, centred (stats warn about it).
+    const x0 =
+      width > parentPart.shelf.usableWidthMm + EPS
+        ? parentOcc.x0 + (parentOcc.x1 - parentOcc.x0 - width) / 2
+        : parentOcc.x0 + inset + placement.xMm;
     // Items stand on the shelf's tray, which sits at the bottom of the shelf's
     // own U, so they start in that U rather than above it.
     return {
@@ -274,7 +278,7 @@ export function checkPlacement(
       problems.push({ code: 'unknown-parent', message: 'Shelf not found' });
     } else if (!parentPart.shelf) {
       problems.push({ code: 'not-a-shelf', message: `${parentPart.name} is not a shelf` });
-    } else if (candidate.xMm + partWidthMm(part) > parentPart.shelf.usableWidthMm + EPS) {
+    } else if (partWidthMm(part) <= parentPart.shelf.usableWidthMm + EPS && candidate.xMm + partWidthMm(part) > parentPart.shelf.usableWidthMm + EPS) {
       problems.push({ code: 'too-wide', message: `Doesn't fit on ${parentPart.name}` });
     }
   } else {
@@ -532,7 +536,8 @@ export function shelfXCandidates(
 ): number[] {
   const w = partWidthMm(part);
   const maxX = geo.usableWidthMm - w;
-  if (maxX < -EPS) return [];
+  // Wider than the usable area: it can only sit centred, overhanging the lips.
+  if (maxX < -EPS) return [0];
   const set = new Set<number>([0, Math.max(0, maxX / 2), Math.max(0, maxX)]);
   for (const p of placements) {
     if (p.parentId !== geo.shelf.id || ignoreIds.includes(p.id)) continue;
@@ -565,9 +570,10 @@ export function findShelfTarget(
   for (const p of design.placements) {
     if (ignoreIds.includes(p.id) || p.parentId !== undefined) continue;
     const geo = shelfGeometry(design.placements, p, catalog);
-    if (!geo || w > geo.usableWidthMm + EPS) continue;
+    if (!geo) continue;
     if (view && !geo.faces.includes(view)) continue;
     const shelfOcc = occupancyOf(design.placements, p, catalog)!;
+    if (w > shelfOcc.x1 - shelfOcc.x0 + EPS) continue;
     // The dragged part's bottom must be near the tray (the shelf's bottom U).
     if (rawBottomU < geo.baseU - 0.75 || rawBottomU > shelfOcc.u1 + 0.5) continue;
     if (centre < shelfOcc.x0 || centre > shelfOcc.x1) continue;

@@ -20,6 +20,7 @@ const EnvSchema = z.object({
   HOST: z.string().default('0.0.0.0'),
   DATA_DIR: z.string().optional(),
   CATALOG_DIR: z.string().optional(),
+  EXAMPLES_DIR: z.string().optional(),
   WEB_DIST: z.string().optional(),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
   BASIC_AUTH_USER: z.string().optional(),
@@ -31,6 +32,7 @@ export type Config = {
   host: string;
   dataDir: string;
   catalogDir: string;
+  examplesDir: string;
   webDist: string;
   logLevel: z.infer<typeof EnvSchema>['LOG_LEVEL'];
   basicAuth: { user: string; pass: string } | null;
@@ -44,6 +46,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     host: e.HOST,
     dataDir: path.resolve(e.DATA_DIR ?? path.join(root, 'data')),
     catalogDir: path.resolve(e.CATALOG_DIR ?? path.join(root, 'catalog')),
+    examplesDir: path.resolve(e.EXAMPLES_DIR ?? path.join(root, 'examples')),
     webDist: path.resolve(e.WEB_DIST ?? path.join(root, 'apps/web/dist')),
     logLevel: e.LOG_LEVEL,
     basicAuth: e.BASIC_AUTH_USER && e.BASIC_AUTH_PASS ? { user: e.BASIC_AUTH_USER, pass: e.BASIC_AUTH_PASS } : null,

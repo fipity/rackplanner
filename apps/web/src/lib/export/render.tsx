@@ -13,9 +13,11 @@ export interface SvgDoc {
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 const FONT = 'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
 
-function rackMarkup(design: Design, catalog: Catalog, view: View): { markup: string; width: number; height: number } {
+function rackMarkup(design: Design, catalog: Catalog, view: View, leds: boolean): { markup: string; width: number; height: number } {
   const layout = rackLayout(design.rack);
-  const markup = resolveCssVars(renderToStaticMarkup(<RackView design={design} catalog={catalog} view={view} scale={1} cables={design.cables} />));
+  const markup = resolveCssVars(
+    renderToStaticMarkup(<RackView design={design} catalog={catalog} view={view} scale={1} cables={design.cables} lod="high" leds={leds} embedDefs />),
+  );
   return { markup, width: layout.width, height: layout.height };
 }
 
@@ -23,12 +25,12 @@ function rackMarkup(design: Design, catalog: Catalog, view: View): { markup: str
  * A sheet with one or more rack views side by side, a title and view labels.
  * Units are millimetres of the drawing (1 user unit = 1 mm of rack).
  */
-export function renderSheet(design: Design, catalog: Catalog, views: View[], opts: { title?: boolean } = {}): SvgDoc {
+export function renderSheet(design: Design, catalog: Catalog, views: View[], opts: { title?: boolean; leds?: boolean } = {}): SvgDoc {
   const pad = 20;
   const titleH = opts.title === false ? 0 : 46;
   const labelH = 22;
   const gap = 40;
-  const racks = views.map((v) => ({ view: v, ...rackMarkup(design, catalog, v) }));
+  const racks = views.map((v) => ({ view: v, ...rackMarkup(design, catalog, v, opts.leds ?? true) }));
   const width = pad * 2 + racks.reduce((s, r) => s + r.width, 0) + gap * (racks.length - 1);
   const height = pad * 2 + titleH + labelH + Math.max(...racks.map((r) => r.height));
   let x = pad;

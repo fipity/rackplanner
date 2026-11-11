@@ -105,7 +105,7 @@ describe('computeStats', () => {
   });
 
   it('warns about devices deeper than the rack', () => {
-    const s = computeStats(design([pp('s', 'srv', 1)], { rack: { width: '19in', heightU: 12, depthMm: 600, numbering: 'bottom-up' } }), catalog);
+    const s = computeStats(design([pp('s', 'srv', 1)], { rack: { width: '19in', heightU: 12, depthMm: 600, numbering: 'bottom-up', frame: 'open-4post', glassDoor: false } }), catalog);
     expect(s.warnings.find((w) => w.code === 'too-deep')?.message).toContain('700 mm deep');
   });
 
@@ -126,7 +126,7 @@ describe('computeStats', () => {
   });
 
   it('reports parts that do not fit the rack width (e.g. after an import)', () => {
-    const s = computeStats(design([pp('a', 'swx', 1)], { rack: { width: '10in', heightU: 12, depthMm: null, numbering: 'bottom-up' } }), catalog);
+    const s = computeStats(design([pp('a', 'swx', 1)], { rack: { width: '10in', heightU: 12, depthMm: null, numbering: 'bottom-up', frame: 'open-4post', glassDoor: false } }), catalog);
     expect(s.warnings.find((w) => w.code === 'invalid-placement')?.message).toMatch(/10in/);
   });
 });
@@ -135,7 +135,7 @@ describe('createDesign', () => {
   it('produces a valid empty design with defaults', () => {
     const d = createDesign({ name: '  Lab  ', rack: { width: '10in' } });
     expect(d.name).toBe('Lab');
-    expect(d.rack).toEqual({ width: '10in', heightU: 12, depthMm: null, numbering: 'bottom-up' });
+    expect(d.rack).toEqual({ width: '10in', heightU: 12, depthMm: null, numbering: 'bottom-up', frame: 'mini-10in', glassDoor: false });
     expect(d.placements).toEqual([]);
   });
 });

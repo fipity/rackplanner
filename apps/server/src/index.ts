@@ -3,6 +3,7 @@ import { buildApp } from './app.js';
 import { loadCatalogDir } from './catalog.js';
 import { seedCatalog } from './catalogRepo.js';
 import { loadConfig } from './config.js';
+import { seedExamples } from './examples.js';
 import { openDb } from './db/index.js';
 
 const config = loadConfig();
@@ -14,7 +15,11 @@ if (catalog.errors.length) {
 
 const db = openDb(path.join(config.dataDir, 'rackplanner.db'));
 const reports = seedCatalog(db, catalog);
+const examples = seedExamples(db, config.examplesDir);
 const app = await buildApp({ config, db });
+for (const r of examples.filter((r) => r.action !== 'skipped')) {
+  app.log.info(`Example ${r.file}: ${r.action}${r.message ? ` (${r.message})` : ''}`);
+}
 for (const r of reports.filter((r) => r.action === 'seeded')) {
   app.log.info(`Seeded ${r.file}: ${r.parts} parts${r.retired ? `, retired ${r.retired}` : ''}`);
 }

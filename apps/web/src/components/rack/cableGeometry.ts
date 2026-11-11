@@ -1,6 +1,6 @@
 import { occupancyOf, type CableEnd, type Catalog, type Design, type Part, type PlacedPart } from '@rackplanner/shared';
 import { portPositions } from '../faceplates/Faceplate';
-import { deviceBox, rackLayout, shelfTrayMm, type DeviceBox, type View } from './geometry';
+import { deviceBox, faceSeen, rackLayout, shelfTrayMm, type DeviceBox, type View } from './geometry';
 
 export interface EndPoint {
   x: number;
@@ -12,7 +12,7 @@ export interface EndPoint {
 }
 
 /** Drawing box of a placement (same as RackView), or null. */
-export function placementBox(design: Pick<Design, 'rack' | 'placements'>, catalog: Catalog, p: PlacedPart, view: View): { box: DeviceBox; part: Part; visible: boolean } | null {
+export function placementBox(design: Pick<Design, 'rack' | 'placements'>, catalog: Catalog, p: PlacedPart, view: View): { box: DeviceBox; part: Part; visible: boolean; face: View } | null {
   const part = catalog.get(p.partId);
   const occ = part && occupancyOf(design.placements, p, catalog);
   if (!part || !occ) return null;
@@ -23,7 +23,7 @@ export function placementBox(design: Pick<Design, 'rack' | 'placements'>, catalo
     if (shelfPart) lift = shelfTrayMm(shelfPart);
   }
   const box = deviceBox(rackLayout(design.rack), part, occ.u0, occ.u1, occ.x0, view, p.parentId !== undefined, lift);
-  return { box, part, visible: occ.faces.includes(view) };
+  return { box, part, visible: occ.faces.includes(view), face: faceSeen(occ.faces, view) };
 }
 
 /** Where a cable end attaches in a view (SVG mm coordinates). */
@@ -31,10 +31,12 @@ export function cableEndPoint(design: Pick<Design, 'rack' | 'placements'>, catal
   const p = design.placements.find((q) => q.id === end.placementId);
   const info = p && placementBox(design, catalog, p, view);
   if (!info) return null;
-  const { box, part, visible } = info;
-  if (visible && end.port) {
-    const slot = portPositions(part, box.w, box.h, box.ears, view).find((s) => s.type === end.port!.type && s.index === end.port!.index);
-    if (slot) return { x: box.x + slot.x + slot.w / 2, y: box.y + slot.y + slot.h / 2, visible, onPort: true };
+  const { box, part, visible, face } = info;
+  if (end.port) {
+    // Ports live on one face; a port on the face we're looking at is visible.
+    const slot = portPositions(part, box.w, box.h, box.ears, face).find((s) => s.type === end.port!.type && s.index === end.port!.index);
+    if (slot) return { x: box.x + slot.x + slot.w / 2, y: box.y + slot.y + slot.h / 2, visible: true, onPort: true };
+    return { x: box.x + box.w / 2, y: box.y + box.h / 2, visible: false, onPort: false };
   }
   return { x: box.x + box.w / 2, y: box.y + box.h / 2, visible, onPort: false };
 }

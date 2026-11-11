@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 2,
+  "version": 3,
   "title": "Ubiquiti UniFi",
   "description": "Rack-relevant UniFi gateways, switches, storage, Protect and power gear plus rack accessories. Specs from techspecs.ui.com (fetched 2026-11-02). Max power excludes PoE output where Ubiquiti lists it that way. UniFi publishes max power only, so typicalW is null.",
   "parts": [
@@ -599,7 +599,7 @@
       "width": {
         "mm": 141.8
       },
-      "depthMm": 128,
+      "depthMm": 127.6,
       "mounting": "front",
       "rackWidths": [
         "19in",
@@ -608,7 +608,8 @@
       "render": {
         "style": "desktop",
         "body": "white",
-        "accent": "#006fff"
+        "accent": "#0ea5e9",
+        "preset": "unifi-white"
       },
       "power": {
         "typicalW": null,
@@ -620,12 +621,106 @@
         "rj45_2_5g": 1
       },
       "tags": [
-        "unifi",
-        "gateway",
         "cloud-gateway",
-        "needs-shelf"
+        "gateway",
+        "needs-shelf",
+        "unifi",
+        "usb-c-power"
       ],
-      "verified": true
+      "verified": true,
+      "powerInput": {
+        "connector": "usb_c",
+        "voltageV": 5,
+        "currentA": 3,
+        "adapter": "wall",
+        "adapterW": 15,
+        "adapterIncluded": true,
+        "notes": "USB-C 5 V / 3 A adapter included."
+      },
+      "notes": "141.8 × 127.6 × 30 mm, 520 g. 0.96\" status display. 2.5 GbE WAN plus four 1 GbE LAN ports. Max 6.2 W, USB-C 5 V / 3 A adapter included.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://techspecs.ui.com/unifi/cloud-gateways/ucg-ultra"
+        ],
+        "notes": "Port counts, display size, reset button and power input are from the spec page. The spec page doesn't say which face each item is on; ports and power on the rear with the display on the front is taken from product imagery and is not confirmed.",
+        "front": {
+          "style": "unifi-white",
+          "regions": [
+            {
+              "type": "display",
+              "variant": "lcd",
+              "x": 0.41,
+              "w": 0.18,
+              "y": 0.27,
+              "h": 0.42
+            }
+          ]
+        },
+        "rear": {
+          "style": "unifi-white",
+          "regions": [
+            {
+              "type": "usb_c",
+              "count": 1,
+              "portType": "none",
+              "role": "Power in",
+              "x": 0.05,
+              "y": 0.4,
+              "h": 0.2
+            },
+            {
+              "type": "button",
+              "kind": "pinhole",
+              "x": 0.16,
+              "y": 0.42,
+              "h": 0.16
+            },
+            {
+              "type": "rj45",
+              "count": 4,
+              "portType": "rj45_1g",
+              "start": 1,
+              "grouping": 4,
+              "x": 0.25,
+              "y": 0.18,
+              "h": 0.66
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_2_5g",
+              "start": 5,
+              "uplink": true,
+              "role": "WAN",
+              "x": 0.78,
+              "y": 0.18,
+              "h": 0.66
+            }
+          ]
+        },
+        "top": {
+          "style": "unifi-white",
+          "regions": [
+            {
+              "type": "panel",
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.03,
+              "h": 0.94,
+              "color": "#f8f9fa",
+              "radius": 4
+            },
+            {
+              "type": "label",
+              "text": "UCG-Ultra",
+              "x": 0.08,
+              "y": 0.08,
+              "size": 6
+            }
+          ]
+        }
+      }
     },
     {
       "id": "ubiquiti-uck-g2-plus",
@@ -3338,7 +3433,7 @@
       "width": {
         "mm": 99.6
       },
-      "depthMm": 164,
+      "depthMm": 163.7,
       "mounting": "front",
       "rackWidths": [
         "19in",
@@ -3347,7 +3442,8 @@
       "render": {
         "style": "desktop",
         "body": "white",
-        "accent": "#006fff"
+        "accent": "#0ea5e9",
+        "preset": "unifi-white"
       },
       "power": {
         "typicalW": null,
@@ -3359,14 +3455,96 @@
         "rj45_1g": 8
       },
       "tags": [
-        "unifi",
-        "switch",
-        "poe",
+        "dc-adapter",
         "lite",
-        "needs-shelf"
+        "needs-shelf",
+        "poe",
+        "switch",
+        "unifi"
       ],
-      "notes": "Max power excludes PoE output.",
-      "verified": true
+      "notes": "99.6 × 163.7 × 31.7 mm, 295 g. Eight 1 GbE ports, ports 1–4 PoE+ (30 W each, 52 W total). Max 8 W excluding PoE, 60 W including PoE. Powered by the included 60 W external adapter (50–57 V DC in).",
+      "verified": true,
+      "powerInput": {
+        "connector": "dc_barrel",
+        "voltageV": 54,
+        "adapter": "brick",
+        "adapterW": 60,
+        "adapterIncluded": true,
+        "notes": "External 60 W AC/DC adapter included; 50–57 V DC input."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://techspecs.ui.com/unifi/switching/usw-lite-8-poe"
+        ],
+        "notes": "PoE count, port count and DC adapter are from the spec page. That the PoE+ ports are numbers 1–4, and that the ports are on the front with the DC jack on the rear, is not stated there.",
+        "front": {
+          "style": "unifi-white",
+          "regions": [
+            {
+              "type": "leds",
+              "count": 1,
+              "colors": [
+                "#0ea5e9"
+              ],
+              "x": 0.015,
+              "y": 0.08,
+              "h": 0.12
+            },
+            {
+              "type": "rj45",
+              "count": 8,
+              "portType": "rj45_1g",
+              "grouping": 8,
+              "poe": "poe+",
+              "poePorts": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "x": 0.06,
+              "w": 0.9,
+              "y": 0.2,
+              "h": 0.68
+            }
+          ]
+        },
+        "rear": {
+          "style": "unifi-white",
+          "regions": [
+            {
+              "type": "dc_barrel",
+              "count": 1,
+              "role": "Power in (54 V DC)",
+              "x": 0.8,
+              "y": 0.3,
+              "h": 0.4
+            }
+          ]
+        },
+        "top": {
+          "style": "unifi-white",
+          "regions": [
+            {
+              "type": "panel",
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.03,
+              "h": 0.94,
+              "color": "#f8f9fa",
+              "radius": 4
+            },
+            {
+              "type": "label",
+              "text": "USW-Lite-8-PoE",
+              "x": 0.08,
+              "y": 0.08,
+              "size": 6
+            }
+          ]
+        }
+      }
     },
     {
       "id": "ubiquiti-usw-pro-8-poe",
@@ -4267,7 +4445,7 @@
       "id": "ubiquiti-unvr-instant",
       "brand": "Ubiquiti",
       "model": "UNVR-Instant",
-      "name": "UniFi Network Video Recorder Instant",
+      "name": "UniFi NVR Instant",
       "category": "nvr",
       "subcategory": "protect",
       "sourceUrl": "https://techspecs.ui.com/unifi/physical-security/unvr-instant",
@@ -4280,12 +4458,14 @@
       "depthMm": 220,
       "mounting": "front",
       "rackWidths": [
-        "19in"
+        "19in",
+        "10in"
       ],
       "render": {
         "style": "desktop",
         "body": "white",
-        "accent": "#006fff"
+        "accent": "#0ea5e9",
+        "preset": "unifi-white"
       },
       "power": {
         "typicalW": null,
@@ -4293,7 +4473,10 @@
       },
       "poeBudgetW": 40.0,
       "weightKg": 1.04,
-      "ports": {},
+      "ports": {
+        "rj45_1g": 7,
+        "hdmi": 1
+      },
       "driveBays": [
         {
           "count": 1,
@@ -4301,14 +4484,106 @@
         }
       ],
       "tags": [
-        "unifi",
+        "10in-too-wide",
+        "needs-shelf",
         "nvr",
         "poe",
         "protect",
-        "needs-shelf"
+        "unifi"
       ],
-      "notes": "Max power excludes PoE output.",
-      "verified": true
+      "notes": "220 × 220 × 47 mm, 1.04 kg. One 3.5\" drive bay (11 W drive budget). 1 GbE uplink plus six 1 GbE PoE ports (15.4 W each, 40 W total), HDMI Viewport, 1.14\" display. Internal 60 W PSU, 100–240 V AC; max 9 W excluding PoE and drive. Wall and DIN-rail mount included. Also sold as the UNVR-Instant-Kit, bundled with G5 Turret Ultra camera(s); only the NVR is a rack item. Too wide (220 mm) for 212 mm 10\" shelves and too deep (220 mm) for 200 mm shelves.",
+      "verified": true,
+      "powerInput": {
+        "connector": "ac_inlet",
+        "adapter": "none",
+        "notes": "Internal 60 W PSU, 100–240 V AC. The inlet type isn't listed in the spec sheet."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://techspecs.ui.com/unifi/cameras-nvrs/unvr-instant",
+          "https://techspecs.ui.com/unifi/cameras-nvrs/unvr-instant-kit"
+        ],
+        "notes": "Port counts, display size and the internal AC PSU are from the spec page. The spec page doesn't give the face of each port, the drive bay access or the AC inlet type; ports on the rear and display on the front are not confirmed.",
+        "front": {
+          "style": "unifi-white",
+          "regions": [
+            {
+              "type": "display",
+              "variant": "lcd",
+              "x": 0.44,
+              "w": 0.12,
+              "y": 0.3,
+              "h": 0.36
+            }
+          ]
+        },
+        "rear": {
+          "style": "unifi-white",
+          "regions": [
+            {
+              "type": "iec_c8",
+              "count": 1,
+              "role": "AC in (inlet type unconfirmed)",
+              "x": 0.05,
+              "y": 0.35,
+              "h": 0.3
+            },
+            {
+              "type": "hdmi",
+              "count": 1,
+              "portType": "hdmi",
+              "role": "Viewport",
+              "x": 0.16,
+              "y": 0.4,
+              "h": 0.2
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_1g",
+              "uplink": true,
+              "role": "Uplink",
+              "start": 1,
+              "x": 0.3,
+              "y": 0.28,
+              "h": 0.5
+            },
+            {
+              "type": "rj45",
+              "count": 6,
+              "portType": "rj45_1g",
+              "poe": "poe",
+              "grouping": 6,
+              "start": 2,
+              "x": 0.42,
+              "y": 0.28,
+              "h": 0.5
+            }
+          ]
+        },
+        "top": {
+          "style": "unifi-white",
+          "regions": [
+            {
+              "type": "panel",
+              "x": 0.03,
+              "w": 0.94,
+              "y": 0.03,
+              "h": 0.94,
+              "color": "#f8f9fa",
+              "radius": 4
+            },
+            {
+              "type": "label",
+              "text": "UNVR-Instant",
+              "x": 0.08,
+              "y": 0.08,
+              "size": 6
+            }
+          ]
+        }
+      }
     },
     {
       "id": "ubiquiti-ups-2u-pro-us",

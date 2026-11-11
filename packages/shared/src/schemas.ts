@@ -35,6 +35,14 @@ export const PORT_TYPES = [
   'outlet_schuko',
   'outlet_au',
   'outlet_uk',
+  'usb_c',
+  'hdmi',
+  'micro_hdmi',
+  'displayport',
+  'vga',
+  'serial',
+  'sc_duplex',
+  'dc_out',
 ] as const;
 export const PortTypeSchema = z.enum(PORT_TYPES);
 export type PortType = z.infer<typeof PortTypeSchema>;
@@ -58,8 +66,16 @@ export const PORT_TYPE_LABELS: Record<PortType, string> = {
   outlet_c19: 'C19 outlet',
   outlet_nema: 'NEMA outlet',
   outlet_schuko: 'Schuko outlet',
-  outlet_au: 'AU outlet',
+  outlet_au: 'AU/NZ outlet',
   outlet_uk: 'UK outlet',
+  usb_c: 'USB-C',
+  hdmi: 'HDMI',
+  micro_hdmi: 'Micro HDMI',
+  displayport: 'DisplayPort',
+  vga: 'VGA',
+  serial: 'Serial (DB9)',
+  sc_duplex: 'SC duplex',
+  dc_out: 'DC output',
 };
 
 export const RenderStyleSchema = z.enum([
@@ -122,11 +138,199 @@ export const UpsSpecSchema = z
   })
   .strict();
 
+// ---------------------------------------------------------------------------
+// Faceplate layouts (declarative front / rear / top drawings)
+// ---------------------------------------------------------------------------
+
+/** Visual style presets. Generic, brand-inspired colours only: no logos. */
+export const STYLE_PRESETS = [
+  'unifi-silver',
+  'unifi-black',
+  'unifi-white',
+  'dell-bezel',
+  'hpe',
+  'synology',
+  'mikrotik',
+  'generic-black',
+  'generic-silver',
+  'patch-panel',
+  'brush-panel',
+  'shelf',
+  'pdu',
+  'ups',
+  'rpi-case',
+] as const;
+export const StylePresetSchema = z.enum(STYLE_PRESETS);
+export type StylePreset = z.infer<typeof StylePresetSchema>;
+
+/** Connectors that are drawn one per port. */
+export const CONNECTORS = [
+  'rj45',
+  'console',
+  'sfp',
+  'sfp_plus',
+  'sfp28',
+  'qsfp',
+  'qsfp28',
+  'usb_a',
+  'usb_c',
+  'micro_usb',
+  'hdmi',
+  'micro_hdmi',
+  'vga',
+  'displayport',
+  'serial',
+  'audio',
+  'microsd',
+  'iec_c13',
+  'iec_c14',
+  'iec_c19',
+  'iec_c20',
+  'iec_c6',
+  'iec_c8',
+  'dc_barrel',
+  'outlet_au',
+  'outlet_nema',
+  'outlet_schuko',
+  'outlet_uk',
+  'keystone',
+  'coupler',
+  'punchdown',
+  'lc',
+  'sc',
+] as const;
+export const ConnectorSchema = z.enum(CONNECTORS);
+export type Connector = z.infer<typeof ConnectorSchema>;
+
+export const PoeLevelSchema = z.enum(['poe', 'poe+', 'poe++', 'passive']);
+export type PoeLevel = z.infer<typeof PoeLevelSchema>;
+
+const frac = z.number().min(0).max(1);
+/** Fractional box inside the face. Omitted x flows after the previous region; omitted w uses the natural size. */
+const RegionBox = {
+  x: frac.optional(),
+  w: frac.optional(),
+  y: frac.optional(),
+  h: frac.optional(),
+  align: z.enum(['start', 'center', 'end']).optional(),
+};
+
+export const PortRegionSchema = z
+  .object({
+    type: ConnectorSchema,
+    count: z.number().int().positive().max(96).default(1),
+    rows: z.number().int().min(1).max(4).optional(),
+    /** Ports per visual group (e.g. 12 = blocks of 6 columns × 2 rows). */
+    grouping: z.number().int().positive().optional(),
+    /** Catalog port type these ports count as (for cables and stats); "none" for pass-through backs. */
+    portType: z.union([PortTypeSchema, z.literal('none')]).optional(),
+    /** First printed port number; defaults to continuing the face's network numbering. */
+    start: z.number().int().nonnegative().optional(),
+    /** zigzag = odd ports on top, even below (switch style); row = left to right, row by row. */
+    order: z.enum(['zigzag', 'row']).optional(),
+    poe: z.union([z.boolean(), PoeLevelSchema]).optional(),
+    /** Printed numbers of the PoE ports when only some are powered. */
+    poePorts: z.array(z.number().int().positive()).optional(),
+    uplink: z.boolean().optional(),
+    /** Speed text for tooltips, e.g. "2.5 GbE". */
+    speed: z.string().max(24).optional(),
+    /** Keystone / port colours, by position (patch panels). */
+    colors: z.array(HexColorSchema).optional(),
+    /** Print port numbers above the ports. */
+    numbers: z.boolean().optional(),
+    /** Purpose label shown in tooltips (e.g. "WAN", "Power in"). */
+    role: z.string().max(48).optional(),
+    ...RegionBox,
+  })
+  .strict();
+export type PortRegion = z.infer<typeof PortRegionSchema>;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+const simple = <T extends string, E extends z.ZodRawShape = {}>(type: T, extra?: E) =>
+  z.object({ type: z.literal(type), ...RegionBox, ...((extra ?? {}) as E) }).strict();
+
+export const FeatureRegionSchema = z.discriminatedUnion('type', [
+  simple('bays', {
+    count: z.number().int().positive().max(60),
+    size: z.enum(['2.5', '3.5', 'm2', 'e1s']).default('3.5'),
+    orientation: z.enum(['horizontal', 'vertical']).optional(),
+    rows: z.number().int().min(1).max(6).optional(),
+    start: z.number().int().nonnegative().optional(),
+  }),
+  simple('display', { variant: z.enum(['lcd', 'touch', 'segment']).default('lcd') }),
+  simple('vent', { pattern: z.enum(['honeycomb', 'slots', 'mesh', 'holes']).optional() }),
+  simple('leds', { count: z.number().int().positive().max(48).default(1), colors: z.array(HexColorSchema).optional(), labels: z.array(z.string().max(8)).optional() }),
+  simple('ledbar', { color: HexColorSchema.optional() }),
+  simple('button', { kind: z.enum(['power', 'reset', 'pinhole', 'push']).default('push') }),
+  simple('label', { text: z.string().max(60).optional(), size: z.number().positive().max(12).optional(), color: HexColorSchema.optional() }),
+  simple('psu', { count: z.number().int().positive().max(4).default(1), inlet: z.enum(['iec_c14', 'iec_c20']).default('iec_c14') }),
+  simple('fan', { count: z.number().int().positive().max(12).default(1) }),
+  simple('pcie', { count: z.number().int().positive().max(8).default(1) }),
+  simple('io_shield'),
+  simple('ground'),
+  simple('label_strip'),
+  simple('cable_bar'),
+  simple('brush'),
+  simple('handle'),
+  simple('thumbscrew'),
+  simple('switch', { variant: z.enum(['rocker', 'toggle']).default('rocker'), count: z.number().int().positive().max(12).default(1) }),
+  simple('breaker'),
+  simple('slot'),
+  simple('d_ring', { count: z.number().int().positive().max(8).default(3) }),
+  simple('panel', { color: HexColorSchema.optional(), radius: z.number().nonnegative().max(40).optional() }),
+]);
+export type FeatureRegion = z.infer<typeof FeatureRegionSchema>;
+
+export const RegionSchema = z.union([PortRegionSchema, FeatureRegionSchema]);
+export type Region = z.infer<typeof RegionSchema>;
+export type RegionInput = z.input<typeof RegionSchema>;
+
+export const FaceLayoutSchema = z
+  .object({
+    style: StylePresetSchema.optional(),
+    regions: z.array(RegionSchema).max(64),
+  })
+  .strict();
+export type FaceLayout = z.infer<typeof FaceLayoutSchema>;
+
+export const PartLayoutSchema = z
+  .object({
+    front: FaceLayoutSchema.optional(),
+    rear: FaceLayoutSchema.optional(),
+    /** Top-down view (lid), used for shelf plans. */
+    top: FaceLayoutSchema.optional(),
+    /** True once port positions, displays and rear panel are confirmed against the sources. */
+    layoutVerified: z.boolean(),
+    sources: z.array(z.url()).default([]),
+    notes: z.string().max(2000).optional(),
+  })
+  .strict();
+export type PartLayout = z.infer<typeof PartLayoutSchema>;
+
+export const POWER_CONNECTORS = ['iec_c14', 'iec_c20', 'iec_c8', 'iec_c6', 'ac_inlet', 'usb_c', 'dc_barrel', 'poe', 'hardwired'] as const;
+export const PowerInputSchema = z
+  .object({
+    connector: z.enum(POWER_CONNECTORS),
+    /** Device-side input voltage (DC), e.g. 5 for USB-C. */
+    voltageV: z.number().positive().max(400).optional(),
+    currentA: z.number().positive().max(100).optional(),
+    /** How it reaches the wall: no adapter (cord to an outlet), a plug-pack, or an inline brick. */
+    adapter: z.enum(['none', 'wall', 'brick']).default('none'),
+    adapterW: z.number().positive().max(5000).optional(),
+    adapterIncluded: z.boolean().optional(),
+    /** Number of power inputs (redundant PSUs). */
+    inputs: z.number().int().positive().max(4).default(1),
+    notes: z.string().max(400).optional(),
+  })
+  .strict();
+export type PowerInput = z.infer<typeof PowerInputSchema>;
+
 export const RenderSpecSchema = z
   .object({
     style: RenderStyleSchema,
     body: BodyFinishSchema.optional(),
     accent: HexColorSchema.optional(),
+    preset: StylePresetSchema.optional(),
   })
   .strict();
 
@@ -168,6 +372,8 @@ export const PartSchema = z
     shelf: ShelfSpecSchema.optional(),
     ups: UpsSpecSchema.optional(),
     render: RenderSpecSchema,
+    layout: PartLayoutSchema.optional(),
+    powerInput: PowerInputSchema.optional(),
     tags: z.array(z.string().min(1)).default([]),
     legacy: z.boolean().optional(),
     sourceUrl: z.url().nullable(),
@@ -206,12 +412,20 @@ export type CatalogFile = z.infer<typeof CatalogFileSchema>;
 // Design
 // ---------------------------------------------------------------------------
 
+export const RACK_FRAMES = ['open-2post', 'open-4post', 'cabinet', 'mini-10in', 'rackmate-t1', 'rackmate-t2'] as const;
+export const RackFrameSchema = z.enum(RACK_FRAMES);
+export type RackFrame = z.infer<typeof RackFrameSchema>;
+
 export const RackSchema = z
   .object({
     width: RackWidthSchema,
     heightU: z.number().int().min(MIN_RACK_U).max(MAX_RACK_U),
     depthMm: z.number().positive().nullable(),
     numbering: z.enum(['bottom-up', 'top-down']).default('bottom-up'),
+    /** Frame drawing style. Defaults by width for designs saved before v2. */
+    frame: RackFrameSchema.default('open-4post'),
+    /** Glass door overlay (cabinets). */
+    glassDoor: z.boolean().default(false),
   })
   .strict();
 export type Rack = z.infer<typeof RackSchema>;
@@ -232,6 +446,8 @@ export const PlacedPartSchema = z
     measuredW: z.number().nonnegative().max(100000).optional(),
     notes: z.string().max(4000).optional(),
     color: HexColorSchema.optional(),
+    /** Per-port colour overrides, keyed "portType:index" (e.g. keystone colours). */
+    portColors: z.record(z.string().regex(/^[a-z0-9_]+:[0-9]+$/), HexColorSchema).optional(),
   })
   .strict();
 export type PlacedPart = z.infer<typeof PlacedPartSchema>;
@@ -262,9 +478,32 @@ export const CableSchema = z
   .strict();
 export type Cable = z.infer<typeof CableSchema>;
 
-export const DesignSchema = z
+export const DESIGN_SCHEMA_VERSION = 2;
+
+/**
+ * Upgrade older saved designs to the current shape before validation.
+ * v1 → v2: racks gain a frame style (19" → 4-post, 10" → generic mini rack).
+ * Unknown input is passed through untouched so zod reports the real error.
+ */
+export function migrateDesignData(raw: unknown): unknown {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return raw;
+  const d = raw as Record<string, unknown>;
+  if (d.schemaVersion === 1) {
+    const rack = d.rack && typeof d.rack === 'object' ? (d.rack as Record<string, unknown>) : null;
+    return {
+      ...d,
+      schemaVersion: 2,
+      rack: rack
+        ? { ...rack, frame: rack.frame ?? (rack.width === '10in' ? 'mini-10in' : 'open-4post'), glassDoor: rack.glassDoor ?? false }
+        : d.rack,
+    };
+  }
+  return raw;
+}
+
+const DesignObjectSchema = z
   .object({
-    schemaVersion: z.literal(1),
+    schemaVersion: z.literal(DESIGN_SCHEMA_VERSION),
     id: z.string().min(1),
     name: z.string().min(1).max(200),
     rack: RackSchema,
@@ -275,4 +514,7 @@ export const DesignSchema = z
     updatedAt: z.iso.datetime(),
   })
   .strict();
-export type Design = z.infer<typeof DesignSchema>;
+
+/** A saved design. Parsing migrates older versions first. */
+export const DesignSchema = z.preprocess(migrateDesignData, DesignObjectSchema);
+export type Design = z.infer<typeof DesignObjectSchema>;

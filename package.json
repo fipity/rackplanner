@@ -17,11 +17,18 @@
     "test:watch": "vitest",
     "typecheck": "tsc -p packages/shared --noEmit && tsc -p apps/server --noEmit && tsc -p apps/web --noEmit",
     "validate:catalog": "tsx scripts/validate-catalog.ts",
-    "catalog:schema": "tsx scripts/gen-catalog-schema.ts"
+    "catalog:schema": "tsx scripts/gen-catalog-schema.ts",
+    "screenshots": "npm run build && node scripts/screenshots/run.mjs",
+    "render:devices": "tsx --tsconfig scripts/tsconfig.json scripts/screenshots/render-devices.tsx",
+    "examples": "tsx scripts/build-examples.ts"
   },
   "devDependencies": {
+    "@playwright/test": "1.64.0",
     "@types/node": "^22.15.0",
     "concurrently": "^9.1.2",
+    "gifenc": "^1.0.3",
+    "playwright": "1.64.0",
+    "sharp": "^0.34.4",
     "tsx": "^4.19.4",
     "typescript": "~5.8.3",
     "vitest": "^3.2.4"
