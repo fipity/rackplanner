@@ -16,6 +16,7 @@
  */
 import type { Design, Mounting, Part, PlacedPart, Rack } from './schemas.js';
 import { EPS, RACK_OPENING_MM, type RackWidth } from './units.js';
+import { SIDE_SUFFIX, uprightId } from './turn.js';
 
 export type Catalog = ReadonlyMap<string, Part>;
 export type Face = 'front' | 'rear';
@@ -423,15 +424,17 @@ export function resolveDrop(
   const existing = req.placementId ? design.placements.find((p) => p.id === req.placementId) : undefined;
   const ignore = existing ? [existing.id, ...descendantsOf(design.placements, existing.id)] : [];
 
-  // Desktop gear dropped onto a shelf sits on it.
-  const shelf = findShelfTarget(design, catalog, part, req.rawBottomU, req.rawXMm, req.view, ignore);
-  if (shelf) {
+  // Desktop gear dropped onto a shelf sits on it. If it only fits the shelf in
+  // its other orientation (on its side, or upright again), it turns.
+  const onShelf = (p: Part): DropResolution | null => {
+    const shelf = findShelfTarget(design, catalog, p, req.rawBottomU, req.rawXMm, req.view, ignore);
+    if (!shelf) return null;
     const relX = req.rawXMm - shelf.x0;
-    const sxs = shelfXCandidates(design.placements, shelf, part, catalog, ignore).sort((a, b) => Math.abs(a - relX) - Math.abs(b - relX));
+    const sxs = shelfXCandidates(design.placements, shelf, p, catalog, ignore).sort((a, b) => Math.abs(a - relX) - Math.abs(b - relX));
     const mounting: Mounting = shelf.faces.includes('front') ? 'front' : 'rear';
     const shelfBase: PlacedPart = existing
-      ? { ...existing, parentId: shelf.shelf.id, bottomU: shelf.baseU, xMm: sxs[0] ?? 0, mounting }
-      : { id: newId, partId: part.id, parentId: shelf.shelf.id, bottomU: shelf.baseU, xMm: sxs[0] ?? 0, mounting };
+      ? { ...existing, partId: p.id, parentId: shelf.shelf.id, bottomU: shelf.baseU, xMm: sxs[0] ?? 0, mounting }
+      : { id: newId, partId: p.id, parentId: shelf.shelf.id, bottomU: shelf.baseU, xMm: sxs[0] ?? 0, mounting };
     let firstOnShelf: DropResolution | null = null;
     for (const xMm of sxs) {
       const candidate = { ...shelfBase, xMm };
@@ -439,8 +442,14 @@ export function resolveDrop(
       if (check.ok) return { candidate, check };
       firstOnShelf ??= { candidate, check };
     }
-    if (firstOnShelf) return firstOnShelf;
-  }
+    return firstOnShelf;
+  };
+  const asIs = onShelf(part);
+  if (asIs?.check.ok) return asIs;
+  const other = catalog.get(part.id.endsWith(SIDE_SUFFIX) ? uprightId(part.id) : part.id + SIDE_SUFFIX);
+  const turned = other ? onShelf(other) : null;
+  if (turned?.check.ok) return turned;
+  if (asIs) return asIs;
 
   const bottomU = snapBottomU(part, req.rawBottomU, design.rack);
   const xs = xCandidates(design, part, bottomU, catalog, ignore).sort(

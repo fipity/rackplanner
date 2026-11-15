@@ -167,7 +167,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <registry>/rackplanner
 | Add a part | Drag it from the catalog into the rack, or click it to drop it in the first free slot |
 | Move | Drag a placed part (red = blocked, with the reason shown next to the cursor) |
 | Put desktop gear on a shelf | Drag it onto a shelf, or just click it in the catalog: it goes onto a shelf with room. It stands on the tray and snaps beside items already there |
-| Lay shelf gear on its side | Select it and press **R**, or choose **Orientation: On its side**. It takes less height and more shelf width; its faceplate and ports turn with it, and cables stay connected |
+| Lay shelf gear on its side | Select it and press **R**, or choose **Orientation: On its side**. It takes less height and more shelf width; its faceplate and ports turn with it, and cables stay connected. A device dropped on a shelf where it only fits lying down (or only upright) is turned for you |
 | Select a shelf that has gear on it | Click its ears or tray, or the shelf name in an item's details |
 | Draw cables | Press <kbd>C</kbd> (or **Cables** in the toolbar), click a port or device, then the other end. <kbd>Esc</kbd> finishes |
 | Edit / delete a cable | Click it to edit type, colour, ports, length, label; <kbd>Del</kbd> removes it |

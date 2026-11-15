@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildBom, buildDesignExport } from './exchange.js';
 import { createDesign } from './design.js';
-import { checkPlacement, occupancyOf, partWidthMm, type Catalog } from './placement.js';
+import { checkPlacement, occupancyOf, partWidthMm, resolveDrop, type Catalog } from './placement.js';
 import { PartSchema, type Part, type PartInput, type PlacedPart, type Rack } from './schemas.js';
 import { SIDE_SUFFIX, canTurn, turnedPart, uprightId, uprightPart, withTurnedParts } from './turn.js';
 
@@ -74,5 +74,35 @@ describe('turning shelf gear on its side', () => {
     expect(row.qty).toBe(2);
     expect(row.name).toBe('ntd');
     expect(buildDesignExport(design, catalog).customParts.map((p) => p.id)).toEqual(['custom-box']);
+  });
+});
+
+describe('dropping onto a shelf', () => {
+  const s = pp({ id: 's', partId: 'shelf-1u', bottomU: 3 });
+  const above = pp({ id: 'sw', partId: 'sw-1u', bottomU: 4 });
+  const drop = (placements: PlacedPart[], partId: string, placementId?: string) =>
+    resolveDrop({ rack, placements }, catalog, { partId, rawBottomU: 3, rawXMm: 20, mounting: 'front', view: 'front', ...(placementId ? { placementId } : {}) });
+
+  it('keeps a device upright when it fits', () => {
+    const r = drop([s], 'ntd')!;
+    expect(r.check.ok).toBe(true);
+    expect(r.candidate).toMatchObject({ partId: 'ntd', parentId: 's' });
+  });
+
+  it('lays a device on its side when only that fits under the gear above', () => {
+    const r = drop([s, above], 'ntd')!;
+    expect(r.check.ok).toBe(true);
+    expect(r.candidate).toMatchObject({ partId: `ntd${SIDE_SUFFIX}`, parentId: 's', bottomU: 3 });
+  });
+
+  it('stands a turned device back up when moved to a shelf where only upright fits', () => {
+    // 400 mm of the 430 mm tray is taken: 132 mm flat won't fit, 44 mm upright will.
+    const wide = part({ id: 'wide', formFactor: 'desktop', heightU: 1, heightMm: 40, width: { mm: 386 }, depthMm: 100, render: { style: 'desktop' } });
+    const cat: Catalog = new Map([...catalog, ...withTurnedParts([wide]).map((p) => [p.id, p] as const)]);
+    const flat = pp({ id: 'n', partId: `ntd${SIDE_SUFFIX}`, bottomU: 8 });
+    const placements = [s, pp({ id: 'w', partId: 'wide', parentId: 's', bottomU: 3 }), flat];
+    const r = resolveDrop({ rack, placements }, cat, { partId: flat.partId, placementId: 'n', rawBottomU: 3, rawXMm: 390, mounting: 'front', view: 'front' })!;
+    expect(r.check.ok).toBe(true);
+    expect(r.candidate).toMatchObject({ id: 'n', partId: 'ntd', parentId: 's' });
   });
 });

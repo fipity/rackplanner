@@ -127,3 +127,8 @@ All white, desktop, `verified: false`, `layoutVerified: false`; tests/visual/nbn
 - `nokia-xs-010x-q-nbn-fttp`: the 1-port FTTP box (XGS-PON). 135 × 135 × 30 mm, 12 V 1 A, < 8.6 W from Nokia's datasheet; SC/APC in (as `sc_duplex`, the only SC type), 1 × 10G RJ45. Weight null (Nokia's datasheet 0.366 kg vs quick reference guide 0.285 kg). Port edge order from Nokia's photo; light names from nbn's 1-port page.
 - `netcomm-ndd-0300-nbn-fttc`: FTTC connection device. 166 × 118 × 44 mm from retailer listings; 2U on a shelf (44 mm doesn't fit 1U). C6 mains inlet, WALL SOCKET (phone line, drawn but not a port), RESET, GATEWAY (RJ45); LAN / DSL / Connection / Power lights on top. From nbn's FTTC setup guide.
 - `nbn-fixed-wireless-ntd`: indoor Fixed Wireless box, modelled lying on its back with the port edge to the rear. Face ≈ 220 × 127 mm (Internode guide; nbn says the current box is similar); thickness unknown, so 2U and no heightMm (can't be turned). 4 × UNI-D; antenna and power lead under a cover. From nbn's 2024 Fixed Wireless user guide.
+
+## Turn on drop (2026-11-15)
+
+- `resolveDrop`: when desktop gear doesn't fit a shelf in its current orientation but does in the other (`<id>@side` or back upright), the candidate takes the other partId. The ghost shows it turned, the drag tooltip adds "on its side" / "upright", and the drop toasts it. Moving an existing placement now carries `partId` through.
+- Tests: turn.test.ts (drop upright, drop turned, stand back up), tests/visual/drop-turn.spec.ts (real drag from the catalog).

@@ -1,5 +1,5 @@
 import { DragOverlay } from '@dnd-kit/core';
-import { formatURange } from '@rackplanner/shared';
+import { SIDE_SUFFIX, formatURange } from '@rackplanner/shared';
 import { BarChart3, ChevronLeft, PanelLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { CatalogSidebar } from '../components/catalog/CatalogSidebar';
@@ -28,6 +28,8 @@ function DragFeedback() {
   const { check, candidate } = resolution;
   const part = useCatalogStore.getState().catalog.get(candidate.partId);
   const where = part ? formatURange(candidate.bottomU, candidate.bottomU + part.heightU, rack) : '';
+  // The drop turns the device to fit the shelf.
+  const turn = candidate.partId === active.partId ? '' : candidate.partId.endsWith(SIDE_SUFFIX) ? ' · on its side' : ' · upright';
   return (
     <div
       role="status"
@@ -37,7 +39,7 @@ function DragFeedback() {
       )}
       style={{ left: pointer.x + 18, top: pointer.y + 18 }}
     >
-      {check.ok ? `${where} · ${candidate.mounting}` : check.problems.map((p) => <div key={p.message}>{p.message}</div>)}
+      {check.ok ? `${where} · ${candidate.mounting}${turn}` : check.problems.map((p) => <div key={p.message}>{p.message}</div>)}
     </div>
   );
 }

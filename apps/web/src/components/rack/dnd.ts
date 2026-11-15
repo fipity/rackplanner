@@ -9,6 +9,7 @@
  */
 import type { DragEndEvent, DragMoveEvent, DragStartEvent } from '@dnd-kit/core';
 import {
+  SIDE_SUFFIX,
   U_MM,
   newId,
   occupancyOf,
@@ -152,19 +153,27 @@ export function handleDragEnd(_e: DragEndEvent): void {
       existing.bottomU === c.bottomU &&
       existing.xMm === c.xMm &&
       existing.mounting === c.mounting &&
-      existing.parentId === c.parentId
+      existing.parentId === c.parentId &&
+      existing.partId === c.partId
     ) {
       return; // no-op move: don't pollute undo history
     }
-    store.updatePlacement(active.placementId, { bottomU: c.bottomU, xMm: c.xMm, mounting: c.mounting, parentId: c.parentId });
-    if (c.parentId && existing?.parentId !== c.parentId) toast('Placed on shelf');
+    store.updatePlacement(active.placementId, { partId: c.partId, bottomU: c.bottomU, xMm: c.xMm, mounting: c.mounting, parentId: c.parentId });
+    if (c.partId !== existing?.partId) toast(turnedMessage(c.partId));
+    else if (c.parentId && existing?.parentId !== c.parentId) toast('Placed on shelf');
     return;
   }
 
   const id = newId('p_');
   store.addPlacement({ ...c, id });
   useUiStore.getState().select(id);
-  if (c.parentId) toast('Placed on shelf');
+  if (c.partId !== active.partId) toast(turnedMessage(c.partId));
+  else if (c.parentId) toast('Placed on shelf');
+}
+
+/** The drop turned the device to make it fit the shelf. */
+function turnedMessage(partId: string): string {
+  return partId.endsWith(SIDE_SUFFIX) ? 'Laid on its side to fit the shelf (R to stand it up)' : 'Stood upright to fit the shelf';
 }
 
 export function handleDragCancel(): void {
