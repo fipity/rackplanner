@@ -217,7 +217,9 @@
                 "serial",
                 "sc_duplex",
                 "dc_out",
-                "coax"
+                "coax",
+                "rj11",
+                "sc_simplex"
               ]
             },
             "additionalProperties": {
@@ -429,7 +431,9 @@
                                 "punchdown",
                                 "lc",
                                 "sc",
-                                "f_type"
+                                "sc_simplex",
+                                "f_type",
+                                "rj11"
                               ]
                             },
                             "count": {
@@ -481,7 +485,9 @@
                                     "serial",
                                     "sc_duplex",
                                     "dc_out",
-                                    "coax"
+                                    "coax",
+                                    "rj11",
+                                    "sc_simplex"
                                   ]
                                 },
                                 {
@@ -1717,7 +1723,9 @@
                                 "punchdown",
                                 "lc",
                                 "sc",
-                                "f_type"
+                                "sc_simplex",
+                                "f_type",
+                                "rj11"
                               ]
                             },
                             "count": {
@@ -1769,7 +1777,9 @@
                                     "serial",
                                     "sc_duplex",
                                     "dc_out",
-                                    "coax"
+                                    "coax",
+                                    "rj11",
+                                    "sc_simplex"
                                   ]
                                 },
                                 {
@@ -3005,7 +3015,9 @@
                                 "punchdown",
                                 "lc",
                                 "sc",
-                                "f_type"
+                                "sc_simplex",
+                                "f_type",
+                                "rj11"
                               ]
                             },
                             "count": {
@@ -3057,7 +3069,9 @@
                                     "serial",
                                     "sc_duplex",
                                     "dc_out",
-                                    "coax"
+                                    "coax",
+                                    "rj11",
+                                    "sc_simplex"
                                   ]
                                 },
                                 {

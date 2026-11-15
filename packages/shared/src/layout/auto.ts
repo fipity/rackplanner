@@ -49,9 +49,9 @@ const NETWORK: readonly PortType[] = [
   'qsfp_plus',
   'qsfp28',
 ];
-const OTHER_IO: readonly PortType[] = ['console', 'usb', 'usb_c', 'hdmi', 'micro_hdmi', 'displayport', 'vga', 'serial'];
+const OTHER_IO: readonly PortType[] = ['console', 'usb', 'usb_c', 'hdmi', 'micro_hdmi', 'displayport', 'vga', 'serial', 'rj11'];
 const OUTLETS: readonly PortType[] = ['outlet_au', 'outlet_nema', 'outlet_schuko', 'outlet_uk', 'outlet_c13', 'outlet_c19', 'dc_out'];
-const PATCH: readonly PortType[] = ['keystone', 'lc_duplex', 'sc_duplex'];
+const PATCH: readonly PortType[] = ['keystone', 'lc_duplex', 'sc_duplex', 'sc_simplex'];
 
 function inletRegion(part: Part): Region {
   const pi = part.powerInput;

@@ -742,7 +742,7 @@
       },
       "weightKg": null,
       "ports": {
-        "sc_duplex": 1,
+        "sc_simplex": 1,
         "rj45_10g": 1
       },
       "render": {
@@ -760,7 +760,7 @@
       ],
       "sourceUrl": "https://amt.com/wp-content/uploads/2024/07/Nokia_ONT_XS_010X_Q_datasheet_Data_Sheet_EN.pdf",
       "verified": false,
-      "notes": "The 1-port nbn fibre connection box (XGS-PON), white. 135 × 135 × 30 mm, 12 V DC 1 A, under 8.6 W, per Nokia's XS-010X-Q datasheet; one SC/APC fibre input (simplex, listed here as SC) and one 100M–10G RJ45 (nbn runs it at up to 2.5 Gbps). Weight left blank: Nokia's datasheet says 0.366 kg, its quick reference guide 0.285 kg. nbn's unit is wall-mounted under a cover and relabels the lights Power / Optical / Alarm / Port.",
+      "notes": "The 1-port nbn fibre connection box (XGS-PON), white. 135 × 135 × 30 mm, 12 V DC 1 A, under 8.6 W, per Nokia's XS-010X-Q datasheet; one SC/APC fibre input (simplex) and one 100M–10G RJ45 (nbn runs it at up to 2.5 Gbps). Weight left blank: Nokia's datasheet says 0.366 kg, its quick reference guide 0.285 kg. nbn's unit is wall-mounted under a cover and relabels the lights Power / Optical / Alarm / Port.",
       "powerInput": {
         "connector": "dc_barrel",
         "voltageV": 12,
@@ -794,14 +794,17 @@
               "align": "center"
             },
             {
-              "type": "sc",
+              "type": "sc_simplex",
               "count": 1,
-              "portType": "sc_duplex",
+              "portType": "sc_simplex",
               "role": "Fibre in (SC/APC)",
-              "x": 0.1,
-              "w": 0.16,
+              "x": 0.13,
+              "w": 0.1,
               "y": 0.3,
-              "h": 0.45
+              "h": 0.45,
+              "colors": [
+                "#16a34a"
+              ]
             },
             {
               "type": "label",
@@ -946,7 +949,8 @@
       },
       "weightKg": null,
       "ports": {
-        "rj45_1g": 1
+        "rj45_1g": 1,
+        "rj11": 1
       },
       "render": {
         "style": "desktop",
@@ -964,7 +968,7 @@
       ],
       "sourceUrl": "https://techtack.com.au/products/nbn-netcomm-wireless-modem-fttc-network-connection-device-ndd-0300",
       "verified": false,
-      "notes": "The nbn FTTC connection box (VDSL2/G.fast over the phone line), white, lies flat. 166 × 118 × 44 mm from retailer listings (no NetComm datasheet found). Mains cord straight in (cloverleaf C6 inlet); it also powers the nbn kerbside unit over the phone line, so its draw is not a normal modem's and is not published. GATEWAY is the Ethernet port to your router; WALL SOCKET is the phone line and isn't a cable end in the planner.",
+      "notes": "The nbn FTTC connection box (VDSL2/G.fast over the phone line), white, lies flat. 166 × 118 × 44 mm from retailer listings (no NetComm datasheet found). Mains cord straight in (cloverleaf C6 inlet); it also powers the nbn kerbside unit over the phone line, so its draw is not a normal modem's and is not published. GATEWAY is the Ethernet port to your router; WALL SOCKET is the RJ11 phone line in from the wall.",
       "powerInput": {
         "connector": "iec_c6",
         "adapter": "none",
@@ -1002,12 +1006,12 @@
               "align": "center"
             },
             {
-              "type": "rj45",
+              "type": "rj11",
               "count": 1,
-              "portType": "none",
+              "portType": "rj11",
               "role": "Wall socket (phone line)",
-              "x": 0.36,
-              "w": 0.12,
+              "x": 0.37,
+              "w": 0.1,
               "y": 0.28,
               "h": 0.36
             },

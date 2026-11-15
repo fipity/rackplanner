@@ -53,6 +53,8 @@ const SYMBOL: Partial<Record<Connector, string>> = {
   outlet_uk: 'rp-uk',
   lc: 'rp-lc',
   sc: 'rp-sc',
+  sc_simplex: 'rp-sc-simplex',
+  rj11: 'rp-rj11',
   audio: 'rp-audio',
   microsd: 'rp-microsd',
   f_type: 'rp-f-type',
@@ -78,7 +80,10 @@ function portColor(p: PortElement, ctx: DrawCtx): string {
     case 'lc':
       return '#38bdf8';
     case 'sc':
+    case 'sc_simplex':
       return '#2563eb';
+    case 'rj11':
+      return ctx.t.jack;
     case 'usb_a':
       return '#111827';
     case 'usb_c':

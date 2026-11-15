@@ -312,6 +312,7 @@ const BACK_PORT_TYPE: Partial<Record<Connector, PortType>> = {
   punchdown: 'keystone',
   lc: 'lc_duplex',
   sc: 'sc_duplex',
+  sc_simplex: 'sc_simplex',
   f_type: 'coax',
 };
 

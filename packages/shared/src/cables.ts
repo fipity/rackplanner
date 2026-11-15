@@ -11,6 +11,7 @@ export const CABLE_COLORS: Record<CableType, string> = {
   fiber: '#eab308',
   dac: '#1f2937',
   coax: '#0d9488',
+  phone: '#a8a29e',
   power: '#111827',
   other: '#a855f7',
 };
@@ -20,6 +21,7 @@ export const CABLE_TYPE_LABELS: Record<CableType, string> = {
   fiber: 'Fibre',
   dac: 'DAC / twinax',
   coax: 'Coax (F-type)',
+  phone: 'Phone (RJ11)',
   power: 'Power',
   other: 'Other',
 };
@@ -66,7 +68,8 @@ export function guessCableType(a: CableEnd, b: CableEnd): CableType {
   const types = [a.port?.type, b.port?.type].filter((t): t is PortType => !!t);
   if (types.some((t) => OUTLETS.has(t))) return 'power';
   if (types.includes('coax')) return 'coax';
-  if (types.includes('lc_duplex') || types.includes('sc_duplex')) return 'fiber';
+  if (types.includes('rj11')) return 'phone';
+  if (types.includes('lc_duplex') || types.includes('sc_duplex') || types.includes('sc_simplex')) return 'fiber';
   if (types.length === 2 && types.every((t) => SFP_FAMILY.has(t))) return 'dac';
   if (types.some((t) => SFP_FAMILY.has(t))) return 'fiber';
   return 'copper';

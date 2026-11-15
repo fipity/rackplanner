@@ -273,6 +273,20 @@ export const FaceplateDefs = memo(function FaceplateDefs() {
         <rect x="2.6" y="1.6" width="8" height="6.8" rx="0.5" fill="url(#rp-hole)" />
         <circle cx="6.6" cy="5" r="0.8" fill="#e5e7eb" />
       </symbol>
+      {/* One SC adapter: square opening with the ferrule sleeve. */}
+      <symbol id="rp-sc-simplex" viewBox="0 0 7.4 10">
+        <rect x="0" y="0" width="7.4" height="10" rx="0.6" fill="currentColor" stroke="#000" strokeOpacity="0.35" strokeWidth="0.3" />
+        <rect x="1" y="1.6" width="5.4" height="6.8" rx="0.5" fill="url(#rp-hole)" />
+        <circle cx="3.7" cy="5" r="0.8" fill="#e5e7eb" />
+      </symbol>
+      {/* RJ11 phone jack: narrower than RJ45, four contacts. */}
+      <symbol id="rp-rj11" viewBox="0 0 10.2 9">
+        <rect x="0" y="0" width="10.2" height="9" rx="0.5" fill="currentColor" />
+        <rect x="0" y="0" width="10.2" height="9" rx="0.5" fill="none" stroke="#000" strokeOpacity="0.35" strokeWidth="0.25" />
+        <path d="M1.2 1 h7.8 v5.6 h-2.3 v1.5 h-3.2 v-1.5 h-2.3 z" fill="url(#rp-hole)" />
+        <path d="M3.6 1.2 v1.5 M4.6 1.2 v1.5 M5.6 1.2 v1.5 M6.6 1.2 v1.5" stroke="#c9a227" strokeWidth="0.32" strokeOpacity="0.85" />
+        <rect x="1.2" y="1" width="7.8" height="0.45" fill="#000" fillOpacity="0.6" />
+      </symbol>
       <symbol id="rp-audio" viewBox="0 0 6.2 6.2">
         <circle cx="3.1" cy="3.1" r="3" fill="#15181b" stroke="#40454b" strokeWidth="0.3" />
         <circle cx="3.1" cy="3.1" r="1.6" fill="#000" />

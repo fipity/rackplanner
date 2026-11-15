@@ -136,3 +136,11 @@ All white, desktop, `verified: false`, `layoutVerified: false`; tests/visual/nbn
 ## Shelf plan of turned gear (2026-11-15)
 
 - ShelfPlanView draws a device on its side as its plain left side panel (body colour, thin front/rear panel edges) instead of the generated lid with slot vents and model name; the hover title adds "on its side". Checked in tests/visual/drop-turn.spec.ts.
+
+## Phone port and simplex SC (2026-11-15)
+
+- New `rj11` port type ("RJ11 (phone)") and `rj11` connector (narrow 4-contact jack drawn in Defs.tsx), plus a `phone` cable type ("Phone (RJ11)", stone grey) guessed whenever one end is RJ11. The FTTC box's WALL SOCKET is now a real RJ11 port, so the phone line can run to it (e.g. from the back of a keystone).
+- New `sc_simplex` port type and connector (one SC adapter, half the width of SC duplex; patch family, pass-through backs supported). The Nokia FTTP box's fibre input uses it and is drawn green (APC).
+- `migrateDesignData` now also renames ports on parts whose port type was corrected after a release (`PORT_RENAMES` in schemas.ts): cables saved against the Nokia's `sc_duplex 1` (v0.3.0) load as `sc_simplex 1`.
+- Coax patch panel numbers: no change needed. They draw at high zoom like every other panel's; at normal zoom (mid detail) no panel shows numbers.
+- Tests: cables.test.ts (phone and simplex guesses), schemas.test.ts (Nokia port rename), tests/visual/nbn.spec.ts (SC simplex port, FTTC phone lead to a keystone back).

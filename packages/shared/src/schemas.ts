@@ -44,6 +44,8 @@ export const PORT_TYPES = [
   'sc_duplex',
   'dc_out',
   'coax',
+  'rj11',
+  'sc_simplex',
 ] as const;
 export const PortTypeSchema = z.enum(PORT_TYPES);
 export type PortType = z.infer<typeof PortTypeSchema>;
@@ -78,6 +80,8 @@ export const PORT_TYPE_LABELS: Record<PortType, string> = {
   sc_duplex: 'SC duplex',
   dc_out: 'DC output',
   coax: 'Coax (F-type)',
+  rj11: 'RJ11 (phone)',
+  sc_simplex: 'SC simplex',
 };
 
 export const RenderStyleSchema = z.enum([
@@ -200,7 +204,9 @@ export const CONNECTORS = [
   'punchdown',
   'lc',
   'sc',
+  'sc_simplex',
   'f_type',
+  'rj11',
 ] as const;
 export const ConnectorSchema = z.enum(CONNECTORS);
 export type Connector = z.infer<typeof ConnectorSchema>;
@@ -455,7 +461,7 @@ export const PlacedPartSchema = z
   .strict();
 export type PlacedPart = z.infer<typeof PlacedPartSchema>;
 
-export const CABLE_TYPES = ['copper', 'fiber', 'dac', 'coax', 'power', 'other'] as const;
+export const CABLE_TYPES = ['copper', 'fiber', 'dac', 'coax', 'phone', 'power', 'other'] as const;
 export const CableTypeSchema = z.enum(CABLE_TYPES);
 export type CableType = z.infer<typeof CableTypeSchema>;
 
@@ -498,7 +504,7 @@ export const DESIGN_SCHEMA_VERSION = 2;
  */
 export function migrateDesignData(raw: unknown): unknown {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return raw;
-  const d = raw as Record<string, unknown>;
+  const d = renamePorts(raw as Record<string, unknown>);
   if (d.schemaVersion === 1) {
     const rack = d.rack && typeof d.rack === 'object' ? (d.rack as Record<string, unknown>) : null;
     return {
@@ -509,7 +515,35 @@ export function migrateDesignData(raw: unknown): unknown {
         : d.rack,
     };
   }
-  return raw;
+  return d;
+}
+
+/**
+ * Catalog parts whose port type was corrected after release: cables saved
+ * against the old type move to the new one (same index).
+ */
+const PORT_RENAMES: Record<string, Partial<Record<string, PortType>>> = {
+  // v0.3.0 listed the Nokia FTTP box's SC/APC input as SC duplex.
+  'nokia-xs-010x-q-nbn-fttp': { sc_duplex: 'sc_simplex' },
+};
+
+function renamePorts(d: Record<string, unknown>): Record<string, unknown> {
+  if (!Array.isArray(d.placements) || !Array.isArray(d.cables)) return d;
+  const partOf = new Map<unknown, unknown>();
+  for (const p of d.placements) if (p && typeof p === 'object') partOf.set((p as { id?: unknown }).id, (p as { partId?: unknown }).partId);
+  let changed = false;
+  const fix = (end: unknown): unknown => {
+    if (!end || typeof end !== 'object') return end;
+    const e = end as { placementId?: unknown; port?: { type?: unknown } };
+    const partId = partOf.get(e.placementId);
+    const map = typeof partId === 'string' ? PORT_RENAMES[partId.replace(/@side$/, '')] : undefined;
+    const to = map && e.port && typeof e.port.type === 'string' ? map[e.port.type] : undefined;
+    if (!to) return end;
+    changed = true;
+    return { ...e, port: { ...e.port, type: to } };
+  };
+  const cables = d.cables.map((c: unknown) => (c && typeof c === 'object' ? { ...(c as object), a: fix((c as { a?: unknown }).a), b: fix((c as { b?: unknown }).b) } : c));
+  return changed ? { ...d, cables } : d;
 }
 
 const DesignObjectSchema = z

@@ -88,6 +88,29 @@ describe('DesignSchema', () => {
     // Re-parsing a migrated design is a no-op.
     expect(DesignSchema.parse(v2)).toEqual(v2);
   });
+  it("moves cables on the Nokia FTTP box's old SC duplex port to SC simplex", () => {
+    const now = '2026-11-15T00:00:00.000Z';
+    const saved = {
+      schemaVersion: 2,
+      id: 'd_fttp',
+      name: 'FTTP',
+      rack: { width: '19in', heightU: 4, depthMm: null, numbering: 'bottom-up', frame: 'open-4post', glassDoor: false },
+      placements: [
+        { id: 'ntd', partId: 'nokia-xs-010x-q-nbn-fttp', bottomU: 1, xMm: 0, mounting: 'front' },
+        { id: 'pp', partId: 'generic-fibre-panel-12-lc-1u', bottomU: 3, xMm: 0, mounting: 'front' },
+      ],
+      cables: [
+        { id: 'c1', a: { placementId: 'pp', port: { type: 'sc_duplex', index: 1 } }, b: { placementId: 'ntd', port: { type: 'sc_duplex', index: 1 } }, type: 'fiber', color: '#eab308' },
+      ],
+      createdAt: now,
+      updatedAt: now,
+    };
+    const d = DesignSchema.parse(saved);
+    expect(d.cables[0]!.b.port).toEqual({ type: 'sc_simplex', index: 1 });
+    // Other parts keep their port types.
+    expect(d.cables[0]!.a.port).toEqual({ type: 'sc_duplex', index: 1 });
+    expect(DesignSchema.parse(d)).toEqual(d);
+  });
   it('keeps per-port colours and rejects bad keys', () => {
     const p = { ...design.placements[0], portColors: { 'keystone:3': '#ff0000' } };
     expect(DesignSchema.parse({ ...design, placements: [p] }).placements[0]!.portColors).toEqual({ 'keystone:3': '#ff0000' });
