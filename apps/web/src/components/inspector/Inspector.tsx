@@ -21,7 +21,7 @@ import {
 } from '@rackplanner/shared';
 import { Copy, ExternalLink, Pencil, Trash2, Wand2 } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
-import { deleteSelected, duplicateSelected, turnSelected } from '../../lib/actions';
+import { deleteSelected, duplicateSelected, moveSelectedIntoRack, moveSelectedToWall, turnSelected } from '../../lib/actions';
 import { toast } from '../../lib/toast';
 import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
@@ -239,7 +239,7 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
           <div className="font-semibold leading-tight">{part.name}</div>
           <div className="text-xs text-zinc-500 dark:text-zinc-400">
             {part.brand} · {part.model}
-            {occ && ` · ${formatURange(occ.u0, occ.u1, design.rack)}`}
+            {occ && (placement.wall ? ` · on the wall, ${placement.xMm} mm from the rack` : ` · ${formatURange(occ.u0, occ.u1, design.rack)}`)}
             {placement.parentId &&
               (() => {
                 const shelf = design.placements.find((p) => p.id === placement.parentId);
@@ -338,7 +338,20 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
         </Field>
       )}
 
-      {placement.parentId === undefined && (
+      {part.formFactor !== 'rack' && part.formFactor !== 'wall' && (
+        <Field label="Where">
+          <div className="grid grid-cols-2 gap-1">
+            <Button active={!placement.wall} className="border border-zinc-300 dark:border-zinc-700" onClick={moveSelectedIntoRack}>
+              In the rack
+            </Button>
+            <Button active={!!placement.wall} className="border border-zinc-300 dark:border-zinc-700" onClick={moveSelectedToWall}>
+              On the wall
+            </Button>
+          </div>
+        </Field>
+      )}
+
+      {placement.parentId === undefined && !placement.wall && (
         <Field label="Mounting">
           <select
             className={cx(selectClass, 'w-full')}

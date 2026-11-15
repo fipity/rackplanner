@@ -61,7 +61,8 @@
             "type": "string",
             "enum": [
               "rack",
-              "desktop"
+              "desktop",
+              "wall"
             ]
           },
           "heightU": {

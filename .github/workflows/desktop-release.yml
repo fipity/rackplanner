@@ -100,6 +100,8 @@ jobs:
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" dist/* --clobber
           else
-            sed "s/{version}/${TAG#v}/g" .github/release-notes.md > notes.md
+            # Hand-written "what's new" (docs/releases/<tag>.md) goes first, if there is one.
+            { if [ -f "docs/releases/$TAG.md" ]; then cat "docs/releases/$TAG.md"; echo; fi
+              sed "s/{version}/${TAG#v}/g" .github/release-notes.md; } > notes.md
             gh release create "$TAG" --title "RackPlanner ${TAG#v}" --notes-file notes.md --generate-notes dist/*
           fi

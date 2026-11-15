@@ -10,8 +10,11 @@ export const RackWidthSchema = z.enum(['19in', '10in']);
 export const MountingSchema = z.enum(['front', 'rear', 'full-depth']);
 export type Mounting = z.infer<typeof MountingSchema>;
 
-/** `desktop` parts are not rack-mountable and must sit on a shelf part. */
-export const FormFactorSchema = z.enum(['rack', 'desktop']);
+/**
+ * `desktop` parts are not rack-mountable and sit on a shelf (or the wall
+ * beside the rack); `wall` parts (wall plates, sockets) only go on the wall.
+ */
+export const FormFactorSchema = z.enum(['rack', 'desktop', 'wall']);
 export type FormFactor = z.infer<typeof FormFactorSchema>;
 
 export const PORT_TYPES = [
@@ -435,6 +438,8 @@ export const RackSchema = z
     frame: RackFrameSchema.default('open-4post'),
     /** Glass door overlay (cabinets). */
     glassDoor: z.boolean().default(false),
+    /** Show a wall area beside the rack for wall-mounted gear. */
+    wall: z.boolean().optional(),
   })
   .strict();
 export type Rack = z.infer<typeof RackSchema>;
@@ -450,6 +455,12 @@ export const PlacedPartSchema = z
     mounting: MountingSchema,
     /** Set when this part sits on a shelf placement. */
     parentId: z.string().min(1).optional(),
+    /**
+     * Mounted on the wall beside the rack instead of in it. bottomU is then
+     * the height on the wall (same U grid as the rack) and xMm the distance
+     * from the side of the rack out to the device; mounting is ignored.
+     */
+    wall: z.literal(true).optional(),
     label: z.string().max(120).optional(),
     /** Your own measured power draw (W). Overrides catalog typical/max in the stats. */
     measuredW: z.number().nonnegative().max(100000).optional(),

@@ -13,6 +13,9 @@ export const EXPORT_PALETTE: Record<string, string> = {
   '--rack-acrylic': 'rgba(148,163,184,0.28)',
   '--rack-empty': 'rgba(255,255,255,0.025)',
   '--rack-empty-edge': 'rgba(255,255,255,0.11)',
+  '--rack-wall': '#e4e0d8',
+  '--rack-wall-edge': '#cdc7bc',
+  '--rack-skirting': '#f4f2ee',
 };
 
 export function resolveCssVars(svg: string): string {

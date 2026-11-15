@@ -1,6 +1,6 @@
-import type { Catalog, Design } from '@rackplanner/shared';
+import { wallWidthMm, type Catalog, type Design } from '@rackplanner/shared';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { rackLayout, type View } from '../../components/rack/geometry';
+import { drawingExtent, rackLayout, type View } from '../../components/rack/geometry';
 import { RackView } from '../../components/rack/RackView';
 import { resolveCssVars } from './palette';
 
@@ -18,7 +18,7 @@ function rackMarkup(design: Design, catalog: Catalog, view: View, leds: boolean)
   const markup = resolveCssVars(
     renderToStaticMarkup(<RackView design={design} catalog={catalog} view={view} scale={1} cables={design.cables} lod="high" leds={leds} embedDefs />),
   );
-  return { markup, width: layout.width, height: layout.height };
+  return { markup, width: drawingExtent(layout, wallWidthMm(design, catalog), view).w, height: layout.height };
 }
 
 /**

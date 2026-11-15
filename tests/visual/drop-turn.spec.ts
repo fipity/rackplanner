@@ -47,9 +47,11 @@ test('a device that only fits a shelf lying down is turned on drop', async ({ pa
   await expect(page.getByText('Laid on its side to fit the shelf')).toBeVisible();
   // Selected after the drop; the inspector offers to stand it back up.
   await expect(page.getByRole('button', { name: 'Upright' })).toBeVisible();
-  const device = page.locator(`${rack} [role="button"][aria-label="arris-cm8200b-nbn-hfc@side"]`);
+  const device = page.locator(`${rack} [role="button"][aria-label="nbn HFC NTD (Arris CM8200B), on its side"]`);
   const box = (await device.boundingBox())!;
   expect(box.width).toBeGreaterThan(box.height * 2);
+  // Screen readers hear the product name and how it sits, never the internal id.
+  await expect(page.locator(`${rack} [aria-label*="@side"]`)).toHaveCount(0);
   await page.screenshot({ path: 'test-results/drop-turn.png' });
 
   // Shelf plan: the turned box shows its side, not a lid.

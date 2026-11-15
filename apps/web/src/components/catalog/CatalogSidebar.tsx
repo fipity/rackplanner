@@ -1,5 +1,6 @@
 import { useDraggable } from '@dnd-kit/core';
-import { displayName, findFreeSlot, findShelfSlot, newId, type Part, type RackWidth } from '@rackplanner/shared';
+import { displayName, findFreeSlot, findShelfSlot, findWallSlot, newId, type Part, type RackWidth } from '@rackplanner/shared';
+import { ensureWall } from '../../lib/actions';
 import { Copy, Filter, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { deletePart } from '../../lib/api';
@@ -20,6 +21,22 @@ function addToRack(part: Part) {
   // Click-to-add uses the part's own default side (e.g. PDUs go to the rear),
   // except that front-mounted gear added while looking at the rear goes there.
   const mounting = part.mounting === 'front' && view === 'rear' ? 'rear' : part.mounting;
+  // Wall plates and outlets go on the wall, which turns on if it was off.
+  if (part.formFactor === 'wall') {
+    const wasOn = !!design.rack.wall;
+    ensureWall();
+    const next = useDesignStore.getState().design;
+    const slot = findWallSlot(next, catalog, part.id);
+    if (!slot) {
+      toast(`No room on the wall for ${part.name}`, 'error');
+      return;
+    }
+    const id = newId('p_');
+    addPlacement({ ...slot, id });
+    useUiStore.getState().select(id);
+    if (!wasOn) toast(`${part.name} added to the wall beside the rack`);
+    return;
+  }
   // Desktop gear goes onto a shelf with room, if there is one.
   const shelfSlot = findShelfSlot(design, catalog, part.id);
   if (shelfSlot) {
@@ -68,7 +85,7 @@ const CatalogItem = memo(function CatalogItem({
         {...listeners}
         {...attributes}
         role="button"
-        title={reason ?? `Drag into the rack, or click to add at the first free slot`}
+        title={reason ?? (part.formFactor === 'wall' ? 'Drag onto the wall beside the rack, or click to add it there' : 'Drag into the rack, or click to add at the first free slot')}
         onClick={() => !disabled && addToRack(part)}
         className={cx(
           'flex items-center gap-2.5 rounded-lg border border-transparent p-1.5 select-none',
@@ -87,10 +104,11 @@ const CatalogItem = memo(function CatalogItem({
             {part.brand} · {part.model}
           </div>
           <div className="mt-1 flex flex-wrap gap-1">
-            <Badge>{part.heightU}U</Badge>
+            {part.formFactor !== 'wall' && <Badge>{part.heightU}U</Badge>}
             {part.width === '10in' && <Badge tone="blue">10″</Badge>}
             {typeof part.width === 'object' || part.width === 'half-19in' ? <Badge tone="blue">partial</Badge> : null}
             {part.formFactor === 'desktop' && <Badge tone="amber">shelf</Badge>}
+            {part.formFactor === 'wall' && <Badge tone="amber">wall</Badge>}
             {part.poeBudgetW ? <Badge tone="green">PoE {part.poeBudgetW}W</Badge> : null}
             {part.legacy && <Badge>legacy</Badge>}
             {reason && <span className="text-[11px] text-red-600 dark:text-red-400">{reason}</span>}

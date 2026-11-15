@@ -1,4 +1,4 @@
-import { RACK_FRAME_INFO, openingMm, partWidthMm, isFullWidth, type Part, type Rack } from '@rackplanner/shared';
+import { RACK_FRAME_INFO, openingMm, partWidthMm, isFullWidth, type Occupancy, type Part, type Rack } from '@rackplanner/shared';
 import { U_MM } from '@rackplanner/shared';
 
 /** SVG layout constants, all in millimetres (the SVG user unit). */
@@ -87,4 +87,54 @@ export function deviceBox(layout: RackLayout, part: Part, u0: number, u1: number
     return { x: layout.railX, y, w: layout.opening + RAIL * 2, h, ears: true };
   }
   return { x: xToSvg(layout, xMm, w, view), y, w, h, ears: false };
+}
+
+// ---------------------------------------------------------------------------
+// Wall area beside the rack
+// ---------------------------------------------------------------------------
+
+/** Gap between the rack's outer edge and the wall area (mm). */
+export const WALL_GAP = 40;
+/** Margin drawn around the wall area (mm). */
+const WALL_PAD = 12;
+
+/**
+ * The wall area in SVG mm. It sits left of the rack in the front view and
+ * right of it in the rear view (mirrored like everything else), so the rack's
+ * own coordinates never change. Null when the wall is off.
+ */
+export function wallArea(layout: RackLayout, wallW: number, view: View): { x: number; w: number } | null {
+  if (wallW <= 0) return null;
+  return view === 'front' ? { x: -(WALL_GAP + wallW), w: wallW } : { x: layout.width + WALL_GAP, w: wallW };
+}
+
+/** SVG x of the left edge of a wall device `xMm` out from the rack. */
+export function wallXToSvg(layout: RackLayout, xMm: number, widthMm: number, view: View): number {
+  return view === 'front' ? -WALL_GAP - xMm - widthMm : layout.width + WALL_GAP + xMm;
+}
+
+/** Inverse of wallXToSvg (left edge in SVG x → distance out from the rack). */
+export function svgToWallX(layout: RackLayout, svgX: number, widthMm: number, view: View): number {
+  return view === 'front' ? -WALL_GAP - svgX - widthMm : svgX - layout.width - WALL_GAP;
+}
+
+/** Is an SVG x over the wall side of the drawing? */
+export function isOverWall(layout: RackLayout, svgX: number, view: View): boolean {
+  return view === 'front' ? svgX < -WALL_GAP / 2 : svgX > layout.width + WALL_GAP / 2;
+}
+
+/** Horizontal extent of the whole drawing (rack plus wall) as viewBox x and width. */
+export function drawingExtent(layout: RackLayout, wallW: number, view: View): { x: number; w: number } {
+  if (wallW <= 0) return { x: 0, w: layout.width };
+  const extra = WALL_GAP + wallW + WALL_PAD;
+  return { x: view === 'front' ? -extra : 0, w: layout.width + extra };
+}
+
+/** Box for a placement: on the wall, on a shelf, or in the rack. */
+export function placementDeviceBox(layout: RackLayout, part: Part, occ: Occupancy, view: View, onShelf: boolean, lift = 0): DeviceBox {
+  if (occ.wall) {
+    const w = partWidthMm(part);
+    return { x: wallXToSvg(layout, occ.x0, w, view), y: uTopToY(layout, occ.u1), w, h: (occ.u1 - occ.u0) * U_MM, ears: false };
+  }
+  return deviceBox(layout, part, occ.u0, occ.u1, occ.x0, view, onShelf, lift);
 }

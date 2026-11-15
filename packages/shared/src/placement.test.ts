@@ -6,7 +6,10 @@ import {
   canAlign,
   checkPlacement,
   findFreeSlot,
+  findWallSlot,
   occupancyOf,
+  wallWidthMm,
+  WALL_MIN_MM,
   resolveDrop,
   snapBottomU,
   xCandidates,
@@ -50,6 +53,7 @@ const parts = [
     render: { style: 'shelf' },
   }),
   part({ id: 'mini-pc', formFactor: 'desktop', heightU: 2, width: { mm: 180 }, depthMm: 180, render: { style: 'desktop' } }),
+  part({ id: 'plate', formFactor: 'wall', heightU: 3, heightMm: 115, width: { mm: 72 }, depthMm: 12, render: { style: 'desktop' } }),
 ];
 const catalog: Catalog = new Map(parts.map((p) => [p.id, p]));
 
@@ -358,5 +362,62 @@ describe('findShelfSlot', () => {
     const full = { rack: rack19, placements: [shelf, pp({ id: 'a', partId: 'mini-pc', parentId: 'shelf', bottomU: 3, xMm: 0 }), pp({ id: 'b', partId: 'mini-pc', parentId: 'shelf', bottomU: 3, xMm: 180 })] };
     expect(findShelfSlot(full, catalog, 'mini-pc')).toBeNull();
     expect(findShelfSlot({ rack: rack19, placements: [shelf] }, catalog, 'sw-1u')).toBeNull();
+  });
+});
+
+describe('wall area', () => {
+  const wallRack: Rack = { ...rack19, wall: true };
+  const onWall = (id: string, partId: string, bottomU: number, xMm: number) => pp({ id, partId, bottomU, xMm, wall: true });
+
+  it('keeps wall gear and rack gear apart', () => {
+    const d = { rack: wallRack, placements: [pp({ id: 'sw', partId: 'sw-1u', bottomU: 3 })] };
+    expect(checkPlacement(d, onWall('w', 'mini-pc', 3, 0), catalog).ok).toBe(true);
+    expect(occupancyOf(d.placements, onWall('w', 'mini-pc', 3, 0), catalog)).toMatchObject({ wall: true, faces: ['front', 'rear'] });
+  });
+
+  it('stops wall gear overlapping on the wall', () => {
+    const d = { rack: wallRack, placements: [onWall('a', 'mini-pc', 3, 0)] };
+    const r = checkPlacement(d, onWall('b', 'mini-pc', 3, 100), catalog);
+    expect(r.ok).toBe(false);
+    expect(r.collisions.map((c) => c.placementId)).toEqual(['a']);
+    expect(checkPlacement(d, onWall('b', 'mini-pc', 3, 185), catalog).ok).toBe(true);
+  });
+
+  it('only takes desktop and wall parts, and only when the wall is on', () => {
+    const d = { rack: wallRack, placements: [] };
+    expect(checkPlacement(d, onWall('a', 'sw-1u', 3, 0), catalog).problems[0]?.code).toBe('mounting');
+    expect(checkPlacement(d, onWall('a', 'plate', 3, 0), catalog).ok).toBe(true);
+    expect(checkPlacement({ rack: rack19, placements: [] }, onWall('a', 'plate', 3, 0), catalog).ok).toBe(false);
+    // Wall plates never go in the rack or on a shelf.
+    expect(checkPlacement(d, pp({ id: 'a', partId: 'plate', bottomU: 3 }), catalog).problems[0]?.code).toBe('mounting');
+  });
+
+  it('drops onto the wall and back into the rack', () => {
+    const d = { rack: wallRack, placements: [onWall('a', 'mini-pc', 5, 0)] };
+    const wall = resolveDrop(d, catalog, { partId: 'plate', rawBottomU: 5.2, rawXMm: 90, mounting: 'front', wall: true })!;
+    expect(wall.check.ok).toBe(true);
+    // Lands flush beside the mini PC rather than on top of it.
+    expect(wall.candidate).toMatchObject({ wall: true, bottomU: 5, xMm: 185 });
+    const back = resolveDrop(d, catalog, { partId: 'mini-pc', placementId: 'a', rawBottomU: 2, rawXMm: 0, mounting: 'front' })!;
+    expect(back.candidate.wall).toBeUndefined();
+  });
+
+  it('finds a free wall slot and widens the wall to fit', () => {
+    const d = { rack: wallRack, placements: [onWall('a', 'mini-pc', 11, 0)] };
+    const slot = findWallSlot(d, catalog, 'mini-pc')!;
+    expect(slot.wall).toBe(true);
+    expect(checkPlacement(d, slot, catalog).ok).toBe(true);
+    expect(findWallSlot(d, catalog, 'sw-1u')).toBeNull();
+    expect(wallWidthMm({ rack: rack19, placements: [] }, catalog)).toBe(0);
+    expect(wallWidthMm({ rack: wallRack, placements: [] }, catalog)).toBe(WALL_MIN_MM);
+    expect(wallWidthMm({ rack: wallRack, placements: [onWall('a', 'mini-pc', 3, 400)] }, catalog)).toBe(700);
+  });
+
+  it('leaves wall gear where it is when the rack changes width', () => {
+    const d = { rack: wallRack, placements: [onWall('a', 'mini-pc', 3, 600)] };
+    const r = applyRackChange(d, { ...wallRack, width: '10in' }, catalog);
+    expect(r.placements[0]).toMatchObject({ xMm: 600, wall: true });
+    // Turning the wall off removes what's on it.
+    expect(applyRackChange(d, { ...wallRack, wall: false }, catalog).removed.map((x) => x.placementId)).toEqual(['a']);
   });
 });

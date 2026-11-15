@@ -1,0 +1,445 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "title": "Wall plates and outlets",
+  "description": "Wall sockets and plates that go on the wall area beside the rack: data, coax, phone, fibre and power.",
+  "parts": [
+    {
+      "id": "generic-wall-plate-1-rj45",
+      "brand": "Generic",
+      "model": "WP-1-RJ45",
+      "name": "Wall plate, 1 × RJ45 data",
+      "category": "wall-outlet",
+      "subcategory": "data",
+      "formFactor": "wall",
+      "heightU": 3,
+      "heightMm": 115,
+      "width": {
+        "mm": 72
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "data",
+        "rj45",
+        "keystone"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Australian standard flush plate, 115 × 72 mm (portrait). One Cat6 keystone jack; the building cable is punched down behind it, in the wall.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 1,
+              "portType": "keystone",
+              "colors": [
+                "#f3f4f6"
+              ],
+              "x": 0.25,
+              "w": 0.5,
+              "y": 0.3,
+              "h": 0.3
+            },
+            {
+              "type": "label",
+              "text": "DATA",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.68,
+              "h": 0.08,
+              "size": 4,
+              "color": "#6b7280",
+              "align": "center"
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-wall-plate-2-rj45",
+      "brand": "Generic",
+      "model": "WP-2-RJ45",
+      "name": "Wall plate, 2 × RJ45 data",
+      "category": "wall-outlet",
+      "subcategory": "data",
+      "formFactor": "wall",
+      "heightU": 3,
+      "heightMm": 115,
+      "width": {
+        "mm": 72
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "keystone": 2
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "data",
+        "rj45",
+        "keystone"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Australian standard flush plate, 115 × 72 mm (portrait). Two Cat6 keystone jacks, one above the other.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "keystone",
+              "count": 2,
+              "portType": "keystone",
+              "rows": 2,
+              "colors": [
+                "#f3f4f6",
+                "#f3f4f6"
+              ],
+              "x": 0.25,
+              "w": 0.5,
+              "y": 0.18,
+              "h": 0.6
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-wall-plate-coax-f",
+      "brand": "Generic",
+      "model": "WP-F",
+      "name": "Wall plate, TV / coax (F-type)",
+      "category": "wall-outlet",
+      "subcategory": "coax",
+      "formFactor": "wall",
+      "heightU": 3,
+      "heightMm": 115,
+      "width": {
+        "mm": 72
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "coax": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "coax",
+        "f-type",
+        "antenna",
+        "nbn"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Australian standard flush plate, 115 × 72 mm (portrait). One F-type coax outlet, as used for antenna, satellite and the nbn HFC cable lead-in.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "f_type",
+              "count": 1,
+              "portType": "coax",
+              "x": 0.3,
+              "w": 0.4,
+              "y": 0.32,
+              "h": 0.26
+            },
+            {
+              "type": "label",
+              "text": "TV",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.66,
+              "h": 0.08,
+              "size": 4,
+              "color": "#6b7280",
+              "align": "center"
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-wall-socket-phone",
+      "brand": "Generic",
+      "model": "WP-PHONE",
+      "name": "Phone wall socket (RJ11 / RJ12)",
+      "category": "wall-outlet",
+      "subcategory": "phone",
+      "formFactor": "wall",
+      "heightU": 3,
+      "heightMm": 115,
+      "width": {
+        "mm": 72
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj11": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "phone",
+        "rj11",
+        "rj12",
+        "nbn"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Australian standard flush plate, 115 × 72 mm (portrait). One modular phone socket (6-position RJ12, takes an RJ11 plug), as used for ADSL, nbn FTTN/FTTB and FTTC.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "rj11",
+              "count": 1,
+              "portType": "rj11",
+              "x": 0.3,
+              "w": 0.4,
+              "y": 0.34,
+              "h": 0.22
+            },
+            {
+              "type": "label",
+              "text": "PHONE",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.66,
+              "h": 0.08,
+              "size": 4,
+              "color": "#6b7280",
+              "align": "center"
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-fibre-wall-outlet-sc-apc",
+      "brand": "Generic",
+      "model": "FWO-SC",
+      "name": "Fibre wall outlet, 1 × SC/APC",
+      "category": "wall-outlet",
+      "subcategory": "fibre",
+      "formFactor": "wall",
+      "heightU": 2,
+      "heightMm": 80,
+      "width": {
+        "mm": 80
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "sc_simplex": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "fibre",
+        "sc",
+        "apc",
+        "nbn",
+        "fttp"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Small surface-mount fibre outlet with one SC/APC adapter (green), about 80 × 80 mm. In an nbn FTTP install a short fibre lead runs from the outlet to the connection box (NTD).",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "sc_simplex",
+              "count": 1,
+              "portType": "sc_simplex",
+              "colors": [
+                "#16a34a"
+              ],
+              "x": 0.35,
+              "w": 0.3,
+              "y": 0.3,
+              "h": 0.36
+            },
+            {
+              "type": "label",
+              "text": "FIBRE",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.74,
+              "h": 0.08,
+              "size": 4,
+              "color": "#6b7280",
+              "align": "center"
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-gpo-double-au",
+      "brand": "Generic",
+      "model": "GPO-2-AU",
+      "name": "Double power point (AU/NZ)",
+      "category": "wall-outlet",
+      "subcategory": "power",
+      "formFactor": "wall",
+      "heightU": 2,
+      "heightMm": 72,
+      "width": {
+        "mm": 115
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_au": 2
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "power",
+        "gpo",
+        "outlet",
+        "au"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Australian double power point (GPO), 115 × 72 mm, mounted landscape. Two 10 A sockets for plug-packs and mains leads.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "outlet_au",
+              "count": 2,
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.2,
+              "h": 0.6
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    }
+  ]
+}

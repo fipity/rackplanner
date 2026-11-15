@@ -8,8 +8,8 @@
  * Deliberately generic: plain-text model labels only, no logos or artwork.
  */
 import { memo } from 'react';
-import { U_MM, resolveFace, uprightPart, type Part, type PortElement, type PortType, type StylePreset } from '@rackplanner/shared';
-import { RAIL, type View } from '../rack/geometry';
+import { U_MM, resolveFace, uprightPart, type Occupancy, type Part, type PortElement, type PortType, type StylePreset } from '@rackplanner/shared';
+import { RAIL, faceSeen, type View } from '../rack/geometry';
 import { Elements, type DrawCtx, type Lod } from './elements';
 import { PRESETS, bezelId, earId } from './presets';
 
@@ -40,7 +40,7 @@ export function lodForScale(pxPerMm: number): Lod {
 
 /** Height of the body actually drawn: desktop gear is often shorter than its U footprint. */
 export function bodyHeight(part: Part, h: number): number {
-  return part.formFactor === 'desktop' && part.heightMm ? Math.min(h, part.heightMm) : h;
+  return part.formFactor !== 'rack' && part.heightMm ? Math.min(h, part.heightMm) : h;
 }
 
 const isVented = (part: Part) => /vent/i.test(part.name) || part.tags.includes('vented');
@@ -110,7 +110,7 @@ export const Faceplate = memo(function Faceplate({ part, w, h, ears, view, label
   const resolved = resolveFace(part, face, iw, bodyH);
   const preset = resolved.preset;
   const t = PRESETS[preset];
-  const desktop = part.formFactor === 'desktop';
+  const desktop = part.formFactor !== 'rack';
   const radius = desktop ? Math.min(t.radius, bodyH / 4, iw / 8) : 0.8;
   const ctx: DrawCtx = { preset, t, lod, leds, model: part.model, portColors, tooltips };
 
@@ -236,6 +236,25 @@ export interface PortSlot {
  * Ports drawn on a faceplate of size w × h (faceplate-local mm) in a view.
  * Only ports with a catalog type (cable targets) are returned.
  */
+const wallFaces = new WeakMap<Part, View>();
+
+/**
+ * The face drawn for a device on the wall: whichever face has its ports
+ * (the rear for nbn boxes, the front for wall plates), in both views.
+ */
+export function wallFace(part: Part): View {
+  const hit = wallFaces.get(part);
+  if (hit) return hit;
+  const face: View = portPositions(part, 100, 100, false, 'rear').length > portPositions(part, 100, 100, false, 'front').length ? 'rear' : 'front';
+  wallFaces.set(part, face);
+  return face;
+}
+
+/** Face of a placement seen from `view`. */
+export function faceFor(occ: Occupancy, part: Part, view: View): View {
+  return occ.wall ? wallFace(part) : faceSeen(occ.faces, view);
+}
+
 export function portPositions(part: Part, w: number, h: number, ears: boolean, view: View): PortSlot[] {
   if (part.render.style === 'shelf') return [];
   const earW = ears ? RAIL : 0;

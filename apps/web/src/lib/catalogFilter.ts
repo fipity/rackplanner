@@ -18,6 +18,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   sbc: 'Single-board computers',
   modem: 'Modems & ONTs',
   storage: 'External storage',
+  'wall-outlet': 'Wall plates & outlets',
 };
 
 export function categoryLabel(cat: string): string {

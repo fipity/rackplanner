@@ -41,7 +41,7 @@ interface Draft {
   brand: string;
   model: string;
   category: string;
-  formFactor: 'rack' | 'desktop';
+  formFactor: 'rack' | 'desktop' | 'wall';
   heightU: string;
   heightMm: string;
   widthKind: WidthKind;
@@ -122,7 +122,7 @@ const num = (v: string): number | null => (v.trim() === '' ? null : Number(v));
 
 /** Draft → object for PartSchema (server fills id/source/verified). */
 function toInput(d: Draft): Record<string, unknown> {
-  const desktop = d.formFactor === 'desktop';
+  const desktop = d.formFactor !== 'rack';
   const heightU = desktop ? Math.max(1, Math.ceil((num(d.heightMm) ?? U_MM) / U_MM - 0.02)) : num(d.heightU);
   const ports: Partial<Record<PortType, number>> = {};
   for (const p of d.ports) {
@@ -250,7 +250,7 @@ export function CustomPartBuilder() {
     }
     for (const t of Object.keys(drawn) as PortType[]) if (!preview.ports[t]) out.push(`The layout draws ${PORT_TYPE_LABELS[t]} ports that aren't in the port list.`);
     const w = partWidthMm(preview);
-    const h = preview.formFactor === 'desktop' && preview.heightMm ? Math.min(preview.heightMm, preview.heightU * U_MM) : preview.heightU * U_MM;
+    const h = preview.formFactor !== 'rack' && preview.heightMm ? Math.min(preview.heightMm, preview.heightU * U_MM) : preview.heightU * U_MM;
     for (const f of ['front', 'rear'] as const) {
       const els = resolveFace(preview, f, w, h).elements.filter((e) => !LAYERED_KINDS.has(e.kind));
       if (els.some((a, i) => els.some((b, j) => j > i && overlaps(a, b)))) out.push(`Some ${f} regions overlap: adjust x / w.`);
@@ -287,7 +287,7 @@ export function CustomPartBuilder() {
   };
 
   const title = builder?.mode === 'edit' ? `Edit ${source?.name ?? 'part'}` : builder?.mode === 'copy' ? `Customise ${source?.name ?? 'part'}` : 'New custom part';
-  const desktop = draft.formFactor === 'desktop';
+  const desktop = draft.formFactor !== 'rack';
   const input = cx(inputClass);
   const select = cx(selectClass, 'w-full');
 
@@ -355,6 +355,7 @@ export function CustomPartBuilder() {
             <select className={select} value={draft.formFactor} onChange={(e) => set('formFactor', e.target.value as Draft['formFactor'])}>
               <option value="rack">Rack-mount</option>
               <option value="desktop">Desktop (sits on a shelf)</option>
+              <option value="wall">Wall (plate or outlet beside the rack)</option>
             </select>
           </Field>
         </div>

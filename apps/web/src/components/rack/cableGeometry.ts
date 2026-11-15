@@ -1,6 +1,6 @@
 import { occupancyOf, samePort, type CableEnd, type Catalog, type Design, type Part, type PlacedPart } from '@rackplanner/shared';
-import { portPositions } from '../faceplates/Faceplate';
-import { deviceBox, faceSeen, rackLayout, shelfTrayMm, type DeviceBox, type View } from './geometry';
+import { faceFor, portPositions } from '../faceplates/Faceplate';
+import { placementDeviceBox, rackLayout, shelfTrayMm, type DeviceBox, type View } from './geometry';
 
 export interface EndPoint {
   x: number;
@@ -22,8 +22,8 @@ export function placementBox(design: Pick<Design, 'rack' | 'placements'>, catalo
     const shelfPart = shelf && catalog.get(shelf.partId);
     if (shelfPart) lift = shelfTrayMm(shelfPart);
   }
-  const box = deviceBox(rackLayout(design.rack), part, occ.u0, occ.u1, occ.x0, view, p.parentId !== undefined, lift);
-  return { box, part, visible: occ.faces.includes(view), face: faceSeen(occ.faces, view) };
+  const box = placementDeviceBox(rackLayout(design.rack), part, occ, view, p.parentId !== undefined, lift);
+  return { box, part, visible: occ.faces.includes(view), face: faceFor(occ, part, view) };
 }
 
 /** Where a cable end attaches in a view (SVG mm coordinates). */

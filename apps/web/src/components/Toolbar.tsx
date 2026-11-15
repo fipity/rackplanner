@@ -1,5 +1,5 @@
 import { MAX_RACK_U, MIN_RACK_U, RACK_DEPTH_PRESETS, RACK_FRAME_INFO, RACK_HEIGHT_PRESETS, defaultFrame, framesFor, type Rack, type RackChangeResult, type RackFrame } from '@rackplanner/shared';
-import { ArrowDown01, ArrowUp01, Cable, DoorOpen, Eye, EyeOff, Lightbulb, LightbulbOff, Maximize, Minus, Monitor, Moon, Plus, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
+import { ArrowDown01, ArrowUp01, BrickWall, Cable, DoorOpen, Eye, EyeOff, Lightbulb, LightbulbOff, Maximize, Minus, Monitor, Moon, Plus, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
 import { useState } from 'react';
 import { commitRackChange, previewRackChange } from '../lib/actions';
 import { useDesignStore, useHistory } from '../store/designStore';
@@ -62,6 +62,16 @@ export function Toolbar() {
           <DoorOpen className="size-4" />
         </Button>
       )}
+      <Button
+        aria-label="Wall beside the rack"
+        aria-pressed={!!rack.wall}
+        title={rack.wall ? 'Hide the wall area' : 'Show a wall area beside the rack, for wall-mounted gear'}
+        active={!!rack.wall}
+        onClick={() => requestRack({ wall: !rack.wall })}
+        className="px-1.5"
+      >
+        <BrickWall className="size-4" />
+      </Button>
 
       <div className="flex items-center gap-1">
         <Button aria-label="Decrease rack height" disabled={rack.heightU <= MIN_RACK_U} onClick={() => requestRack({ heightU: rack.heightU - 1 })} className="px-1.5">

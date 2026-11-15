@@ -4,6 +4,7 @@ import {
   checkPlacement,
   findFreeSlot,
   findShelfSlot,
+  findWallSlot,
   newId,
   partWidthMm,
   shelfGeometry,
@@ -41,9 +42,10 @@ export function duplicateSelected(): void {
   if (!part) return;
   const mounting = p.parentId !== undefined ? (part.mounting === 'full-depth' ? 'full-depth' : 'front') : p.mounting;
   // Shelf items are duplicated onto the same shelf (or another) when there's room.
-  const slot =
-    (part.formFactor === 'desktop' ? findShelfSlot(design, catalog, p.partId, p.parentId) : null) ??
-    findFreeSlot(design, catalog, p.partId, mounting, p.bottomU + part.heightU);
+  const slot = p.wall
+    ? findWallSlot(design, catalog, p.partId, p.bottomU)
+    : (part.formFactor === 'desktop' ? findShelfSlot(design, catalog, p.partId, p.parentId) : null) ??
+      findFreeSlot(design, catalog, p.partId, mounting, p.bottomU + part.heightU);
   if (!slot) {
     toast(`No free space for another ${part.name}`, 'error');
     return;
@@ -122,4 +124,50 @@ export function commitRackChange(rack: Rack, result: RackChangeResult): void {
   useDesignStore.getState().setRack(rack, result.placements);
   const sel = useUiStore.getState().selectedId;
   if (sel && !result.placements.some((p) => p.id === sel)) useUiStore.getState().select(null);
+}
+
+/** Turn the wall area on (keeping everything in the rack as it is). */
+export function ensureWall(): void {
+  const { design, setRack } = useDesignStore.getState();
+  if (!design.rack.wall) setRack({ ...design.rack, wall: true }, design.placements);
+}
+
+/** Move the selected device onto the wall beside the rack, turning the wall on if needed. */
+export function moveSelectedToWall(): void {
+  const p = selected();
+  if (!p || p.wall) return;
+  const { catalog } = useCatalogStore.getState();
+  const part = catalog.get(p.partId);
+  if (!part) return;
+  ensureWall();
+  const { design, updatePlacement } = useDesignStore.getState();
+  // Whatever stands on it can't come along.
+  if (design.placements.some((q) => q.parentId === p.id)) {
+    toast(`Take the gear off ${part.name} first`, 'error');
+    return;
+  }
+  const slot = findWallSlot({ ...design, placements: design.placements.filter((q) => q.id !== p.id) }, catalog, p.partId, p.bottomU);
+  if (!slot) {
+    toast(`No room on the wall for ${part.name}`, 'error');
+    return;
+  }
+  updatePlacement(p.id, { bottomU: slot.bottomU, xMm: slot.xMm, mounting: 'front', parentId: undefined, wall: true });
+}
+
+/** Move the selected wall device back into the rack (onto a shelf if it's desktop gear). */
+export function moveSelectedIntoRack(): void {
+  const p = selected();
+  if (!p || !p.wall) return;
+  const { design, updatePlacement } = useDesignStore.getState();
+  const { catalog } = useCatalogStore.getState();
+  const part = catalog.get(p.partId);
+  if (!part) return;
+  const others = { ...design, placements: design.placements.filter((q) => q.id !== p.id) };
+  const slot = findShelfSlot(others, catalog, p.partId) ?? findFreeSlot(others, catalog, p.partId, 'front');
+  if (!slot) {
+    toast(`No room in the rack for ${part.name}`, 'error');
+    return;
+  }
+  updatePlacement(p.id, { bottomU: slot.bottomU, xMm: slot.xMm, mounting: slot.mounting, parentId: slot.parentId, wall: undefined });
+  if (slot.parentId) toast('Placed on shelf');
 }

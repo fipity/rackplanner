@@ -776,9 +776,21 @@
           "https://amt.com/wp-content/uploads/2024/07/Nokia_ONT_XS_010X_Q_datasheet_Data_Sheet_EN.pdf",
           "https://www.nbnco.com.au/learn/network-technology/fibre-to-the-premises-explained-fttp/connection-box/1-port"
         ],
-        "notes": "Port edge follows Nokia's product photo (PON, ETHERNET, RESET, POWER, ON/OFF), drawn as the rear; nbn says the order can vary. Light names from nbn's 1-port page. Offsets estimated. Top view: lights at the corner away from the ports, NOKIA near the port edge, as in Nokia's photo.",
+        "notes": "Port edge follows Nokia's product photo (PON, ETHERNET, RESET, POWER, ON/OFF), drawn as the rear; nbn says the order can vary. Light names from nbn's 1-port page. Offsets estimated. Top view: lights at the corner away from the ports, NOKIA near the port edge, as in Nokia's photo. The front edge label is the planner's own, to tell the boxes apart.",
         "front": {
-          "regions": []
+          "regions": [
+            {
+              "type": "label",
+              "text": "nbn  FTTP",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.3,
+              "h": 0.4,
+              "size": 5.5,
+              "color": "#4b5563",
+              "align": "center"
+            }
+          ]
         },
         "rear": {
           "regions": [
@@ -979,9 +991,21 @@
         "sources": [
           "https://leaptel.com.au/wp-content/uploads/2024/01/FTTC_Setup_Guide_1830077.pdf.coredownload.pdf.pdf"
         ],
-        "notes": "Port order and names from nbn's FTTC setup guide photos (POWER, WALL SOCKET, RESET, GATEWAY); lights LAN / DSL / Connection / Power under a slide cover on the top. Offsets estimated.",
+        "notes": "Port order and names from nbn's FTTC setup guide photos (POWER, WALL SOCKET, RESET, GATEWAY); lights LAN / DSL / Connection / Power under a slide cover on the top. Offsets estimated. GATEWAY jack is yellow as on the unit. The front edge label is the planner's own, to tell the boxes apart.",
         "front": {
-          "regions": []
+          "regions": [
+            {
+              "type": "label",
+              "text": "nbn  FTTC",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.3,
+              "h": 0.4,
+              "size": 5.5,
+              "color": "#4b5563",
+              "align": "center"
+            }
+          ]
         },
         "rear": {
           "regions": [
@@ -1053,7 +1077,10 @@
               "x": 0.74,
               "w": 0.13,
               "y": 0.28,
-              "h": 0.36
+              "h": 0.36,
+              "colors": [
+                "#facc15"
+              ]
             },
             {
               "type": "label",
@@ -1182,9 +1209,21 @@
           "https://www.nbnco.com.au/content/dam/nbn/documents/support/access-technologies-mtm/fixed-wireless/nbn-fixed-wireless-user-guide.pdf.coredownload.pdf",
           "https://www.internode.on.net/pdf/products/nbn/preparing-for-nbn-wireless.pdf"
         ],
-        "notes": "Port edge from nbn's 2024 user guide drawing: covered power and antenna lead on the left, 4 × UNI-D on the right. Lights (Power, Status, Outdoor unit, 3-step signal strength) sit under a cover on the face. Offsets estimated.",
+        "notes": "Port edge from nbn's 2024 user guide drawing: covered power and antenna lead on the left, 4 × UNI-D on the right. Lights (Power, Status, Outdoor unit, 3-step signal strength) sit under a cover on the face. Offsets estimated. The front edge label is the planner's own, to tell the boxes apart.",
         "front": {
-          "regions": []
+          "regions": [
+            {
+              "type": "label",
+              "text": "nbn  FIXED WIRELESS",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.3,
+              "h": 0.4,
+              "size": 5.5,
+              "color": "#4b5563",
+              "align": "center"
+            }
+          ]
         },
         "rear": {
           "regions": [

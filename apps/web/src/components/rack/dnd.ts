@@ -15,6 +15,7 @@ import {
   occupancyOf,
   partWidthMm,
   resolveDrop,
+  wallWidthMm,
   type Mounting,
   type Part,
 } from '@rackplanner/shared';
@@ -23,7 +24,7 @@ import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
 import { useDragStore } from '../../store/dragStore';
 import { useUiStore } from '../../store/uiStore';
-import { rackLayout, svgToXMm, uTopToY, xToSvg, yToUTop } from './geometry';
+import { isOverWall, rackLayout, svgToWallX, svgToXMm, uTopToY, wallXToSvg, xToSvg, yToUTop } from './geometry';
 
 export type DragData = { kind: 'catalog'; partId: string } | { kind: 'placement'; placementId: string };
 
@@ -94,7 +95,7 @@ export function handleDragStart(e: DragStartEvent): void {
   if (!placement || !part || !occ) return;
   const layout = rackLayout(design.rack);
   const ptr = startPointer && clientToSvg(startPointer);
-  const left = xToSvg(layout, occ.x0, partWidthMm(part), view);
+  const left = occ.wall ? wallXToSvg(layout, occ.x0, partWidthMm(part), view) : xToSvg(layout, occ.x0, partWidthMm(part), view);
   const top = uTopToY(layout, occ.u1);
   useUiStore.getState().select(placement.id);
   useDragStore.getState().start({
@@ -126,7 +127,10 @@ export function handleDragMove(e: DragMoveEvent): void {
   const view = useUiStore.getState().view;
   const topY = svgPt.y - active.grabDy;
   const rawBottomU = yToUTop(layout, topY) - part.heightU;
-  const rawXMm = svgToXMm(layout, svgPt.x - active.grabDx, partWidthMm(part), view);
+  // The pointer, not the device's edge, decides between the wall and the rack.
+  const wall = wallWidthMm(design, catalog) > 0 && isOverWall(layout, svgPt.x, view);
+  const left = svgPt.x - active.grabDx;
+  const rawXMm = wall ? svgToWallX(layout, left, partWidthMm(part), view) : svgToXMm(layout, left, partWidthMm(part), view);
   const resolution = resolveDrop(design, catalog, {
     partId: part.id,
     ...(active.placementId ? { placementId: active.placementId } : {}),
@@ -134,6 +138,7 @@ export function handleDragMove(e: DragMoveEvent): void {
     rawXMm,
     mounting: active.mounting,
     view,
+    wall,
   });
   drag.update({ resolution, overRack: true, pointer });
 }
@@ -154,12 +159,14 @@ export function handleDragEnd(_e: DragEndEvent): void {
       existing.xMm === c.xMm &&
       existing.mounting === c.mounting &&
       existing.parentId === c.parentId &&
-      existing.partId === c.partId
+      existing.partId === c.partId &&
+      existing.wall === c.wall
     ) {
       return; // no-op move: don't pollute undo history
     }
-    store.updatePlacement(active.placementId, { partId: c.partId, bottomU: c.bottomU, xMm: c.xMm, mounting: c.mounting, parentId: c.parentId });
-    if (c.partId !== existing?.partId) toast(turnedMessage(c.partId));
+    store.updatePlacement(active.placementId, { partId: c.partId, bottomU: c.bottomU, xMm: c.xMm, mounting: c.mounting, parentId: c.parentId, wall: c.wall });
+    if (c.wall && !existing?.wall) toast('Mounted on the wall');
+    else if (c.partId !== existing?.partId) toast(turnedMessage(c.partId));
     else if (c.parentId && existing?.parentId !== c.parentId) toast('Placed on shelf');
     return;
   }
@@ -167,6 +174,7 @@ export function handleDragEnd(_e: DragEndEvent): void {
   const id = newId('p_');
   store.addPlacement({ ...c, id });
   useUiStore.getState().select(id);
+  if (c.wall) return;
   if (c.partId !== active.partId) toast(turnedMessage(c.partId));
   else if (c.parentId) toast('Placed on shelf');
 }

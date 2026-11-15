@@ -29,7 +29,7 @@ test('shelf gear can be laid on its side and cabled there', async ({ page, reque
 
   await page.goto(`/d/${id}`);
   await page.waitForSelector(rack);
-  const device = page.locator(`${rack} [role="button"][aria-label="ntd"]`);
+  const device = page.locator(`${rack} [role="button"][aria-label^="ntd"]`);
   const upright = (await device.boundingBox())!;
   expect(upright.height).toBeGreaterThan(upright.width * 2);
 

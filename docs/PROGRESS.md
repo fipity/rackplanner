@@ -144,3 +144,20 @@ All white, desktop, `verified: false`, `layoutVerified: false`; tests/visual/nbn
 - `migrateDesignData` now also renames ports on parts whose port type was corrected after a release (`PORT_RENAMES` in schemas.ts): cables saved against the Nokia's `sc_duplex 1` (v0.3.0) load as `sc_simplex 1`.
 - Coax patch panel numbers: no change needed. They draw at high zoom like every other panel's; at normal zoom (mid detail) no panel shows numbers.
 - Tests: cables.test.ts (phone and simplex guesses), schemas.test.ts (Nokia port rename), tests/visual/nbn.spec.ts (SC simplex port, FTTC phone lead to a keystone back).
+
+## Wall area beside the rack (2026-11-15)
+
+- Design format: `rack.wall` (optional boolean) shows the wall; a placement with `wall: true` is on it. `bottomU` is its height on the wall (same U grid as the rack, so the wall is as tall as the rack) and `xMm` is the distance out from the rack's side, so widening the wall never moves anything. `mounting` is ignored. No schema version bump: both fields are optional.
+- Engine (placement.ts): wall occupancies carry `wall: true` and both faces; `collides` never pairs wall with rack. `checkPlacement` takes desktop and `wall` form-factor parts on the wall only while the wall is on (bounds 0..`WALL_MAX_MM`); `wall` parts can't go in the rack or on a shelf. `resolveDrop({ wall: true })`, `findWallSlot`, `wallWidthMm` (auto: 400 mm minimum, grows to fit with 120 mm spare, 50 mm steps). `applyRackChange` leaves wall x alone; turning the wall off goes through the usual removal confirm. Stats: wall gear uses no rack U, isn't "desktop gear not on a shelf", and isn't checked against rack depth.
+- Drawing (web): the wall is at negative SVG x in the front view and past the rack's right edge in the rear view (`wallArea`, `wallXToSvg`, `drawingExtent` in geometry.ts), so rack coordinates are unchanged; the viewBox widens. `WallArea.tsx` draws paint, a skirting board and dashed marks every 5U. A wall device shows the face with its ports in both views (`wallFace`: rear for nbn boxes, front for wall plates). New CSS vars `--rack-wall`, `--rack-wall-edge`, `--rack-skirting` (also in the export palette).
+- UI: toolbar wall toggle (BrickWall icon); drag onto the wall (pointer side decides wall vs rack; tooltip "On the wall · N mm from the rack"); inspector **Where: In the rack / On the wall** for desktop gear; catalog click on a wall part turns the wall on and adds it; duplicate keeps wall gear on the wall.
+- New `wall` form factor and `catalog/wall.json` (6 generic, unverified parts, category `wall-outlet`, passive): 1 × and 2 × RJ45 data plates, TV/coax F-type plate, phone socket (RJ11/RJ12), fibre wall outlet (SC/APC, green), double AU power point (counts as 2 mains sockets). Custom part builder has a Wall option.
+- Note for tests: dnd-kit swallows clicks for 50 ms after a drop; wait before clicking after a drag.
+- Tests: placement.test.ts "wall area"; tests/visual/wall.spec.ts.
+
+## Smaller polish (2026-11-15)
+
+- Screen-reader names: a device is announced by its label or product name, plus ", on its side" / ", on the wall" (`placementA11yName` in RackCanvas.tsx), never its internal id.
+- Coloured ports: any port region's `colors` already worked (not just patch panels). The FTTC box's GATEWAY is yellow; the Nokia's SC/APC green.
+- The FTTP, FTTC and Fixed Wireless boxes have a small "nbn FTTP" / "nbn FTTC" / "nbn FIXED WIRELESS" label on the front edge (the planner's own, noted in their layout notes).
+- Release notes: the release workflow puts `docs/releases/<tag>.md` (hand-written "What's new") above the standard install text when it exists. Written for v0.3.0 (to paste into the existing release) and v0.4.0 (the next release).

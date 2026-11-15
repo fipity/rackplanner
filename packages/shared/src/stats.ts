@@ -32,6 +32,7 @@ export const PASSIVE_CATEGORIES: ReadonlySet<string> = new Set([
   'shelf',
   'mount',
   'accessory',
+  'wall-outlet',
 ]);
 
 export type WarningCode =
@@ -139,7 +140,7 @@ export function computeStats(
       return;
     }
     const occ = occupancyOf(placements, p, catalog);
-    if (occ) {
+    if (occ && !occ.wall) {
       for (let u = occ.u0; u < occ.u1 - EPS; u += 0.5) occupied.add(Math.round(u * 2));
     }
 
@@ -191,7 +192,7 @@ export function computeStats(
       }
     }
 
-    if (rack.depthMm !== null && part.depthMm !== null && p.parentId === undefined && part.depthMm > rack.depthMm + EPS) {
+    if (rack.depthMm !== null && part.depthMm !== null && p.parentId === undefined && !p.wall && part.depthMm > rack.depthMm + EPS) {
       warnings.push({
         code: 'too-deep',
         severity: 'warning',
@@ -231,7 +232,7 @@ export function computeStats(
           });
         }
       }
-    } else if (part.formFactor === 'desktop') {
+    } else if (part.formFactor === 'desktop' && !p.wall) {
       desktopLoose.push(p.id);
     }
   });

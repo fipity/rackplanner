@@ -13,6 +13,7 @@ Runs as a single Docker container with a SQLite database, or as a [desktop app f
 - **Rack frames:** 2-post, 4-post, enclosed cabinet (with glass door) and 10″ mini racks including the **DeskPi RackMate T1 / T2**, with rails, cage-nut holes at EIA spacing and free-slot hints.
 - **Shelf plans:** a top-down view of every shelf showing how devices fit side by side, with overhangs flagged.
 - **Placement:** drag and drop with U snapping, collision checks, front / rear / full-depth mounting, partial-width gear and desktop gear on shelves. Warns when something is too wide, deep or tall for its shelf.
+- **Wall area:** an optional wall beside the rack for wall-mounted gear: nbn connection boxes, modems, and data, TV, phone, fibre and power wall plates, cabled to the rack like anything else.
 - **Power sources:** USB-C, DC adapters, plug-packs and IEC inlets per device, checked against the outlets your power boards provide.
 - **Cables:** colour-coded port-to-port patch cables, with tooltips on every port ("Port 17 — 1 GbE (PoE+)").
 - **Zoom-aware detail:** simplified blocks when zoomed out and full detail up close, so a full 32U rack stays smooth.
@@ -168,6 +169,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <registry>/rackplanner
 | Move | Drag a placed part (red = blocked, with the reason shown next to the cursor) |
 | Put desktop gear on a shelf | Drag it onto a shelf, or just click it in the catalog: it goes onto a shelf with room. It stands on the tray and snaps beside items already there |
 | Lay shelf gear on its side | Select it and press **R**, or choose **Orientation: On its side**. It takes less height and more shelf width; its faceplate and ports turn with it, and cables stay connected. A device dropped on a shelf where it only fits lying down (or only upright) is turned for you |
+| Put gear on the wall beside the rack | Turn on the wall with the wall button in the toolbar, then drag desktop gear or wall plates onto it (left of the rack in the front view, right of it in the rear view). Clicking a wall plate in the catalog turns the wall on and puts it there. For a selected desktop device, **Where: In the rack / On the wall** moves it without dragging. Turning the wall off asks before removing what's on it |
 | Select a shelf that has gear on it | Click its ears or tray, or the shelf name in an item's details |
 | Draw cables | Press <kbd>C</kbd> (or **Cables** in the toolbar), click a port or device, then the other end. <kbd>Esc</kbd> finishes |
 | Edit / delete a cable | Click it to edit type, colour, ports, length, label; <kbd>Del</kbd> removes it |

@@ -39,7 +39,7 @@ function DragFeedback() {
       )}
       style={{ left: pointer.x + 18, top: pointer.y + 18 }}
     >
-      {check.ok ? `${where} · ${candidate.mounting}${turn}` : check.problems.map((p) => <div key={p.message}>{p.message}</div>)}
+      {check.ok ? (candidate.wall ? `On the wall · ${candidate.xMm} mm from the rack` : `${where} · ${candidate.mounting}${turn}`) : check.problems.map((p) => <div key={p.message}>{p.message}</div>)}
     </div>
   );
 }

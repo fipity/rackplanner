@@ -6,12 +6,20 @@ import { useDragStore } from '../../store/dragStore';
 import { useUiStore } from '../../store/uiStore';
 import { handleCableEndClick } from '../../lib/cableActions';
 import { rackSvgRef, type DragData } from './dnd';
-import { rackLayout } from './geometry';
+import { uprightPart, wallWidthMm, type PlacedPart, type Part } from '@rackplanner/shared';
+import { drawingExtent, rackLayout } from './geometry';
 import { RackView, type PlacementWrapperProps, type RackGhost } from './RackView';
 import { lodForScale } from '../faceplates/Faceplate';
 import { ShelfPlanView } from './ShelfPlanView';
 
-function DraggablePlacement({ placement, box, children }: PlacementWrapperProps) {
+/** What a screen reader announces for a device: its label or product name, and how it sits. */
+export function placementA11yName(placement: PlacedPart, part: Part): string {
+  const name = placement.label?.trim() || part.name;
+  const how = [uprightPart(part) ? 'on its side' : null, placement.wall ? 'on the wall' : null].filter(Boolean).join(', ');
+  return how ? `${name}, ${how}` : name;
+}
+
+function DraggablePlacement({ placement, part, box, children }: PlacementWrapperProps) {
   const data: DragData = { kind: 'placement', placementId: placement.id };
   const cableMode = useUiStore((s) => s.cableMode);
   const { setNodeRef, listeners, attributes } = useDraggable({ id: `placement:${placement.id}`, data, disabled: cableMode });
@@ -27,7 +35,7 @@ function DraggablePlacement({ placement, box, children }: PlacementWrapperProps)
       aria-disabled={cableMode ? undefined : attributes['aria-disabled']}
       aria-roledescription={cableMode ? undefined : attributes['aria-roledescription']}
       role="button"
-      aria-label={placement.label ?? placement.partId}
+      aria-label={placementA11yName(placement, part)}
       className={cableMode ? 'cursor-crosshair outline-none' : 'cursor-grab outline-none active:cursor-grabbing'}
       onClick={(e) => {
         e.stopPropagation();
@@ -63,7 +71,8 @@ export function RackCanvas() {
   }, []);
 
   const layout = rackLayout(design.rack);
-  const fit = Math.max(0.2, Math.min((size.w - 48) / layout.width, (size.h - 48) / layout.height));
+  const extent = drawingExtent(layout, wallWidthMm(design, catalog), view);
+  const fit = Math.max(0.2, Math.min((size.w - 48) / extent.w, (size.h - 48) / layout.height));
   const scale = zoom === 'fit' ? fit : zoom;
   useEffect(() => setFitScale(fit), [fit, setFitScale]);
 

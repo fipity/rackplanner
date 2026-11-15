@@ -10,6 +10,7 @@ import {
   overlaps,
   portKey,
   samePort,
+  wallWidthMm,
   type Cable,
   type CableEnd,
   type Catalog,
@@ -18,11 +19,12 @@ import {
   type Part,
   type PlacedPart,
 } from '@rackplanner/shared';
-import { Faceplate, bodyHeight, portPositions, type Lod } from '../faceplates/Faceplate';
+import { Faceplate, bodyHeight, faceFor, portPositions, type Lod } from '../faceplates/Faceplate';
 import { FaceplateDefs } from '../faceplates/Defs';
 import { GlassDoor, RackFrame } from './RackFrame';
 import { cableEndPoint, cablePath } from './cableGeometry';
-import { deviceBox, faceSeen, rackLayout, shelfTrayMm, type DeviceBox, type View } from './geometry';
+import { drawingExtent, placementDeviceBox, rackLayout, shelfTrayMm, wallArea, type DeviceBox, type View } from './geometry';
+import { WallArea } from './WallArea';
 
 export interface PlacementWrapperProps {
   placement: PlacedPart;
@@ -112,8 +114,11 @@ export function RackView({
       const shelfPart = shelf && catalog.get(shelf.partId);
       if (shelfPart) lift = shelfTrayMm(shelfPart);
     }
-    return deviceBox(layout, part, occ.u0, occ.u1, occ.x0, view, p.parentId !== undefined, lift);
+    return placementDeviceBox(layout, part, occ, view, p.parentId !== undefined, lift);
   };
+  const wallW = wallWidthMm(design, catalog);
+  const wall = wallArea(layout, wallW, view);
+  const extent = drawingExtent(layout, wallW, view);
 
   const visible = items.filter((i) => i.occ.faces.includes(view));
   const visibleBoxes = onPortClick ? items.filter((i) => i.occ.faces.includes(view)).map(({ p, part, occ }) => boxOf(p, part, occ)) : [];
@@ -125,7 +130,7 @@ export function RackView({
 
   // U slots with nothing mounted on this face: drawn as subtle "free" hints.
   const filled = new Set<number>();
-  for (const { occ } of visible) for (let u = Math.floor(occ.u0); u < occ.u1 - 1e-6; u++) filled.add(u);
+  for (const { occ } of visible) if (!occ.wall) for (let u = Math.floor(occ.u0); u < occ.u1 - 1e-6; u++) filled.add(u);
   const emptyUs = Array.from({ length: design.rack.heightU }, (_, i) => i + 1).filter((u) => !filled.has(u));
 
   const face = (p: PlacedPart, part: Part, occ: Occupancy, box: DeviceBox, extra: { label?: string | undefined; color?: string | undefined } = {}) => (
@@ -134,7 +139,7 @@ export function RackView({
       w={box.w}
       h={box.h}
       ears={box.ears}
-      view={faceSeen(occ.faces, view)}
+      view={faceFor(occ, part, view)}
       lod={lod}
       leds={leds}
       portColors={p.portColors}
@@ -177,14 +182,15 @@ export function RackView({
     <svg
       ref={svgRef}
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 ${layout.width} ${layout.height}`}
-      width={scale ? layout.width * scale : undefined}
+      viewBox={`${extent.x} 0 ${extent.w} ${layout.height}`}
+      width={scale ? extent.w * scale : undefined}
       height={scale ? layout.height * scale : undefined}
       className={className}
       role="img"
-      aria-label={`${design.rack.heightU}U ${design.rack.width} rack, ${view} view`}
+      aria-label={`${design.rack.heightU}U ${design.rack.width} rack, ${view} view${wall ? ', with wall' : ''}`}
     >
       {embedDefs && <FaceplateDefs />}
+      {wall && <WallArea layout={layout} x={wall.x} w={wall.w} view={view} lod={lod} />}
       <RackFrame layout={layout} lod={lod} emptyKey={emptyUs.join(',')} />
 
       {/* Gear mounted on the other face, seen through the rack. */}
@@ -200,7 +206,7 @@ export function RackView({
       {/* Soft shadow where devices meet the rails and the gear below. */}
       {lod !== 'low' &&
         visible.map(({ p, part, occ }) => {
-          if (part.render.style === 'shelf') return null;
+          if (part.render.style === 'shelf' || occ.wall) return null;
           const box = boxOf(p, part, occ);
           const bh = bodyHeight(part, box.h);
           return <rect key={`s-${p.id}`} x={box.x + 0.8} y={box.y + box.h - 0.3} width={box.w - 1.6} height={Math.min(3, bh * 0.2)} fill="url(#rp-rail-shadow)" pointerEvents="none" />;
@@ -304,7 +310,7 @@ export function RackView({
             // its ports are reachable unless something on this face covers them.
             const behind = !occ.faces.includes(view);
             const covering = behind ? visibleBoxes.filter((b) => overlaps(b, box)) : [];
-            return portPositions(part, box.w, box.h, box.ears, faceSeen(occ.faces, view)).map((sl) => {
+            return portPositions(part, box.w, box.h, box.ears, faceFor(occ, part, view)).map((sl) => {
               if (covering.some((b) => overlaps(b, { x: box.x + sl.x, y: box.y + sl.y, w: sl.w, h: sl.h }))) return null;
               const port = { type: sl.type, index: sl.index, ...(sl.back ? { back: true as const } : {}) };
               const end: CableEnd = { placementId: p.id, port };

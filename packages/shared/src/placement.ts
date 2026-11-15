@@ -29,6 +29,8 @@ export interface Occupancy {
   x1: number;
   faces: readonly Face[];
   depthMm: number | null;
+  /** On the wall beside the rack (x is then the distance out from the rack's side). */
+  wall?: true;
 }
 
 export type CollisionReason = 'overlap' | 'depth';
@@ -185,6 +187,19 @@ export function occupancyOf(
     };
   }
 
+  if (placement.wall) {
+    return {
+      placementId: placement.id,
+      u0: placement.bottomU,
+      u1: placement.bottomU + part.heightU,
+      x0: placement.xMm,
+      x1: placement.xMm + width,
+      faces: ['front', 'rear'],
+      depthMm: part.depthMm,
+      wall: true,
+    };
+  }
+
   return {
     placementId: placement.id,
     u0: placement.bottomU,
@@ -198,6 +213,7 @@ export function occupancyOf(
 
 /** Does `a` collide with `b`? Returns the reason, or null if they can coexist. */
 export function collides(a: Occupancy, b: Occupancy, rack: Rack): CollisionReason | null {
+  if (!!a.wall !== !!b.wall) return null; // the wall and the rack never meet
   if (!rangesOverlap(a.u0, a.u1, b.u0, b.u1)) return null;
   if (!rangesOverlap(a.x0, a.x1, b.x0, b.x1)) return null;
   if (a.faces.some((f) => b.faces.includes(f))) return 'overlap';
@@ -272,7 +288,13 @@ export function checkPlacement(
 
   const placements = replaceOrAppend(design.placements, candidate);
 
-  if (candidate.parentId !== undefined) {
+  if (candidate.wall) {
+    if (candidate.parentId !== undefined) problems.push({ code: 'mounting', message: 'Wall gear can’t sit on a shelf' });
+    if (part.formFactor === 'rack') problems.push({ code: 'mounting', message: `${part.name} goes in the rack, not on the wall` });
+    if (!rack.wall) problems.push({ code: 'out-of-bounds', message: 'The wall area is turned off' });
+  } else if (part.formFactor === 'wall') {
+    problems.push({ code: 'mounting', message: `${part.name} goes on the wall beside the rack` });
+  } else if (candidate.parentId !== undefined) {
     const parent = placements.find((p) => p.id === candidate.parentId);
     const parentPart = parent ? catalog.get(parent.partId) : undefined;
     if (!parent || !parentPart) {
@@ -305,7 +327,9 @@ export function checkPlacement(
     if (occ.u0 < 1 - EPS || occ.u1 > rack.heightU + 1 + EPS) {
       problems.push({ code: 'out-of-bounds', message: id === candidate.id ? 'Outside the rack' : 'Shelf item would leave the rack' });
     }
-    if (occ.x0 < -EPS || occ.x1 > opening + EPS) {
+    if (occ.wall) {
+      if (occ.x0 < -EPS || occ.x1 > WALL_MAX_MM + EPS) problems.push({ code: 'out-of-bounds', message: 'Outside the wall area' });
+    } else if (occ.x0 < -EPS || occ.x1 > opening + EPS) {
       if (!problems.some((pr) => pr.code === 'rack-width')) {
         problems.push({ code: 'out-of-bounds', message: 'Outside the rack opening' });
       }
@@ -385,7 +409,7 @@ export function xCandidates(
   for (const p of design.placements) {
     if (ignoreIds.includes(p.id)) continue;
     const occ = occupancyOf(design.placements, p, catalog);
-    if (!occ || !rangesOverlap(u0, u1, occ.u0, occ.u1)) continue;
+    if (!occ || occ.wall || !rangesOverlap(u0, u1, occ.u0, occ.u1)) continue;
     if (occ.x1 <= maxX + EPS) set.add(occ.x1);
     if (occ.x0 - w >= -EPS) set.add(Math.max(0, occ.x0 - w));
   }
@@ -401,6 +425,8 @@ export interface DropRequest {
   mounting: Mounting;
   /** View being dropped into; only shelves visible in it are drop targets. */
   view?: Face;
+  /** Dropped on the wall area: rawXMm is then the distance out from the rack's side. */
+  wall?: boolean;
 }
 
 export interface DropResolution {
@@ -423,6 +449,7 @@ export function resolveDrop(
   if (!part) return null;
   const existing = req.placementId ? design.placements.find((p) => p.id === req.placementId) : undefined;
   const ignore = existing ? [existing.id, ...descendantsOf(design.placements, existing.id)] : [];
+  if (req.wall) return resolveWallDrop(design, catalog, part, existing, req, newId, ignore);
 
   // Desktop gear dropped onto a shelf sits on it. If it only fits the shelf in
   // its other orientation (on its side, or upright again), it turns.
@@ -435,6 +462,7 @@ export function resolveDrop(
     const shelfBase: PlacedPart = existing
       ? { ...existing, partId: p.id, parentId: shelf.shelf.id, bottomU: shelf.baseU, xMm: sxs[0] ?? 0, mounting }
       : { id: newId, partId: p.id, parentId: shelf.shelf.id, bottomU: shelf.baseU, xMm: sxs[0] ?? 0, mounting };
+    delete shelfBase.wall;
     let firstOnShelf: DropResolution | null = null;
     for (const xMm of sxs) {
       const candidate = { ...shelfBase, xMm };
@@ -460,6 +488,7 @@ export function resolveDrop(
     ? { ...existing, parentId: undefined, bottomU, xMm: xs[0] ?? 0, mounting: req.mounting }
     : { id: newId, partId: part.id, bottomU, xMm: xs[0] ?? 0, mounting: req.mounting };
   if (base.parentId === undefined) delete base.parentId;
+  delete base.wall;
 
   let first: DropResolution | null = null;
   for (const xMm of xs) {
@@ -469,6 +498,99 @@ export function resolveDrop(
     first ??= { candidate, check };
   }
   return first ?? { candidate: base, check: checkPlacement(design, base, catalog) };
+}
+
+// ---------------------------------------------------------------------------
+// Wall area
+// ---------------------------------------------------------------------------
+
+/** Widest the wall area beside the rack can get (mm). */
+export const WALL_MAX_MM = 2000;
+/** Narrowest wall area drawn (mm). */
+export const WALL_MIN_MM = 400;
+/** Wall positions snap to this many mm horizontally. */
+export const WALL_SNAP_MM = 5;
+
+/** Drawn width of the wall area: enough for what's on it, plus room to add more. */
+export function wallWidthMm(design: Pick<Design, 'rack' | 'placements'>, catalog: Catalog): number {
+  if (!design.rack.wall) return 0;
+  let right = 0;
+  for (const p of design.placements) {
+    if (!p.wall) continue;
+    const part = catalog.get(p.partId);
+    if (part) right = Math.max(right, p.xMm + partWidthMm(part));
+  }
+  return Math.min(WALL_MAX_MM, Math.max(WALL_MIN_MM, Math.ceil((right + 120) / 50) * 50));
+}
+
+/** Parts that can go on the wall: desktop gear and wall-only parts. */
+export function canGoOnWall(part: Part): boolean {
+  return part.formFactor !== 'rack';
+}
+
+/** Horizontal spots on the wall to try: the pointer, then flush against neighbours. */
+function wallXCandidates(design: Pick<Design, 'rack' | 'placements'>, catalog: Catalog, part: Part, bottomU: number, rawX: number, ignore: readonly string[]): number[] {
+  const w = partWidthMm(part);
+  const snap = (x: number) => Math.min(Math.max(0, Math.round(x / WALL_SNAP_MM) * WALL_SNAP_MM), WALL_MAX_MM - w);
+  const set = new Set<number>([snap(rawX), 0]);
+  for (const p of design.placements) {
+    if (!p.wall || ignore.includes(p.id)) continue;
+    const occ = occupancyOf(design.placements, p, catalog);
+    if (!occ || !rangesOverlap(bottomU, bottomU + part.heightU, occ.u0, occ.u1)) continue;
+    set.add(Math.min(occ.x1 + WALL_SNAP_MM, WALL_MAX_MM - w));
+    if (occ.x0 - w - WALL_SNAP_MM >= -EPS) set.add(occ.x0 - w - WALL_SNAP_MM);
+  }
+  return [...set].sort((a, b) => Math.abs(a - rawX) - Math.abs(b - rawX));
+}
+
+function resolveWallDrop(
+  design: Pick<Design, 'rack' | 'placements'>,
+  catalog: Catalog,
+  part: Part,
+  existing: PlacedPart | undefined,
+  req: DropRequest,
+  newId: string,
+  ignore: readonly string[],
+): DropResolution {
+  const bottomU = snapBottomU(part, req.rawBottomU, design.rack);
+  const base: PlacedPart = existing
+    ? { ...existing, partId: part.id, bottomU, xMm: 0, mounting: 'front', wall: true }
+    : { id: newId, partId: part.id, bottomU, xMm: 0, mounting: 'front', wall: true };
+  delete base.parentId;
+  let first: DropResolution | null = null;
+  for (const xMm of wallXCandidates(design, catalog, part, bottomU, req.rawXMm, ignore)) {
+    const candidate = { ...base, xMm };
+    const check = checkPlacement(design, candidate, catalog);
+    if (check.ok) return { candidate, check };
+    first ??= { candidate, check };
+  }
+  return first ?? { candidate: base, check: checkPlacement(design, base, catalog) };
+}
+
+/** First free spot on the wall, top-left first. Needs the wall area turned on. */
+export function findWallSlot(
+  design: Pick<Design, 'rack' | 'placements'>,
+  catalog: Catalog,
+  partId: string,
+  nearU?: number,
+  newId = '__candidate__',
+): PlacedPart | null {
+  const part = catalog.get(partId);
+  if (!part || !canGoOnWall(part)) return null;
+  const step = uStep(part);
+  const maxBottom = design.rack.heightU + 1 - part.heightU;
+  if (maxBottom < 1) return null;
+  const positions: number[] = [];
+  for (let u = 1; u <= maxBottom + EPS; u += step) positions.push(u);
+  const target = nearU ?? maxBottom;
+  positions.sort((a, b) => Math.abs(a - target) - Math.abs(b - target) || b - a);
+  for (const bottomU of positions) {
+    for (const xMm of wallXCandidates(design, catalog, part, bottomU, 0, [])) {
+      const candidate: PlacedPart = { id: newId, partId, bottomU, xMm, mounting: 'front', wall: true };
+      if (checkPlacement(design, candidate, catalog).ok) return candidate;
+    }
+  }
+  return null;
 }
 
 /**
@@ -622,7 +744,7 @@ export type Alignment = 'left' | 'centre' | 'right';
 /** xMm that aligns a placement left / centre / right in the rack or on its shelf. */
 export function alignedX(design: Pick<Design, 'rack' | 'placements'>, placement: PlacedPart, catalog: Catalog, align: Alignment): number | null {
   const part = catalog.get(placement.partId);
-  if (!part) return null;
+  if (!part || placement.wall) return null;
   const w = partWidthMm(part);
   let span: number;
   if (placement.parentId !== undefined) {
@@ -694,7 +816,7 @@ export function applyRackChange(
       continue;
     }
     let candidate = original;
-    if (original.parentId === undefined) {
+    if (original.parentId === undefined && !original.wall) {
       const w = partWidthMm(part);
       const xMm = w >= opening - EPS ? 0 : Math.min(Math.max(original.xMm, 0), Math.max(0, opening - w));
       candidate = { ...original, xMm };

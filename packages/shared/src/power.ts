@@ -9,7 +9,7 @@ import type { Design, Part, PortType, PowerInput } from './schemas.js';
 export const MAINS_SOCKETS: readonly PortType[] = ['outlet_au', 'outlet_nema', 'outlet_schuko', 'outlet_uk'];
 export const IEC_OUTLETS: readonly PortType[] = ['outlet_c13', 'outlet_c19'];
 
-const PASSIVE_CATS = new Set(['blank', 'patch-panel', 'cable-management', 'shelf', 'mount', 'accessory']);
+const PASSIVE_CATS = new Set(['blank', 'patch-panel', 'cable-management', 'shelf', 'mount', 'accessory', 'wall-outlet']);
 
 export interface PowerNeed {
   placementId: string;
