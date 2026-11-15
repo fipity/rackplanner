@@ -277,6 +277,13 @@ export const FaceplateDefs = memo(function FaceplateDefs() {
         <circle cx="3.1" cy="3.1" r="3" fill="#15181b" stroke="#40454b" strokeWidth="0.3" />
         <circle cx="3.1" cy="3.1" r="1.6" fill="#000" />
       </symbol>
+      {/* F-type coax jack: hex nut, threaded barrel, centre pin. */}
+      <symbol id="rp-f-type" viewBox="0 0 11 11">
+        <path d="M2.75 0.74 H8.25 L11 5.5 L8.25 10.26 H2.75 L0 5.5 Z" fill="url(#rp-metal)" stroke="#4b5157" strokeWidth="0.3" />
+        <circle cx="5.5" cy="5.5" r="3.4" fill="url(#rp-metal-dark)" stroke="#3f444a" strokeWidth="0.3" />
+        <circle cx="5.5" cy="5.5" r="2.3" fill="#e5e7eb" stroke="#9ca3af" strokeWidth="0.2" />
+        <circle cx="5.5" cy="5.5" r="0.6" fill="#b45309" />
+      </symbol>
       <symbol id="rp-microsd" viewBox="0 0 12 2">
         <rect x="0" y="0" width="12" height="2" rx="0.4" fill="#07090b" stroke="#3f444a" strokeWidth="0.2" />
       </symbol>

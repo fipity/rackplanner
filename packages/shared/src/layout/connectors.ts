@@ -64,6 +64,7 @@ export const CONNECTOR_SPECS: Record<Connector, ConnectorSpec> = {
   punchdown: { w: 14.8, h: 20, gapX: 1.4, gapY: 2, groupGap: 4.5, groupCols: 6, family: 'patch', label: 'Port' },
   lc: { w: 13.2, h: 10, gapX: 1.6, gapY: 2, groupGap: 4, groupCols: 6, family: 'patch', label: 'LC' },
   sc: { w: 13.2, h: 10, gapX: 1.6, gapY: 2, groupGap: 4, groupCols: 6, family: 'patch', label: 'SC' },
+  f_type: { w: 11, h: 11, gapX: 3, gapY: 2, groupGap: 4, groupCols: 4, family: 'other', label: 'Coax' },
 };
 
 /** Catalog port type a connector counts as when the region doesn't say. */
@@ -92,6 +93,7 @@ export const DEFAULT_PORT_TYPE: Partial<Record<Connector, PortType>> = {
   coupler: 'keystone',
   lc: 'lc_duplex',
   sc: 'sc_duplex',
+  f_type: 'coax',
 };
 
 /** Connector drawn for a catalog port type (used by auto-generated layouts). */
@@ -124,6 +126,7 @@ export const CONNECTOR_FOR_PORT: Record<PortType, Connector> = {
   serial: 'serial',
   sc_duplex: 'sc',
   dc_out: 'dc_barrel',
+  coax: 'f_type',
 };
 
 /** Short speed / kind text for tooltips. */
@@ -156,6 +159,7 @@ export const PORT_SPEED_TEXT: Record<PortType, string> = {
   serial: 'DB9',
   sc_duplex: 'SC duplex',
   dc_out: 'DC',
+  coax: 'Coax',
 };
 
 export const POE_TEXT: Record<PoeLevel, string> = {

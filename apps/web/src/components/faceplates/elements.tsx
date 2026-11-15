@@ -55,6 +55,7 @@ const SYMBOL: Partial<Record<Connector, string>> = {
   sc: 'rp-sc',
   audio: 'rp-audio',
   microsd: 'rp-microsd',
+  f_type: 'rp-f-type',
 };
 
 /** Deterministic "lit" pattern so a rack looks alive but renders the same every time. */

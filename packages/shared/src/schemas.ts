@@ -43,6 +43,7 @@ export const PORT_TYPES = [
   'serial',
   'sc_duplex',
   'dc_out',
+  'coax',
 ] as const;
 export const PortTypeSchema = z.enum(PORT_TYPES);
 export type PortType = z.infer<typeof PortTypeSchema>;
@@ -76,6 +77,7 @@ export const PORT_TYPE_LABELS: Record<PortType, string> = {
   serial: 'Serial (DB9)',
   sc_duplex: 'SC duplex',
   dc_out: 'DC output',
+  coax: 'Coax (F-type)',
 };
 
 export const RenderStyleSchema = z.enum([
@@ -198,6 +200,7 @@ export const CONNECTORS = [
   'punchdown',
   'lc',
   'sc',
+  'f_type',
 ] as const;
 export const ConnectorSchema = z.enum(CONNECTORS);
 export type Connector = z.infer<typeof ConnectorSchema>;

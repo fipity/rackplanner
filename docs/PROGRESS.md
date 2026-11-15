@@ -95,3 +95,8 @@
 - `desktop/build.sh [linux|win]` builds `RackPlanner-Setup-<v>.exe` (NSIS, per-user, unsigned) and `rackplanner_<v>_amd64.deb` in Docker (`electronuserland/builder:wine`).
 - better-sqlite3 upgraded to 13.0.3 (Node-API prebuilds bundled for every OS, so no Electron rebuild or cross-compiling). npm 10 still tries node-gyp on it, so the build installs with `--ignore-scripts`.
 - Verified: .deb installs and runs on a clean ubuntu:24.04 (Xvfb); the Windows build runs under Wine (server up, designs in %APPDATA%\RackPlanner\data). The NSIS installer itself wasn't exercised (silent install under Wine didn't complete).
+
+## nbn HFC NTD (2026-11-15)
+
+- New desktop part `arris-cm8200b-nbn-hfc`: the nbn HFC connection box (Arris CM8200B). Upright 132 × 44 × 132 mm (H × W × D), 0.95 kg, 2 × GbE (UNI-D1/UNI-D2), F-type coax in, 12 V DC plug-pack. Figures from a reseller copy of the Arris datasheet, so `verified: false`; rear port order is estimated.
+- New `coax` port type and `f_type` connector (hex-nut F jack drawn in Defs.tsx), so a cable can run from the coax input.

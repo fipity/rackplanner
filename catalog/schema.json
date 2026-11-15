@@ -216,7 +216,8 @@
                 "vga",
                 "serial",
                 "sc_duplex",
-                "dc_out"
+                "dc_out",
+                "coax"
               ]
             },
             "additionalProperties": {
@@ -427,7 +428,8 @@
                                 "coupler",
                                 "punchdown",
                                 "lc",
-                                "sc"
+                                "sc",
+                                "f_type"
                               ]
                             },
                             "count": {
@@ -478,7 +480,8 @@
                                     "vga",
                                     "serial",
                                     "sc_duplex",
-                                    "dc_out"
+                                    "dc_out",
+                                    "coax"
                                   ]
                                 },
                                 {
@@ -1713,7 +1716,8 @@
                                 "coupler",
                                 "punchdown",
                                 "lc",
-                                "sc"
+                                "sc",
+                                "f_type"
                               ]
                             },
                             "count": {
@@ -1764,7 +1768,8 @@
                                     "vga",
                                     "serial",
                                     "sc_duplex",
-                                    "dc_out"
+                                    "dc_out",
+                                    "coax"
                                   ]
                                 },
                                 {
@@ -2999,7 +3004,8 @@
                                 "coupler",
                                 "punchdown",
                                 "lc",
-                                "sc"
+                                "sc",
+                                "f_type"
                               ]
                             },
                             "count": {
@@ -3050,7 +3056,8 @@
                                     "vga",
                                     "serial",
                                     "sc_duplex",
-                                    "dc_out"
+                                    "dc_out",
+                                    "coax"
                                   ]
                                 },
                                 {

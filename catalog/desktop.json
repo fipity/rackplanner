@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 3,
+  "version": 4,
   "title": "Desktop gear (shelf-mounted)",
   "description": "Mini PCs, SBCs, desktop NAS (UGREEN NASync), modems and other devices that sit on a rack shelf.",
   "parts": [
@@ -401,6 +401,190 @@
       "sourceUrl": null,
       "verified": false,
       "notes": "Generic ISP fibre terminal; typical size."
+    },
+    {
+      "id": "arris-cm8200b-nbn-hfc",
+      "brand": "Arris",
+      "model": "CM8200B",
+      "name": "nbn HFC NTD (Arris CM8200B)",
+      "category": "modem",
+      "formFactor": "desktop",
+      "heightU": 3,
+      "heightMm": 132,
+      "width": {
+        "mm": 44
+      },
+      "depthMm": 132,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": 0.95,
+      "ports": {
+        "rj45_1g": 2,
+        "coax": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "arris",
+        "nbn",
+        "hfc",
+        "modem",
+        "ntd",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://adamscableequipment.com/wp-content/uploads/2022/01/Arris-CM8200.pdf",
+      "verified": false,
+      "notes": "The nbn connection box for HFC (DOCSIS 3.1). Stands upright: 132 mm tall × 44 mm wide × 132 mm deep, 0.95 kg (5.19 × 1.73 × 5.19 in, 2.1 lb per a reseller copy of the Arris datasheet). 2 × gigabit Ethernet (UNI-D1/UNI-D2; nbn normally activates UNI-D1 only), one F-type coax input, 12 V DC in. Power draw not published.",
+      "powerInput": {
+        "connector": "dc_barrel",
+        "voltageV": 12,
+        "currentA": 2,
+        "adapter": "wall",
+        "adapterW": 24,
+        "adapterIncluded": true,
+        "notes": "12 V DC plug-pack supplied by nbn. The 2 A rating comes from DeviWiki, not an Arris datasheet."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://adamscableequipment.com/wp-content/uploads/2022/01/Arris-CM8200.pdf",
+          "https://deviwiki.com/wiki/Arris_CM8200"
+        ],
+        "notes": "Datasheet: Power, DS/US and Online LEDs on the front, Ethernet link/speed LEDs on the rear. Rear connector order (coax at the top, then UNI-D1, UNI-D2, reset, DC jack) and all offsets are estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "label",
+              "text": "ARRIS",
+              "x": 0.15,
+              "w": 0.7,
+              "y": 0.08,
+              "size": 3.2,
+              "color": "#6b7280"
+            },
+            {
+              "type": "leds",
+              "count": 1,
+              "colors": [
+                "#22c55e"
+              ],
+              "labels": [
+                "PWR"
+              ],
+              "x": 0.3,
+              "w": 0.4,
+              "y": 0.3,
+              "h": 0.04
+            },
+            {
+              "type": "leds",
+              "count": 1,
+              "colors": [
+                "#22c55e"
+              ],
+              "labels": [
+                "DS"
+              ],
+              "x": 0.3,
+              "w": 0.4,
+              "y": 0.4,
+              "h": 0.04
+            },
+            {
+              "type": "leds",
+              "count": 1,
+              "colors": [
+                "#22c55e"
+              ],
+              "labels": [
+                "US"
+              ],
+              "x": 0.3,
+              "w": 0.4,
+              "y": 0.5,
+              "h": 0.04
+            },
+            {
+              "type": "leds",
+              "count": 1,
+              "colors": [
+                "#22c55e"
+              ],
+              "labels": [
+                "ONLINE"
+              ],
+              "x": 0.3,
+              "w": 0.4,
+              "y": 0.6,
+              "h": 0.04
+            }
+          ]
+        },
+        "rear": {
+          "regions": [
+            {
+              "type": "f_type",
+              "count": 1,
+              "portType": "coax",
+              "role": "Cable in (wall socket)",
+              "x": 0.25,
+              "w": 0.5,
+              "y": 0.06,
+              "h": 0.1
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_1g",
+              "speed": "1 GbE",
+              "role": "UNI-D1 (active)",
+              "start": 1,
+              "x": 0.15,
+              "w": 0.7,
+              "y": 0.3,
+              "h": 0.1
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_1g",
+              "speed": "1 GbE",
+              "role": "UNI-D2",
+              "start": 2,
+              "x": 0.15,
+              "w": 0.7,
+              "y": 0.45,
+              "h": 0.1
+            },
+            {
+              "type": "button",
+              "kind": "pinhole",
+              "x": 0.4,
+              "w": 0.2,
+              "y": 0.66,
+              "h": 0.03
+            },
+            {
+              "type": "dc_barrel",
+              "count": 1,
+              "role": "Power in (12 V)",
+              "x": 0.3,
+              "w": 0.4,
+              "y": 0.78,
+              "h": 0.08
+            }
+          ]
+        }
+      }
     },
     {
       "id": "ugreen-dh2300",
