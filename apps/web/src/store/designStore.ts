@@ -40,7 +40,8 @@ function syncShelfChildren(placements: PlacedPart[]): PlacedPart[] {
   return changed ? out : placements;
 }
 
-export type PlacementPatch = Partial<Omit<PlacedPart, 'id' | 'partId'>>;
+/** partId changes only to swap between a device's upright and on-its-side versions. */
+export type PlacementPatch = Partial<Omit<PlacedPart, 'id'>>;
 
 interface DesignState {
   design: Design;

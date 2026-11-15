@@ -8,7 +8,7 @@
  * Deliberately generic: plain-text model labels only, no logos or artwork.
  */
 import { memo } from 'react';
-import { U_MM, resolveFace, type Part, type PortElement, type PortType, type StylePreset } from '@rackplanner/shared';
+import { U_MM, resolveFace, uprightPart, type Part, type PortElement, type PortType, type StylePreset } from '@rackplanner/shared';
 import { RAIL, type View } from '../rack/geometry';
 import { Elements, type DrawCtx, type Lod } from './elements';
 import { PRESETS, bezelId, earId } from './presets';
@@ -45,9 +45,36 @@ export function bodyHeight(part: Part, h: number): number {
 
 const isVented = (part: Part) => /vent/i.test(part.name) || part.tags.includes('vented');
 
+/**
+ * Where the upright face lands when a device lies on its side. The upright
+ * face (uw wide × uh tall) fills the turned body (uh wide × uw tall) at
+ * (ix, by). From the front the device turns clockwise (its top goes right);
+ * seen from behind, the same turn is anticlockwise.
+ */
+function turnTransform(view: View, uw: number, uh: number, ix: number, by: number): string {
+  return view === 'front' ? `translate(${ix + uh} ${by}) rotate(90)` : `translate(${ix} ${by + uw}) rotate(-90)`;
+}
+
 export const Faceplate = memo(function Faceplate({ part, w, h, ears, view, label, color, lod = 'high', leds = true, portColors, tooltips = false }: FaceplateProps) {
   const face = view === 'front' ? 'front' : 'rear';
   const earW = ears ? RAIL : 0;
+
+  const upright = uprightPart(part);
+  if (upright) {
+    // On its side: draw the upright faceplate, rotated. Tags stay level.
+    const iw = w - earW * 2;
+    const bodyH = bodyHeight(part, h);
+    const by = h - bodyH;
+    return (
+      <g>
+        <g transform={turnTransform(view, bodyH, iw, earW, by)}>
+          <Faceplate part={upright} w={bodyH} h={iw} ears={false} view={view} lod={lod} leds={leds} portColors={portColors} tooltips={tooltips} />
+        </g>
+        {color && <rect x={earW + 0.3} y={by + 0.6} width={2.4} height={bodyH - 1.2} rx={0.4} fill={color} />}
+        {label && <LabelTag x={earW + iw} y={by} text={label} />}
+      </g>
+    );
+  }
   const ix = earW;
   const iw = w - earW * 2;
 
@@ -212,6 +239,18 @@ export interface PortSlot {
 export function portPositions(part: Part, w: number, h: number, ears: boolean, view: View): PortSlot[] {
   if (part.render.style === 'shelf') return [];
   const earW = ears ? RAIL : 0;
+  const upright = uprightPart(part);
+  if (upright) {
+    // Same rotation as the drawing (see turnTransform).
+    const iw = w - earW * 2;
+    const bodyH = bodyHeight(part, h);
+    const by = h - bodyH;
+    return portPositions(upright, bodyH, iw, false, view).map((s) =>
+      view === 'front'
+        ? { ...s, x: earW + iw - (s.y + s.h), y: by + s.x, w: s.h, h: s.w }
+        : { ...s, x: earW + s.y, y: by + bodyH - (s.x + s.w), w: s.h, h: s.w },
+    );
+  }
   const bodyH = bodyHeight(part, h);
   const face = resolveFace(part, view === 'front' ? 'front' : 'rear', w - earW * 2, bodyH);
   return face.elements

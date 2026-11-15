@@ -16,10 +16,12 @@ import {
   type Part,
   type PlacedPart,
   type PortType,
+  turnedPart,
+  uprightPart,
 } from '@rackplanner/shared';
 import { Copy, ExternalLink, Pencil, Trash2, Wand2 } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
-import { deleteSelected, duplicateSelected } from '../../lib/actions';
+import { deleteSelected, duplicateSelected, turnSelected } from '../../lib/actions';
 import { toast } from '../../lib/toast';
 import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
@@ -215,6 +217,10 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
   const catalog = useCatalogStore((s) => s.catalog);
   const occ = occupancyOf(design.placements, placement, catalog);
   const mountings = allowedMountings(part);
+  // The catalog entry behind a turned device is its upright part.
+  const upright = uprightPart(part);
+  const basePart = upright ?? part;
+  const turnable = upright !== undefined || turnedPart(part) !== null;
 
   const setMounting = (m: Mounting) => {
     const check = checkPlacement(design, { ...placement, mounting: m }, catalog);
@@ -314,6 +320,24 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
         </Field>
       )}
 
+      {turnable && (
+        <Field label="Orientation">
+          <div className="grid grid-cols-2 gap-1">
+            {([false, true] as const).map((side) => (
+              <Button
+                key={String(side)}
+                active={side === (upright !== undefined)}
+                className="border border-zinc-300 dark:border-zinc-700"
+                title="Turn (R)"
+                onClick={() => side !== (upright !== undefined) && turnSelected()}
+              >
+                {side ? 'On its side' : 'Upright'}
+              </Button>
+            ))}
+          </div>
+        </Field>
+      )}
+
       {placement.parentId === undefined && (
         <Field label="Mounting">
           <select
@@ -359,10 +383,12 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
         <Specs part={part} />
         {part.notes && <p className="text-xs text-zinc-500 dark:text-zinc-400">{part.notes}</p>}
         <Button
-          onClick={() => useUiStore.getState().openBuilder(part.source === 'custom' ? { mode: 'edit', partId: part.id } : { mode: 'copy', partId: part.id })}
+          onClick={() =>
+            useUiStore.getState().openBuilder(basePart.source === 'custom' ? { mode: 'edit', partId: basePart.id } : { mode: 'copy', partId: basePart.id })
+          }
           className="w-full border border-zinc-300 dark:border-zinc-700"
         >
-          {part.source === 'custom' ? (
+          {basePart.source === 'custom' ? (
             <>
               <Pencil className="size-4" /> Edit custom part
             </>
@@ -394,6 +420,7 @@ function RackSummary() {
           ['Ctrl+D', 'duplicate'],
           ['Ctrl+Z / Ctrl+Shift+Z', 'undo / redo'],
           ['C', 'cable mode'],
+          ['R', 'turn shelf device on its side'],
           ['+ / − / 0', 'zoom / fit'],
           ['Ctrl+scroll', 'zoom'],
         ].map(([k, v]) => (

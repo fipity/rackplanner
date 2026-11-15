@@ -5,6 +5,11 @@ import {
   findFreeSlot,
   findShelfSlot,
   newId,
+  partWidthMm,
+  shelfGeometry,
+  shelfXCandidates,
+  turnedPart,
+  uprightPart,
   uStep,
   type Rack,
   type RackChangeResult,
@@ -66,6 +71,45 @@ export function nudgeSelected(dir: 1 | -1): void {
   } else {
     toast(check.problems[0]?.message ?? 'Cannot move there', 'error');
   }
+}
+
+/** Lay the selected shelf device on its side, or stand it back up (R). */
+export function turnSelected(): void {
+  const p = selected();
+  if (!p) return;
+  const { design, updatePlacement } = useDesignStore.getState();
+  const { catalog } = useCatalogStore.getState();
+  const part = catalog.get(p.partId);
+  if (!part) return;
+  const upright = uprightPart(part);
+  const next = upright ?? turnedPart(part);
+  if (!next) {
+    if (part.formFactor === 'desktop') toast(`${part.name} can't be turned on its side`, 'error');
+    return;
+  }
+  // On a shelf, keep the device centred where it was, inside the usable width.
+  const shelf = p.parentId ? design.placements.find((s) => s.id === p.parentId) : undefined;
+  const geo = shelf ? shelfGeometry(design.placements, shelf, catalog) : null;
+  const w = partWidthMm(next);
+  let xMm = p.xMm;
+  if (geo) xMm = Math.min(Math.max(0, p.xMm + (partWidthMm(part) - w) / 2), Math.max(0, geo.usableWidthMm - w));
+  let check = checkPlacement(design, { ...p, partId: next.id, xMm }, catalog);
+  if (!check.ok && geo) {
+    // Try the nearest free spot on the same shelf.
+    for (const x of shelfXCandidates(design.placements, geo, next, catalog, [p.id]).sort((a, b) => Math.abs(a - xMm) - Math.abs(b - xMm))) {
+      const c = checkPlacement(design, { ...p, partId: next.id, xMm: x }, catalog);
+      if (c.ok) {
+        xMm = x;
+        check = c;
+        break;
+      }
+    }
+  }
+  if (!check.ok) {
+    toast(check.problems[0]?.message ?? `No room to turn ${part.name}`, 'error');
+    return;
+  }
+  updatePlacement(p.id, { partId: next.id, xMm });
 }
 
 /** Preview a rack change without applying it. */

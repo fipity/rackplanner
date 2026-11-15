@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 4,
+  "version": 5,
   "title": "Desktop gear (shelf-mounted)",
   "description": "Mini PCs, SBCs, desktop NAS (UGREEN NASync), modems and other devices that sit on a rack shelf.",
   "parts": [
@@ -431,7 +431,7 @@
       },
       "render": {
         "style": "desktop",
-        "body": "white"
+        "body": "black"
       },
       "tags": [
         "arris",
@@ -443,7 +443,7 @@
       ],
       "sourceUrl": "https://adamscableequipment.com/wp-content/uploads/2022/01/Arris-CM8200.pdf",
       "verified": false,
-      "notes": "The nbn connection box for HFC (DOCSIS 3.1). Stands upright: 132 mm tall × 44 mm wide × 132 mm deep, 0.95 kg (5.19 × 1.73 × 5.19 in, 2.1 lb per a reseller copy of the Arris datasheet). 2 × gigabit Ethernet (UNI-D1/UNI-D2; nbn normally activates UNI-D1 only), one F-type coax input, 12 V DC in. Power draw not published.",
+      "notes": "The nbn connection box for HFC (DOCSIS 3.1), black. Stands upright (can be turned on its side in the planner): 132 mm tall × 44 mm wide × 132 mm deep, 0.95 kg (5.19 × 1.73 × 5.19 in, 2.1 lb per a reseller copy of the Arris datasheet). 2 × gigabit Ethernet (UNI-D1/UNI-D2; nbn normally activates UNI-D1 only), one F-type coax input, 12 V DC in. Power draw not published.",
       "powerInput": {
         "connector": "dc_barrel",
         "voltageV": 12,
@@ -459,78 +459,166 @@
           "https://adamscableequipment.com/wp-content/uploads/2022/01/Arris-CM8200.pdf",
           "https://deviwiki.com/wiki/Arris_CM8200"
         ],
-        "notes": "Datasheet: Power, DS/US and Online LEDs on the front, Ethernet link/speed LEDs on the rear. Rear connector order (coax at the top, then UNI-D1, UNI-D2, reset, DC jack) and all offsets are estimated.",
+        "notes": "Front follows product photos: nbn mark, POWER / DOWNSTREAM / UPSTREAM / ONLINE LEDs, ARRIS and CM8200 at the bottom (plain text, no logos). Datasheet: Ethernet link/speed LEDs on the rear. Rear connector order (coax at the top, then UNI-D1, UNI-D2, reset, DC jack) and all offsets are estimated.",
         "front": {
           "regions": [
             {
+              "type": "panel",
+              "x": 0.09,
+              "w": 0.82,
+              "y": 0.025,
+              "h": 0.95,
+              "color": "#07080a",
+              "radius": 3
+            },
+            {
               "type": "label",
-              "text": "ARRIS",
-              "x": 0.15,
-              "w": 0.7,
-              "y": 0.08,
-              "size": 3.2,
-              "color": "#6b7280"
+              "text": "nbn",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.105,
+              "h": 0.0512,
+              "size": 5.2,
+              "color": "#f9fafb",
+              "align": "center"
+            },
+            {
+              "type": "label",
+              "text": "POWER",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.262,
+              "h": 0.0227,
+              "size": 2.3,
+              "color": "#e5e7eb",
+              "align": "center"
             },
             {
               "type": "leds",
               "count": 1,
               "colors": [
-                "#22c55e"
+                "#84cc16"
               ],
               "labels": [
-                "PWR"
+                "POWER"
               ],
               "x": 0.3,
               "w": 0.4,
-              "y": 0.3,
-              "h": 0.04
+              "y": 0.303,
+              "h": 0.03
+            },
+            {
+              "type": "label",
+              "text": "DOWNSTREAM",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.35,
+              "h": 0.0227,
+              "size": 2.3,
+              "color": "#e5e7eb",
+              "align": "center"
             },
             {
               "type": "leds",
               "count": 1,
               "colors": [
-                "#22c55e"
+                "#84cc16"
               ],
               "labels": [
                 "DS"
               ],
               "x": 0.3,
               "w": 0.4,
-              "y": 0.4,
-              "h": 0.04
+              "y": 0.39,
+              "h": 0.03
+            },
+            {
+              "type": "label",
+              "text": "UPSTREAM",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.437,
+              "h": 0.0227,
+              "size": 2.3,
+              "color": "#e5e7eb",
+              "align": "center"
             },
             {
               "type": "leds",
               "count": 1,
               "colors": [
-                "#22c55e"
+                "#84cc16"
               ],
               "labels": [
                 "US"
               ],
               "x": 0.3,
               "w": 0.4,
-              "y": 0.5,
-              "h": 0.04
+              "y": 0.477,
+              "h": 0.03
+            },
+            {
+              "type": "label",
+              "text": "ONLINE",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.524,
+              "h": 0.0227,
+              "size": 2.3,
+              "color": "#e5e7eb",
+              "align": "center"
             },
             {
               "type": "leds",
               "count": 1,
               "colors": [
-                "#22c55e"
+                "#84cc16"
               ],
               "labels": [
                 "ONLINE"
               ],
               "x": 0.3,
               "w": 0.4,
-              "y": 0.6,
-              "h": 0.04
+              "y": 0.564,
+              "h": 0.03
+            },
+            {
+              "type": "label",
+              "text": "ARRIS",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.86,
+              "h": 0.0355,
+              "size": 3.6,
+              "color": "#d1d5db",
+              "align": "center"
+            },
+            {
+              "type": "label",
+              "text": "CM8200",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.905,
+              "h": 0.0236,
+              "size": 2.4,
+              "color": "#9ca3af",
+              "align": "center"
             }
           ]
         },
         "rear": {
           "regions": [
+            {
+              "type": "label",
+              "text": "CABLE",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.03,
+              "h": 0.0217,
+              "size": 2.2,
+              "color": "#9ca3af",
+              "align": "center"
+            },
             {
               "type": "f_type",
               "count": 1,
@@ -542,6 +630,17 @@
               "h": 0.1
             },
             {
+              "type": "label",
+              "text": "UNI-D1",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.255,
+              "h": 0.0217,
+              "size": 2.2,
+              "color": "#9ca3af",
+              "align": "center"
+            },
+            {
               "type": "rj45",
               "count": 1,
               "portType": "rj45_1g",
@@ -550,8 +649,19 @@
               "start": 1,
               "x": 0.15,
               "w": 0.7,
-              "y": 0.3,
+              "y": 0.28,
               "h": 0.1
+            },
+            {
+              "type": "label",
+              "text": "UNI-D2",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.405,
+              "h": 0.0217,
+              "size": 2.2,
+              "color": "#9ca3af",
+              "align": "center"
             },
             {
               "type": "rj45",
@@ -562,16 +672,38 @@
               "start": 2,
               "x": 0.15,
               "w": 0.7,
-              "y": 0.45,
+              "y": 0.43,
               "h": 0.1
+            },
+            {
+              "type": "label",
+              "text": "RESET",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.605,
+              "h": 0.0217,
+              "size": 2.2,
+              "color": "#9ca3af",
+              "align": "center"
             },
             {
               "type": "button",
               "kind": "pinhole",
               "x": 0.4,
               "w": 0.2,
-              "y": 0.66,
+              "y": 0.63,
               "h": 0.03
+            },
+            {
+              "type": "label",
+              "text": "12V DC",
+              "x": 0.1,
+              "w": 0.8,
+              "y": 0.73,
+              "h": 0.0217,
+              "size": 2.2,
+              "color": "#9ca3af",
+              "align": "center"
             },
             {
               "type": "dc_barrel",
@@ -579,7 +711,7 @@
               "role": "Power in (12 V)",
               "x": 0.3,
               "w": 0.4,
-              "y": 0.78,
+              "y": 0.76,
               "h": 0.08
             }
           ]

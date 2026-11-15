@@ -7,6 +7,7 @@ import type { Catalog } from './placement.js';
 import { DesignSchema, PartSchema, type Design, type Part } from './schemas.js';
 import { CABLE_TYPE_LABELS } from './cables.js';
 import { placementPower } from './stats.js';
+import { uprightId } from './turn.js';
 
 export const EXPORT_FORMAT = 'rackplanner-design';
 
@@ -21,7 +22,8 @@ export const DesignExportSchema = z.object({
 export type DesignExport = z.infer<typeof DesignExportSchema>;
 
 export function buildDesignExport(design: Design, catalog: Catalog, now = new Date()): DesignExport {
-  const used = new Set(design.placements.map((p) => p.partId));
+  // A turned device is derived from its upright part; export that.
+  const used = new Set(design.placements.map((p) => uprightId(p.partId)));
   const customParts = [...used].map((id) => catalog.get(id)).filter((p): p is Part => !!p && p.source === 'custom');
   return { format: EXPORT_FORMAT, formatVersion: 1, exportedAt: now.toISOString(), design, customParts };
 }
@@ -78,14 +80,17 @@ export interface BomRow {
 export function buildBom(design: Pick<Design, 'placements'> & { cables?: Design['cables'] }, catalog: Catalog): BomRow[] {
   const rows = new Map<string, BomRow>();
   for (const p of design.placements) {
-    const part = catalog.get(p.partId);
-    let row = rows.get(p.partId);
+    const placed = catalog.get(p.partId);
+    // Upright and turned copies of a device are the same thing to buy.
+    const key = uprightId(p.partId);
+    const part = catalog.get(key) ?? placed;
+    let row = rows.get(key);
     if (!row) {
       row = {
-        partId: p.partId,
+        partId: key,
         brand: part?.brand ?? '',
-        model: part?.model ?? p.partId,
-        name: part?.name ?? `Unknown part ${p.partId}`,
+        model: part?.model ?? key,
+        name: part?.name ?? `Unknown part ${key}`,
         category: part?.category ?? '',
         qty: 0,
         heightU: part?.heightU ?? 0,
@@ -98,10 +103,10 @@ export function buildBom(design: Pick<Design, 'placements'> & { cables?: Design[
         sourceUrl: part?.sourceUrl ?? null,
         missing: !part,
       };
-      rows.set(p.partId, row);
+      rows.set(key, row);
     }
     row.qty++;
-    row.totalU += part && p.parentId === undefined ? part.heightU : 0;
+    row.totalU += placed && p.parentId === undefined ? placed.heightU : 0;
     if (p.label) row.labels.push(p.label);
     if (part) {
       const pw = placementPower(p, part);

@@ -8,6 +8,7 @@ export * from './exchange.js';
 export * from './cables.js';
 export * from './frames.js';
 export * from './power.js';
+export * from './turn.js';
 export * from './layout/engine.js';
 export * from './layout/connectors.js';
 export * from './layout/presets.js';

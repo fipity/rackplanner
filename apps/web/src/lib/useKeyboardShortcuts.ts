@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDesignStore } from '../store/designStore';
 import { useUiStore } from '../store/uiStore';
-import { deleteSelected, duplicateSelected, nudgeSelected } from './actions';
+import { deleteSelected, duplicateSelected, nudgeSelected, turnSelected } from './actions';
 
 function isEditable(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -50,6 +50,8 @@ export function useKeyboardShortcuts(): void {
       } else if (!mod && key === 'c') {
         const ui = useUiStore.getState();
         ui.setCableMode(!ui.cableMode);
+      } else if (!mod && key === 'r') {
+        turnSelected();
       } else if (!mod && (e.key === '+' || e.key === '=')) {
         useUiStore.getState().zoomBy(1.2);
       } else if (!mod && e.key === '-') {

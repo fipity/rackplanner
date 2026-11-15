@@ -1,4 +1,4 @@
-import type { Catalog, Part } from '@rackplanner/shared';
+import { withTurnedParts, type Catalog, type Part } from '@rackplanner/shared';
 import { create } from 'zustand';
 import { fetchCatalog } from '../lib/api';
 
@@ -15,7 +15,8 @@ interface CatalogState {
   remove: (id: string) => void;
 }
 
-const index = (parts: Part[]): Catalog => new Map(parts.map((p) => [p.id, p]));
+/** Lookup by id, including the on-its-side version of shelf gear (not listed in the catalog). */
+const index = (parts: Part[]): Catalog => new Map(withTurnedParts(parts).map((p) => [p.id, p]));
 
 export const useCatalogStore = create<CatalogState>()((set, get) => ({
   status: 'idle',

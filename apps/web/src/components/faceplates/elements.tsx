@@ -349,12 +349,15 @@ function feature(e: FeatureElement, ctx: DrawCtx): ReactNode {
       );
     }
     case 'label': {
-      const r = e.region as { text?: string; size?: number; color?: string };
+      const r = e.region as { text?: string; size?: number; color?: string; align?: 'start' | 'center' | 'end' };
       const text = r.text ?? ctx.model;
       const size = Math.min(r.size ?? 3.4, h / 1.3, Math.max(1.6, (w / Math.max(1, text.length)) * 1.6));
       if (ctx.lod === 'low' && size < 2.5) return null;
+      // align centres or right-aligns the text within the label's box.
+      const anchor = r.align === 'center' ? 'middle' : r.align === 'end' ? 'end' : undefined;
+      const tx = r.align === 'center' ? x + w / 2 : r.align === 'end' ? x + w : x;
       return (
-        <text x={x} y={y + size} fontSize={size} fill={r.color ?? t.text} fontFamily={t.font} fontWeight={t.fontWeight} letterSpacing={0.08}>
+        <text x={tx} y={y + size} textAnchor={anchor} fontSize={size} fill={r.color ?? t.text} fontFamily={t.font} fontWeight={t.fontWeight} letterSpacing={0.08}>
           {text}
         </text>
       );

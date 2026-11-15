@@ -100,3 +100,11 @@
 
 - New desktop part `arris-cm8200b-nbn-hfc`: the nbn HFC connection box (Arris CM8200B). Upright 132 × 44 × 132 mm (H × W × D), 0.95 kg, 2 × GbE (UNI-D1/UNI-D2), F-type coax in, 12 V DC plug-pack. Figures from a reseller copy of the Arris datasheet, so `verified: false`; rear port order is estimated.
 - New `coax` port type and `f_type` connector (hex-nut F jack drawn in Defs.tsx), so a cable can run from the coax input.
+
+## Turning shelf gear on its side; CM8200B restyled (2026-11-15)
+
+- Any desktop part with a known width and height and no top-face layout can lie on its side (R, or Orientation in the inspector). The turned version is a derived catalog entry `<id>@side` (packages/shared/src/turn.ts, added to the client catalog map only), so turning just swaps the placement's partId; cables keep their port indexes. Faceplate draws the upright face rotated (clockwise from the front, anticlockwise from behind) and `portPositions` applies the same rotation. BOM rows and custom-part export use the upright id.
+- Parts with a `top` layout (Pi case) can't turn, since their top-face ports would have nowhere sensible to go.
+- Labels with `align: center | end` now centre or right-align their text in the label box.
+- CM8200B redrawn from a product photo: black body, inner panel, nbn mark, captioned POWER / DOWNSTREAM / UPSTREAM / ONLINE LEDs, ARRIS / CM8200 (plain text, no logos); rear labels for CABLE, UNI-D1/2, RESET, 12V DC.
+- Test: tests/visual/turn.spec.ts (turn, rotated rear port order, cable to a turned port, stand back up), packages/shared/src/turn.test.ts.
