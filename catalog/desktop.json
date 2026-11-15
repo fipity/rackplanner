@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 5,
+  "version": 6,
   "title": "Desktop gear (shelf-mounted)",
   "description": "Mini PCs, SBCs, desktop NAS (UGREEN NASync), modems and other devices that sit on a rack shelf.",
   "parts": [
@@ -713,6 +713,575 @@
               "w": 0.4,
               "y": 0.76,
               "h": 0.08
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nokia-xs-010x-q-nbn-fttp",
+      "brand": "Nokia",
+      "model": "XS-010X-Q",
+      "name": "nbn FTTP NTD, 1 port (Nokia XS-010X-Q)",
+      "category": "modem",
+      "formFactor": "desktop",
+      "heightU": 1,
+      "heightMm": 30,
+      "width": {
+        "mm": 135
+      },
+      "depthMm": 135,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": 8.6
+      },
+      "weightKg": null,
+      "ports": {
+        "sc_duplex": 1,
+        "rj45_10g": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "nokia",
+        "nbn",
+        "fttp",
+        "xgs-pon",
+        "modem",
+        "ntd",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://amt.com/wp-content/uploads/2024/07/Nokia_ONT_XS_010X_Q_datasheet_Data_Sheet_EN.pdf",
+      "verified": false,
+      "notes": "The 1-port nbn fibre connection box (XGS-PON), white. 135 × 135 × 30 mm, 12 V DC 1 A, under 8.6 W, per Nokia's XS-010X-Q datasheet; one SC/APC fibre input (simplex, listed here as SC) and one 100M–10G RJ45 (nbn runs it at up to 2.5 Gbps). Weight left blank: Nokia's datasheet says 0.366 kg, its quick reference guide 0.285 kg. nbn's unit is wall-mounted under a cover and relabels the lights Power / Optical / Alarm / Port.",
+      "powerInput": {
+        "connector": "dc_barrel",
+        "voltageV": 12,
+        "currentA": 1,
+        "adapter": "wall",
+        "adapterW": 12,
+        "adapterIncluded": true,
+        "notes": "12 V DC plug-pack supplied by nbn."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://amt.com/wp-content/uploads/2024/07/Nokia_ONT_XS_010X_Q_datasheet_Data_Sheet_EN.pdf",
+          "https://www.nbnco.com.au/learn/network-technology/fibre-to-the-premises-explained-fttp/connection-box/1-port"
+        ],
+        "notes": "Port edge follows Nokia's product photo (PON, ETHERNET, RESET, POWER, ON/OFF), drawn as the rear; nbn says the order can vary. Light names from nbn's 1-port page. Offsets estimated. Top view: lights at the corner away from the ports, NOKIA near the port edge, as in Nokia's photo.",
+        "front": {
+          "regions": []
+        },
+        "rear": {
+          "regions": [
+            {
+              "type": "label",
+              "text": "PON",
+              "x": 0.1,
+              "w": 0.16,
+              "y": 0.1,
+              "h": 0.14,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "sc",
+              "count": 1,
+              "portType": "sc_duplex",
+              "role": "Fibre in (SC/APC)",
+              "x": 0.1,
+              "w": 0.16,
+              "y": 0.3,
+              "h": 0.45
+            },
+            {
+              "type": "label",
+              "text": "ETHERNET",
+              "x": 0.3,
+              "w": 0.2,
+              "y": 0.1,
+              "h": 0.14,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_10g",
+              "speed": "10 GbE",
+              "role": "UNI-D (Port)",
+              "x": 0.3,
+              "w": 0.2,
+              "y": 0.28,
+              "h": 0.5
+            },
+            {
+              "type": "label",
+              "text": "RESET",
+              "x": 0.53,
+              "w": 0.1,
+              "y": 0.1,
+              "h": 0.14,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "button",
+              "kind": "pinhole",
+              "x": 0.55,
+              "w": 0.06,
+              "y": 0.45,
+              "h": 0.12
+            },
+            {
+              "type": "label",
+              "text": "POWER",
+              "x": 0.65,
+              "w": 0.12,
+              "y": 0.1,
+              "h": 0.14,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "dc_barrel",
+              "count": 1,
+              "role": "Power in (12 V)",
+              "x": 0.65,
+              "w": 0.12,
+              "y": 0.3,
+              "h": 0.42
+            },
+            {
+              "type": "label",
+              "text": "ON/OFF",
+              "x": 0.8,
+              "w": 0.12,
+              "y": 0.1,
+              "h": 0.14,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "button",
+              "kind": "power",
+              "x": 0.82,
+              "w": 0.08,
+              "y": 0.32,
+              "h": 0.38
+            }
+          ]
+        },
+        "top": {
+          "regions": [
+            {
+              "type": "label",
+              "text": "NOKIA",
+              "x": 0.1,
+              "w": 0.4,
+              "y": 0.14,
+              "h": 0.08,
+              "size": 5,
+              "color": "#1f2937",
+              "align": "center"
+            },
+            {
+              "type": "leds",
+              "count": 4,
+              "colors": [
+                "#22c55e",
+                "#22c55e",
+                "#ef4444",
+                "#22c55e"
+              ],
+              "labels": [
+                "POWER",
+                "OPTICAL",
+                "ALARM",
+                "PORT"
+              ],
+              "x": 0.52,
+              "w": 0.4,
+              "y": 0.84,
+              "h": 0.06
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "netcomm-ndd-0300-nbn-fttc",
+      "brand": "NetComm",
+      "model": "NDD-0300",
+      "name": "nbn FTTC connection device (NetComm NDD-0300)",
+      "category": "modem",
+      "formFactor": "desktop",
+      "heightU": 2,
+      "heightMm": 44,
+      "width": {
+        "mm": 166
+      },
+      "depthMm": 118,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "netcomm",
+        "nbn",
+        "fttc",
+        "vdsl",
+        "g.fast",
+        "modem",
+        "ntd",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://techtack.com.au/products/nbn-netcomm-wireless-modem-fttc-network-connection-device-ndd-0300",
+      "verified": false,
+      "notes": "The nbn FTTC connection box (VDSL2/G.fast over the phone line), white, lies flat. 166 × 118 × 44 mm from retailer listings (no NetComm datasheet found). Mains cord straight in (cloverleaf C6 inlet); it also powers the nbn kerbside unit over the phone line, so its draw is not a normal modem's and is not published. GATEWAY is the Ethernet port to your router; WALL SOCKET is the phone line and isn't a cable end in the planner.",
+      "powerInput": {
+        "connector": "iec_c6",
+        "adapter": "none",
+        "notes": "nbn mains cord (C5 plug) into the POWER inlet."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://leaptel.com.au/wp-content/uploads/2024/01/FTTC_Setup_Guide_1830077.pdf.coredownload.pdf.pdf"
+        ],
+        "notes": "Port order and names from nbn's FTTC setup guide photos (POWER, WALL SOCKET, RESET, GATEWAY); lights LAN / DSL / Connection / Power under a slide cover on the top. Offsets estimated.",
+        "front": {
+          "regions": []
+        },
+        "rear": {
+          "regions": [
+            {
+              "type": "iec_c6",
+              "count": 1,
+              "role": "Mains in",
+              "x": 0.08,
+              "w": 0.16,
+              "y": 0.25,
+              "h": 0.4
+            },
+            {
+              "type": "label",
+              "text": "POWER",
+              "x": 0.06,
+              "w": 0.2,
+              "y": 0.72,
+              "h": 0.12,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "none",
+              "role": "Wall socket (phone line)",
+              "x": 0.36,
+              "w": 0.12,
+              "y": 0.28,
+              "h": 0.36
+            },
+            {
+              "type": "label",
+              "text": "WALL SOCKET",
+              "x": 0.3,
+              "w": 0.24,
+              "y": 0.72,
+              "h": 0.12,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "button",
+              "kind": "pinhole",
+              "x": 0.58,
+              "w": 0.05,
+              "y": 0.4,
+              "h": 0.1
+            },
+            {
+              "type": "label",
+              "text": "RESET",
+              "x": 0.54,
+              "w": 0.13,
+              "y": 0.72,
+              "h": 0.12,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "rj45",
+              "count": 1,
+              "portType": "rj45_1g",
+              "role": "GATEWAY (to your router)",
+              "x": 0.74,
+              "w": 0.13,
+              "y": 0.28,
+              "h": 0.36
+            },
+            {
+              "type": "label",
+              "text": "GATEWAY",
+              "x": 0.7,
+              "w": 0.21,
+              "y": 0.72,
+              "h": 0.12,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            }
+          ]
+        },
+        "top": {
+          "regions": [
+            {
+              "type": "vent",
+              "pattern": "holes",
+              "x": 0.06,
+              "w": 0.88,
+              "y": 0.06,
+              "h": 0.3
+            },
+            {
+              "type": "panel",
+              "x": 0.3,
+              "w": 0.4,
+              "y": 0.42,
+              "h": 0.12,
+              "color": "#e5e7eb",
+              "radius": 4
+            },
+            {
+              "type": "leds",
+              "count": 4,
+              "colors": [
+                "#3b82f6",
+                "#3b82f6",
+                "#3b82f6",
+                "#3b82f6"
+              ],
+              "labels": [
+                "LAN",
+                "DSL",
+                "CONN",
+                "POWER"
+              ],
+              "x": 0.38,
+              "w": 0.3,
+              "y": 0.45,
+              "h": 0.06
+            },
+            {
+              "type": "label",
+              "text": "nbn",
+              "x": 0.3,
+              "w": 0.4,
+              "y": 0.62,
+              "h": 0.1,
+              "size": 5,
+              "color": "#1f2937",
+              "align": "center"
+            },
+            {
+              "type": "vent",
+              "pattern": "holes",
+              "x": 0.06,
+              "w": 0.88,
+              "y": 0.78,
+              "h": 0.16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nbn-fixed-wireless-ntd",
+      "brand": "nbn",
+      "model": "Fixed Wireless NTD",
+      "name": "nbn Fixed Wireless connection box",
+      "category": "modem",
+      "formFactor": "desktop",
+      "heightU": 2,
+      "width": {
+        "mm": 220
+      },
+      "depthMm": 127,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "rj45_1g": 4
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "nbn",
+        "fixed-wireless",
+        "lte",
+        "5g",
+        "modem",
+        "ntd",
+        "needs-shelf"
+      ],
+      "sourceUrl": "https://www.nbnco.com.au/content/dam/nbn/documents/support/access-technologies-mtm/fixed-wireless/nbn-fixed-wireless-user-guide.pdf.coredownload.pdf",
+      "verified": false,
+      "notes": "The indoor box for nbn Fixed Wireless, white, normally wall-mounted; modelled lying on its back with the port edge to the rear. Face about 220 × 127 mm (Internode's guide, original model; nbn says the current box is similar in size). Thickness, weight, power draw and port speed not published, so it takes 2U and the height is left blank. 4 × UNI-D data ports; the antenna cable and power lead sit under a tamper-proof cover and aren't cable ends in the planner.",
+      "powerInput": {
+        "connector": "dc_barrel",
+        "adapter": "wall",
+        "adapterIncluded": true,
+        "notes": "Plug-pack supplied by nbn; the box end is a fixed lead under the tamper-proof cover, not a barrel jack. Voltage not published."
+      },
+      "layout": {
+        "layoutVerified": false,
+        "sources": [
+          "https://www.nbnco.com.au/content/dam/nbn/documents/support/access-technologies-mtm/fixed-wireless/nbn-fixed-wireless-user-guide.pdf.coredownload.pdf",
+          "https://www.internode.on.net/pdf/products/nbn/preparing-for-nbn-wireless.pdf"
+        ],
+        "notes": "Port edge from nbn's 2024 user guide drawing: covered power and antenna lead on the left, 4 × UNI-D on the right. Lights (Power, Status, Outdoor unit, 3-step signal strength) sit under a cover on the face. Offsets estimated.",
+        "front": {
+          "regions": []
+        },
+        "rear": {
+          "regions": [
+            {
+              "type": "panel",
+              "x": 0.08,
+              "w": 0.24,
+              "y": 0.15,
+              "h": 0.7,
+              "color": "#e5e7eb",
+              "radius": 3
+            },
+            {
+              "type": "label",
+              "text": "POWER",
+              "x": 0.08,
+              "w": 0.24,
+              "y": 0.2,
+              "h": 0.12,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "label",
+              "text": "UNI-D",
+              "x": 0.5,
+              "w": 0.4,
+              "y": 0.15,
+              "h": 0.12,
+              "size": 2.2,
+              "color": "#6b7280",
+              "align": "center"
+            },
+            {
+              "type": "rj45",
+              "count": 4,
+              "portType": "rj45_1g",
+              "role": "UNI-D (data)",
+              "numbers": true,
+              "x": 0.5,
+              "w": 0.4,
+              "y": 0.32,
+              "h": 0.4
+            }
+          ]
+        },
+        "top": {
+          "regions": [
+            {
+              "type": "label",
+              "text": "nbn",
+              "x": 0.08,
+              "w": 0.2,
+              "y": 0.12,
+              "h": 0.1,
+              "size": 5,
+              "color": "#1d4ed8",
+              "align": "center"
+            },
+            {
+              "type": "panel",
+              "x": 0.75,
+              "w": 0.2,
+              "y": 0.1,
+              "h": 0.14,
+              "color": "#ffffff",
+              "radius": 1
+            },
+            {
+              "type": "panel",
+              "x": 0.38,
+              "w": 0.24,
+              "y": 0.78,
+              "h": 0.16,
+              "color": "#e5e7eb",
+              "radius": 4
+            },
+            {
+              "type": "leds",
+              "count": 6,
+              "colors": [
+                "#22c55e",
+                "#22c55e",
+                "#22c55e",
+                "#22c55e",
+                "#22c55e",
+                "#22c55e"
+              ],
+              "labels": [
+                "SIG",
+                "SIG",
+                "SIG",
+                "ODU",
+                "STATUS",
+                "POWER"
+              ],
+              "x": 0.4,
+              "w": 0.2,
+              "y": 0.84,
+              "h": 0.05
             }
           ]
         }
