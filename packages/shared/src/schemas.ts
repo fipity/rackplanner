@@ -455,7 +455,7 @@ export const PlacedPartSchema = z
   .strict();
 export type PlacedPart = z.infer<typeof PlacedPartSchema>;
 
-export const CABLE_TYPES = ['copper', 'fiber', 'dac', 'power', 'other'] as const;
+export const CABLE_TYPES = ['copper', 'fiber', 'dac', 'coax', 'power', 'other'] as const;
 export const CableTypeSchema = z.enum(CABLE_TYPES);
 export type CableType = z.infer<typeof CableTypeSchema>;
 

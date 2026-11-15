@@ -52,6 +52,8 @@ describe('cables', () => {
     expect(guessCableType({ placementId: 'a', port: { type: 'rj45_1g', index: 1 } }, { placementId: 'b', port: { type: 'keystone', index: 1 } })).toBe('copper');
     expect(guessCableType({ placementId: 'a', port: { type: 'sfp_plus', index: 1 } }, { placementId: 'b', port: { type: 'sfp_plus', index: 2 } })).toBe('dac');
     expect(guessCableType({ placementId: 'a', port: { type: 'outlet_c13', index: 1 } }, { placementId: 'b' })).toBe('power');
+    expect(guessCableType({ placementId: 'a', port: { type: 'coax', index: 1 } }, { placementId: 'b' })).toBe('coax');
+    expect(guessCableType({ placementId: 'a', port: { type: 'sc_duplex', index: 1 } }, { placementId: 'b', port: { type: 'sc_duplex', index: 2 } })).toBe('fiber');
   });
 
   it('suggests standard lengths with slack', () => {

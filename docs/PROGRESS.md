@@ -108,3 +108,7 @@
 - Labels with `align: center | end` now centre or right-align their text in the label box.
 - CM8200B redrawn from a product photo: black body, inner panel, nbn mark, captioned POWER / DOWNSTREAM / UPSTREAM / ONLINE LEDs, ARRIS / CM8200 (plain text, no logos); rear labels for CABLE, UNI-D1/2, RESET, 12V DC.
 - Test: tests/visual/turn.spec.ts (turn, rotated rear port order, cable to a turned port, stand back up), packages/shared/src/turn.test.ts.
+
+## Coax cable type (2026-11-15)
+
+- New `coax` cable type ("Coax (F-type)", teal). Cables from a coax port are guessed as coax, and SC duplex ports now guess fibre (they guessed copper before). The parts list names them as coax leads.
