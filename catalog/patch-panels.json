@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 7,
+  "version": 8,
   "title": "Patch panels, blanks & passive 19\"",
   "description": "Generic passive rack gear with typical dimensions.",
   "parts": [
@@ -621,6 +621,88 @@
               "rows": 1,
               "x": 0.03,
               "w": 0.94
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "generic-coax-panel-12-f-1u",
+      "brand": "Generic",
+      "model": "CP-12-F",
+      "name": "Coax patch panel 12× F-type 1U",
+      "category": "patch-panel",
+      "subcategory": "coax",
+      "formFactor": "rack",
+      "heightU": 1,
+      "width": "19in",
+      "depthMm": 40,
+      "mounting": "front",
+      "rackWidths": [
+        "19in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "coax": 12
+      },
+      "render": {
+        "style": "patch-panel",
+        "body": "black"
+      },
+      "tags": [
+        "generic",
+        "patch-panel",
+        "passive",
+        "coax",
+        "f-type"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Generic item; typical dimensions. F-type through-couplers (female both sides): bring the wall or antenna coax to the rear and patch the front to a modem or nbn HFC NTD with a short F-to-F lead.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "f_type",
+              "count": 12,
+              "portType": "coax",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.2,
+              "w": 0.6,
+              "y": 0.1,
+              "h": 0.62
+            },
+            {
+              "type": "label_strip",
+              "x": 0.22,
+              "w": 0.5599999999999999,
+              "y": 0.78,
+              "h": 0.12
+            }
+          ]
+        },
+        "rear": {
+          "style": "patch-panel",
+          "regions": [
+            {
+              "type": "f_type",
+              "count": 12,
+              "portType": "none",
+              "numbers": true,
+              "grouping": 6,
+              "rows": 1,
+              "x": 0.2,
+              "w": 0.6
             }
           ]
         }

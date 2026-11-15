@@ -112,3 +112,10 @@
 ## Coax cable type (2026-11-15)
 
 - New `coax` cable type ("Coax (F-type)", teal). Cables from a coax port are guessed as coax, and SC duplex ports now guess fibre (they guessed copper before). The parts list names them as coax leads.
+
+## Coax patch panels (2026-11-15)
+
+- New `generic-coax-panel-12-f-1u` (19") and `generic-coax-panel-6-f-10in` (10"): F-type through-couplers, so wall or antenna coax lands on the rear and a short lead runs from the front to a modem or the nbn HFC NTD. Generic, unverified.
+- Engine: a rear region with `portType: "none"` is a pass-through back for any connector with a back port type (now including `f_type` → coax), not only the patch family, so the NTD's F jack keeps its "Coax 1" name.
+- No wall socket: every placement sits in a rack, so a wall plate would need an off-rack area first.
+- Test: tests/visual/coax.spec.ts.

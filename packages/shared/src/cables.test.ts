@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { cableProblems, guessCableType, portOptions, sameEnd, suggestCableLengthM } from './cables.js';
 import { createDesign } from './design.js';
@@ -33,6 +34,14 @@ describe('cables', () => {
     expect(opts).toHaveLength(48);
     expect(opts[0]).toEqual({ type: 'keystone', index: 1, label: 'Keystone 1 (front)' });
     expect(opts[24]).toEqual({ type: 'keystone', index: 1, back: true, label: 'Keystone 1 (rear)' });
+  });
+
+  it('gives coax patch panels F-type rear couplers', () => {
+    const raw = JSON.parse(readFileSync(new URL('../../../catalog/patch-panels.json', import.meta.url), 'utf8')) as { parts: PartInput[] };
+    const panel = PartSchema.parse(raw.parts.find((p) => p.id === 'generic-coax-panel-12-f-1u'));
+    const opts = portOptions(panel);
+    expect(opts).toHaveLength(24);
+    expect(opts[12]).toEqual({ type: 'coax', index: 1, back: true, label: 'Coax (F-type) 1 (rear)' });
   });
 
   it('lets the front and rear of a patch port take one cable each', () => {

@@ -312,11 +312,12 @@ const BACK_PORT_TYPE: Partial<Record<Connector, PortType>> = {
   punchdown: 'keystone',
   lc: 'lc_duplex',
   sc: 'sc_duplex',
+  f_type: 'coax',
 };
 
 /** A rear patch region that doesn't count as ports of its own: the backs of the front jacks. */
 export function isPassThroughBack(r: Region, face: FaceName): r is PortRegion {
-  return face === 'rear' && isPortRegion(r) && r.portType === 'none' && CONNECTOR_SPECS[r.type].family === 'patch';
+  return face === 'rear' && isPortRegion(r) && r.portType === 'none' && BACK_PORT_TYPE[r.type] !== undefined;
 }
 
 function layoutPorts(r: PortRegion, box: Box, counters: Counters, out: FaceElement[], face?: FaceName) {
