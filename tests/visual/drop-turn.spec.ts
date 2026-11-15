@@ -51,4 +51,9 @@ test('a device that only fits a shelf lying down is turned on drop', async ({ pa
   const box = (await device.boundingBox())!;
   expect(box.width).toBeGreaterThan(box.height * 2);
   await page.screenshot({ path: 'test-results/drop-turn.png' });
+
+  // Shelf plan: the turned box shows its side, not a lid.
+  await page.getByRole('radio', { name: 'Shelves' }).click();
+  await expect(page.locator('svg[aria-label^="Top view of"] title', { hasText: 'on its side' })).toHaveCount(1);
+  await page.screenshot({ path: 'test-results/drop-turn-plan.png' });
 });

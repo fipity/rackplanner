@@ -132,3 +132,7 @@ All white, desktop, `verified: false`, `layoutVerified: false`; tests/visual/nbn
 
 - `resolveDrop`: when desktop gear doesn't fit a shelf in its current orientation but does in the other (`<id>@side` or back upright), the candidate takes the other partId. The ghost shows it turned, the drag tooltip adds "on its side" / "upright", and the drop toasts it. Moving an existing placement now carries `partId` through.
 - Tests: turn.test.ts (drop upright, drop turned, stand back up), tests/visual/drop-turn.spec.ts (real drag from the catalog).
+
+## Shelf plan of turned gear (2026-11-15)
+
+- ShelfPlanView draws a device on its side as its plain left side panel (body colour, thin front/rear panel edges) instead of the generated lid with slot vents and model name; the hover title adds "on its side". Checked in tests/visual/drop-turn.spec.ts.

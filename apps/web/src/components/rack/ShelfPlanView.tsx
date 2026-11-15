@@ -2,7 +2,8 @@
  * Top-down plans of every shelf: the usable tray area with each device's
  * footprint (from its top layout), front edge at the bottom. Overhangs past
  * the side lips or the back of the tray are hatched red, so you can see how
- * devices physically fit side by side.
+ * devices physically fit side by side. Gear laid on its side shows its
+ * plain side panel rather than its lid.
  */
 import {
   displayName,
@@ -11,6 +12,7 @@ import {
   partWidthMm,
   resolveFace,
   shelfGeometry,
+  uprightPart,
   type Catalog,
   type Design,
   type Part,
@@ -95,7 +97,10 @@ function ShelfPlan({ design, catalog, shelf, leds }: { design: Pick<Design, 'rac
         </text>
 
         {items.map(({ p, part, x, y, w, d, over }) => {
-          const face = resolveFace(part, 'top', w, d);
+          // On its side, the top is the device's left side: a plain panel, no lid detail.
+          const onSide = uprightPart(part) !== undefined;
+          const lid = resolveFace(part, 'top', w, d);
+          const face = onSide ? { ...lid, elements: [] } : lid;
           const t = PRESETS[face.preset];
           const ctx: DrawCtx = { preset: face.preset, t, lod: 'high', leds, model: part.model };
           const full = displayName(p, part);
@@ -109,6 +114,13 @@ function ShelfPlan({ design, catalog, shelf, leds }: { design: Pick<Design, 'rac
               <g transform={`translate(${x} ${y})`}>
                 <Elements elements={face.elements} ctx={ctx} />
               </g>
+              {onSide && (
+                // Edges of the front and rear panels, seen edge-on.
+                <g fill={t.edge} opacity={0.9}>
+                  <rect x={x + 0.6} y={y + d - 2.2} width={w - 1.2} height={1.6} rx={0.6} />
+                  <rect x={x + 0.6} y={y + 0.6} width={w - 1.2} height={1.6} rx={0.6} />
+                </g>
+              )}
               {over && (
                 <>
                   {x < 0 && <rect x={x} y={Math.max(y, 0)} width={-x} height={d} fill="url(#rp-over)" />}
@@ -124,7 +136,7 @@ function ShelfPlan({ design, catalog, shelf, leds }: { design: Pick<Design, 'rac
               <text x={x + w / 2} y={y + d - size * 0.75 - 4} textAnchor="middle" fontSize={size * 0.8} fill="#cbd5e1" fontFamily={FONT}>
                 {w} × {d} mm
               </text>
-              <title>{`${full}: ${w} × ${d} mm${over ? ' (overhangs the shelf)' : ''}`}</title>
+              <title>{`${full}: ${w} × ${d} mm${onSide ? ', on its side' : ''}${over ? ' (overhangs the shelf)' : ''}`}</title>
             </g>
           );
         })}
