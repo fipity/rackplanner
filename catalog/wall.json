@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 1,
+  "version": 2,
   "title": "Wall plates and outlets",
   "description": "Wall sockets and plates that go on the wall area beside the rack: data, coax, phone, fibre and power.",
   "parts": [
@@ -433,6 +433,363 @@
               "w": 0.8,
               "y": 0.2,
               "h": 0.6
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-gpo-single-au",
+      "brand": "Generic",
+      "model": "GPO-1-AU",
+      "name": "Single power point (AU/NZ)",
+      "category": "wall-outlet",
+      "subcategory": "power",
+      "formFactor": "wall",
+      "heightU": 3,
+      "heightMm": 115,
+      "width": {
+        "mm": 72
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_au": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "power",
+        "gpo",
+        "outlet",
+        "power point",
+        "au"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Australian single power point, 72 × 115 mm, mounted portrait. One switched 10 A socket.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "outlet_au",
+              "count": 1,
+              "x": 0.15,
+              "w": 0.7,
+              "y": 0.15,
+              "h": 0.5
+            },
+            {
+              "type": "switch",
+              "variant": "rocker",
+              "count": 1,
+              "x": 0.38,
+              "y": 0.74,
+              "w": 0.24,
+              "h": 0.1
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-gpo-double-au-usb",
+      "brand": "Generic",
+      "model": "GPO-2-AU-USB",
+      "name": "Double power point with USB-A + USB-C (AU/NZ)",
+      "category": "wall-outlet",
+      "subcategory": "power",
+      "formFactor": "wall",
+      "heightU": 2,
+      "heightMm": 72,
+      "width": {
+        "mm": 115
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_au": 2,
+        "usb": 1,
+        "usb_c": 1
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "power",
+        "gpo",
+        "outlet",
+        "power point",
+        "au",
+        "usb",
+        "usb-c"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "Australian double power point with USB charging outlets, 115 × 72 mm, landscape. Two switched 10 A sockets plus USB-A and USB-C, so 5 V gear (a Raspberry Pi, the UCG-Ultra) can skip its plug-pack. Check the USB-C output can supply what the device needs (often 5 V / 3 A).",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "outlet_au",
+              "count": 2,
+              "x": 0.04,
+              "w": 0.7,
+              "y": 0.2,
+              "h": 0.6
+            },
+            {
+              "type": "usb_a",
+              "count": 1,
+              "portType": "usb",
+              "role": "Charging",
+              "x": 0.78,
+              "w": 0.16,
+              "y": 0.22,
+              "h": 0.25
+            },
+            {
+              "type": "usb_c",
+              "count": 1,
+              "portType": "usb_c",
+              "speed": "USB-C PD",
+              "role": "Charging",
+              "x": 0.78,
+              "w": 0.16,
+              "y": 0.55,
+              "h": 0.25
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-wall-outlet-uk-double",
+      "brand": "Generic",
+      "model": "GPO-2-UK",
+      "name": "Double power point (UK, BS 1363)",
+      "category": "wall-outlet",
+      "subcategory": "power",
+      "formFactor": "wall",
+      "heightU": 2,
+      "heightMm": 86,
+      "width": {
+        "mm": 146
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_uk": 2
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "power",
+        "gpo",
+        "outlet",
+        "power point",
+        "uk"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "UK twin switched socket, 146 × 86 mm, landscape. Two 13 A BS 1363 sockets.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "outlet_uk",
+              "count": 2,
+              "x": 0.06,
+              "w": 0.88,
+              "y": 0.12,
+              "h": 0.76
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-wall-outlet-schuko-double",
+      "brand": "Generic",
+      "model": "GPO-2-SCHUKO",
+      "name": "Double power point (EU Schuko)",
+      "category": "wall-outlet",
+      "subcategory": "power",
+      "formFactor": "wall",
+      "heightU": 2,
+      "heightMm": 80,
+      "width": {
+        "mm": 151
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_schuko": 2
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "power",
+        "gpo",
+        "outlet",
+        "power point",
+        "eu",
+        "schuko"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "European double Schuko (CEE 7/3) socket, about 151 × 80 mm, landscape.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "outlet_schuko",
+              "count": 2,
+              "x": 0.06,
+              "w": 0.88,
+              "y": 0.08,
+              "h": 0.84
+            }
+          ]
+        },
+        "rear": {
+          "regions": []
+        }
+      }
+    },
+    {
+      "id": "generic-wall-outlet-nema-duplex",
+      "brand": "Generic",
+      "model": "GPO-2-NEMA",
+      "name": "Duplex power outlet (US, NEMA 5-15R)",
+      "category": "wall-outlet",
+      "subcategory": "power",
+      "formFactor": "wall",
+      "heightU": 3,
+      "heightMm": 114,
+      "width": {
+        "mm": 70
+      },
+      "depthMm": 12,
+      "mounting": "front",
+      "rackWidths": [
+        "19in",
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {
+        "outlet_nema": 2
+      },
+      "render": {
+        "style": "desktop",
+        "body": "white"
+      },
+      "tags": [
+        "generic",
+        "wall",
+        "power",
+        "gpo",
+        "outlet",
+        "power point",
+        "us",
+        "nema"
+      ],
+      "sourceUrl": null,
+      "verified": false,
+      "notes": "US duplex receptacle on a standard single-gang plate, 70 × 114 mm, portrait. Two 15 A NEMA 5-15R outlets.",
+      "layout": {
+        "layoutVerified": false,
+        "sources": [],
+        "notes": "Generic part: typical layout, positions estimated.",
+        "front": {
+          "regions": [
+            {
+              "type": "outlet_nema",
+              "count": 2,
+              "rows": 2,
+              "x": 0.15,
+              "w": 0.7,
+              "y": 0.08,
+              "h": 0.84
             }
           ]
         },

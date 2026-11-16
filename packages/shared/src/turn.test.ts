@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildBom, buildDesignExport } from './exchange.js';
 import { createDesign } from './design.js';
-import { checkPlacement, occupancyOf, partWidthMm, resolveDrop, type Catalog } from './placement.js';
+import { checkPlacement, findFreeSlot, findShelfSlot, findWallSlot, occupancyOf, partWidthMm, resolveDrop, type Catalog } from './placement.js';
 import { PartSchema, type Part, type PartInput, type PlacedPart, type Rack } from './schemas.js';
 import { SIDE_SUFFIX, canTurn, turnedPart, uprightId, uprightPart, withTurnedParts } from './turn.js';
 
@@ -77,6 +77,24 @@ describe('turning shelf gear on its side', () => {
   });
 });
 
+describe('turning to fit elsewhere', () => {
+  it('turns on the wall when it is too tall to stand up there', () => {
+    // A 2U-tall wall: the 3U upright box can't fit anywhere, flat it can.
+    const wallRack: Rack = { ...rack, heightU: 2, wall: true };
+    const r = resolveDrop({ rack: wallRack, placements: [] }, catalog, { partId: 'ntd', rawBottomU: 2, rawXMm: 20, mounting: 'front', wall: true })!;
+    expect(r.check.ok).toBe(true);
+    expect(r.candidate).toMatchObject({ partId: `ntd${SIDE_SUFFIX}`, wall: true, bottomU: 2 });
+    expect(findWallSlot({ rack: wallRack, placements: [] }, catalog, 'ntd')).toMatchObject({ partId: `ntd${SIDE_SUFFIX}` });
+    // With room to stand, it stays upright.
+    expect(resolveDrop({ rack: { ...rack, wall: true }, placements: [] }, catalog, { partId: 'ntd', rawBottomU: 4, rawXMm: 20, mounting: 'front', wall: true })!.candidate.partId).toBe('ntd');
+  });
+
+  it('turns loose in the rack when only that fits, and finds free slots the same way', () => {
+    const small: Rack = { ...rack, heightU: 2 };
+    expect(findFreeSlot({ rack: small, placements: [] }, catalog, 'ntd', 'front')).toMatchObject({ partId: `ntd${SIDE_SUFFIX}` });
+  });
+});
+
 describe('dropping onto a shelf', () => {
   const s = pp({ id: 's', partId: 'shelf-1u', bottomU: 3 });
   const above = pp({ id: 'sw', partId: 'sw-1u', bottomU: 4 });
@@ -84,9 +102,22 @@ describe('dropping onto a shelf', () => {
     resolveDrop({ rack, placements }, catalog, { partId, rawBottomU: 3, rawXMm: 20, mounting: 'front', view: 'front', ...(placementId ? { placementId } : {}) });
 
   it('keeps a device upright when it fits', () => {
+    const short = part({ id: 'short', formFactor: 'desktop', heightU: 3, heightMm: 120, width: { mm: 44 }, depthMm: 132, render: { style: 'desktop' } });
+    const cat: Catalog = new Map([...catalog, ...withTurnedParts([short]).map((p) => [p.id, p] as const)]);
+    const r = resolveDrop({ rack, placements: [s] }, cat, { partId: 'short', rawBottomU: 3, rawXMm: 20, mounting: 'front', view: 'front' })!;
+    expect(r.check.ok).toBe(true);
+    expect(r.candidate).toMatchObject({ partId: 'short', parentId: 's' });
+  });
+
+  it('lays a device on its side when it is taller than the room its U span leaves above the tray', () => {
+    // 132 mm standing, but 3U on a shelf leaves about 129 mm (the nbn HFC NTD).
     const r = drop([s], 'ntd')!;
     expect(r.check.ok).toBe(true);
-    expect(r.candidate).toMatchObject({ partId: 'ntd', parentId: 's' });
+    expect(r.candidate).toMatchObject({ partId: `ntd${SIDE_SUFFIX}`, parentId: 's' });
+  });
+
+  it('click-to-add and moving onto a shelf turn the same way', () => {
+    expect(findShelfSlot({ rack, placements: [s] }, catalog, 'ntd')).toMatchObject({ partId: `ntd${SIDE_SUFFIX}`, parentId: 's' });
   });
 
   it('lays a device on its side when only that fits under the gear above', () => {

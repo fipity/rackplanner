@@ -165,8 +165,8 @@ export function handleDragEnd(_e: DragEndEvent): void {
       return; // no-op move: don't pollute undo history
     }
     store.updatePlacement(active.placementId, { partId: c.partId, bottomU: c.bottomU, xMm: c.xMm, mounting: c.mounting, parentId: c.parentId, wall: c.wall });
-    if (c.wall && !existing?.wall) toast('Mounted on the wall');
-    else if (c.partId !== existing?.partId) toast(turnedMessage(c.partId));
+    if (c.partId !== existing?.partId) toast(turnedMessage(c.partId, !!c.wall));
+    else if (c.wall && !existing?.wall) toast('Mounted on the wall');
     else if (c.parentId && existing?.parentId !== c.parentId) toast('Placed on shelf');
     return;
   }
@@ -174,14 +174,15 @@ export function handleDragEnd(_e: DragEndEvent): void {
   const id = newId('p_');
   store.addPlacement({ ...c, id });
   useUiStore.getState().select(id);
-  if (c.wall) return;
-  if (c.partId !== active.partId) toast(turnedMessage(c.partId));
+  if (c.partId !== active.partId) toast(turnedMessage(c.partId, !!c.wall));
+  else if (c.wall) return;
   else if (c.parentId) toast('Placed on shelf');
 }
 
-/** The drop turned the device to make it fit the shelf. */
-function turnedMessage(partId: string): string {
-  return partId.endsWith(SIDE_SUFFIX) ? 'Laid on its side to fit the shelf (R to stand it up)' : 'Stood upright to fit the shelf';
+/** The device was turned to make it fit (the shelf, the room above it, or the wall). */
+export function turnedMessage(partId: string, wall = false): string {
+  const where = wall ? 'on the wall' : 'there';
+  return partId.endsWith(SIDE_SUFFIX) ? `Laid on its side to fit ${where} (R to stand it up)` : `Stood upright to fit ${where}`;
 }
 
 export function handleDragCancel(): void {

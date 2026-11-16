@@ -15,7 +15,7 @@
  *    xMm is relative to the shelf's usable area.
  */
 import type { Design, Mounting, Part, PlacedPart, Rack } from './schemas.js';
-import { EPS, RACK_OPENING_MM, type RackWidth } from './units.js';
+import { EPS, RACK_OPENING_MM, U_MM, type RackWidth } from './units.js';
 import { SIDE_SUFFIX, uprightId } from './turn.js';
 
 export type Catalog = ReadonlyMap<string, Part>;
@@ -392,6 +392,50 @@ export function snapBottomU(part: Part, rawBottomU: number, rack: Rack): number 
  * Candidate horizontal positions for a top-level part: left, centre, right,
  * and flush against neighbours that share its U range.
  */
+/** Room above a shelf's tray within the U span an item on it reserves (mm). */
+export function shelfHeadroomMm(part: Part, shelfPart: Part): number {
+  return part.heightU * U_MM - Math.min(4, shelfPart.heightU * U_MM * 0.12);
+}
+
+/** Is a device taller than the room its U span leaves above a shelf's tray? */
+export function tooTallForShelf(part: Part, shelfPart: Part): boolean {
+  return part.heightMm !== undefined && part.heightMm > shelfHeadroomMm(part, shelfPart) + EPS;
+}
+
+/** The part in its current orientation, then (for shelf gear that can turn) the other one. */
+export function orientationsOf(part: Part, catalog: Catalog): Part[] {
+  const other = catalog.get(part.id.endsWith(SIDE_SUFFIX) ? uprightId(part.id) : part.id + SIDE_SUFFIX);
+  return other ? [part, other] : [part];
+}
+
+/** A valid placement that also stands within its shelf's headroom (no "too tall" warning). */
+function fitsCleanly(design: Pick<Design, 'rack' | 'placements'>, candidate: PlacedPart, check: PlacementCheck, catalog: Catalog): boolean {
+  if (!check.ok) return false;
+  if (candidate.parentId === undefined) return true;
+  const part = catalog.get(candidate.partId);
+  const shelf = design.placements.find((q) => q.id === candidate.parentId);
+  const shelfPart = shelf && catalog.get(shelf.partId);
+  return !part || !shelfPart || !tooTallForShelf(part, shelfPart);
+}
+
+/**
+ * Pick between orientations: the first that fits cleanly; else, of those that
+ * fit with a warning, the one taking fewest U (a tall box lies down); else the
+ * first attempt (to show what's wrong).
+ */
+function pickOrientation<T extends { candidate: PlacedPart; check: PlacementCheck }>(
+  design: Pick<Design, 'rack' | 'placements'>,
+  catalog: Catalog,
+  tries: readonly (T | null)[],
+): T | null {
+  const clean = tries.find((t) => t && fitsCleanly(design, t.candidate, t.check, catalog));
+  if (clean) return clean;
+  const heightOf = (t: T) => catalog.get(t.candidate.partId)?.heightU ?? Infinity;
+  const ok = tries.filter((t): t is T => !!t?.check.ok);
+  if (ok.length) return ok.reduce((best, t) => (heightOf(t) < heightOf(best) ? t : best));
+  return tries.find((t) => t) ?? null;
+}
+
 export function xCandidates(
   design: Pick<Design, 'rack' | 'placements'>,
   part: Part,
@@ -449,10 +493,12 @@ export function resolveDrop(
   if (!part) return null;
   const existing = req.placementId ? design.placements.find((p) => p.id === req.placementId) : undefined;
   const ignore = existing ? [existing.id, ...descendantsOf(design.placements, existing.id)] : [];
-  if (req.wall) return resolveWallDrop(design, catalog, part, existing, req, newId, ignore);
+  // On the wall, gear turns when it only fits the other way (e.g. near the top).
+  if (req.wall) return pickOrientation(design, catalog, orientationsOf(part, catalog).map((p) => resolveWallDrop(design, catalog, p, existing, req, newId, ignore)));
 
   // Desktop gear dropped onto a shelf sits on it. If it only fits the shelf in
-  // its other orientation (on its side, or upright again), it turns.
+  // its other orientation (on its side, or upright again), or is too tall for
+  // the room above the tray standing up, it turns.
   const onShelf = (p: Part): DropResolution | null => {
     const shelf = findShelfTarget(design, catalog, p, req.rawBottomU, req.rawXMm, req.view, ignore);
     if (!shelf) return null;
@@ -472,20 +518,33 @@ export function resolveDrop(
     }
     return firstOnShelf;
   };
-  const asIs = onShelf(part);
-  if (asIs?.check.ok) return asIs;
-  const other = catalog.get(part.id.endsWith(SIDE_SUFFIX) ? uprightId(part.id) : part.id + SIDE_SUFFIX);
-  const turned = other ? onShelf(other) : null;
-  if (turned?.check.ok) return turned;
-  if (asIs) return asIs;
+  const shelfPick = pickOrientation(design, catalog, orientationsOf(part, catalog).map(onShelf));
+  if (shelfPick) return shelfPick;
 
+  // Loose in the rack: turns too when only the other orientation fits.
+  return pickOrientation(
+    design,
+    catalog,
+    orientationsOf(part, catalog).map((p) => resolveRackDrop(design, catalog, p, existing, req, newId, ignore)),
+  )!;
+}
+
+function resolveRackDrop(
+  design: Pick<Design, 'rack' | 'placements'>,
+  catalog: Catalog,
+  part: Part,
+  existing: PlacedPart | undefined,
+  req: DropRequest,
+  newId: string,
+  ignore: readonly string[],
+): DropResolution {
   const bottomU = snapBottomU(part, req.rawBottomU, design.rack);
   const xs = xCandidates(design, part, bottomU, catalog, ignore).sort(
     (a, b) => Math.abs(a - req.rawXMm) - Math.abs(b - req.rawXMm),
   );
 
   const base: PlacedPart = existing
-    ? { ...existing, parentId: undefined, bottomU, xMm: xs[0] ?? 0, mounting: req.mounting }
+    ? { ...existing, partId: part.id, parentId: undefined, bottomU, xMm: xs[0] ?? 0, mounting: req.mounting }
     : { id: newId, partId: part.id, bottomU, xMm: xs[0] ?? 0, mounting: req.mounting };
   if (base.parentId === undefined) delete base.parentId;
   delete base.wall;
@@ -576,6 +635,22 @@ export function findWallSlot(
   newId = '__candidate__',
 ): PlacedPart | null {
   const part = catalog.get(partId);
+  if (!part) return null;
+  for (const p of orientationsOf(part, catalog)) {
+    const slot = wallSlotFor(design, catalog, p.id, nearU, newId);
+    if (slot) return slot;
+  }
+  return null;
+}
+
+function wallSlotFor(
+  design: Pick<Design, 'rack' | 'placements'>,
+  catalog: Catalog,
+  partId: string,
+  nearU: number | undefined,
+  newId: string,
+): PlacedPart | null {
+  const part = catalog.get(partId);
   if (!part || !canGoOnWall(part)) return null;
   const step = uStep(part);
   const maxBottom = design.rack.heightU + 1 - part.heightU;
@@ -604,6 +679,23 @@ export function findFreeSlot(
   mounting: Mounting,
   nearU?: number,
   newId = '__candidate__',
+): PlacedPart | null {
+  const part = catalog.get(partId);
+  if (!part) return null;
+  for (const p of orientationsOf(part, catalog)) {
+    const slot = freeSlotFor(design, catalog, p.id, mounting, nearU, newId);
+    if (slot) return slot;
+  }
+  return null;
+}
+
+function freeSlotFor(
+  design: Pick<Design, 'rack' | 'placements'>,
+  catalog: Catalog,
+  partId: string,
+  mounting: Mounting,
+  nearU: number | undefined,
+  newId: string,
 ): PlacedPart | null {
   const part = catalog.get(partId);
   if (!part) return null;
@@ -727,16 +819,24 @@ export function findShelfSlot(
   const shelves = design.placements
     .filter((p) => p.parentId === undefined && catalog.get(p.partId)?.shelf)
     .sort((a, b) => Number(b.id === preferShelfId) - Number(a.id === preferShelfId) || b.bottomU - a.bottomU);
-  for (const shelf of shelves) {
-    const geo = shelfGeometry(design.placements, shelf, catalog);
-    if (!geo) continue;
-    const mounting: Mounting = geo.faces.includes('front') ? 'front' : 'rear';
-    for (const xMm of shelfXCandidates(design.placements, geo, part, catalog)) {
-      const candidate: PlacedPart = { id: newId, partId, parentId: shelf.id, bottomU: geo.baseU, xMm, mounting };
-      if (checkPlacement(design, candidate, catalog).ok) return candidate;
+  // Each orientation's first valid spot; the turned one wins if only it stands clear of the shelf above.
+  const tries = orientationsOf(part, catalog).map((p) => {
+    let fallback: { candidate: PlacedPart; check: PlacementCheck } | null = null;
+    for (const shelf of shelves) {
+      const geo = shelfGeometry(design.placements, shelf, catalog);
+      if (!geo) continue;
+      const mounting: Mounting = geo.faces.includes('front') ? 'front' : 'rear';
+      for (const xMm of shelfXCandidates(design.placements, geo, p, catalog)) {
+        const candidate: PlacedPart = { id: newId, partId: p.id, parentId: shelf.id, bottomU: geo.baseU, xMm, mounting };
+        const check = checkPlacement(design, candidate, catalog);
+        if (!check.ok) continue;
+        if (fitsCleanly(design, candidate, check, catalog)) return { candidate, check };
+        fallback ??= { candidate, check };
+      }
     }
-  }
-  return null;
+    return fallback;
+  });
+  return pickOrientation(design, catalog, tries)?.candidate ?? null;
 }
 
 export type Alignment = 'left' | 'centre' | 'right';

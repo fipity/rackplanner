@@ -18,6 +18,8 @@ import {
   displayName,
   occupancyOf,
   partWidthMm,
+  shelfHeadroomMm,
+  tooTallForShelf,
   type Catalog,
 } from './placement.js';
 import { airflowGroups, wattsToBtuH } from './airflow.js';
@@ -226,8 +228,8 @@ export function computeStats(
       }
       if (shelfPart && part.heightMm !== undefined) {
         // Room above the tray within the U span the item reserves.
-        const room = part.heightU * U_MM - Math.min(4, shelfPart.heightU * U_MM * 0.12);
-        if (part.heightMm > room + EPS) {
+        const room = shelfHeadroomMm(part, shelfPart);
+        if (tooTallForShelf(part, shelfPart)) {
           warnings.push({
             code: 'too-tall',
             severity: 'warning',

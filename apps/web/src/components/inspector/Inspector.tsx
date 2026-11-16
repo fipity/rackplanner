@@ -471,6 +471,7 @@ function RackSummary() {
           ['R', 'turn shelf device on its side'],
           ['+ / − / 0', 'zoom / fit'],
           ['Ctrl+scroll', 'zoom'],
+          ['Right-drag', 'pan around'],
         ].map(([k, v]) => (
           <div key={k} className="flex justify-between gap-2">
             <kbd className="font-mono text-zinc-700 dark:text-zinc-300">{k}</kbd>

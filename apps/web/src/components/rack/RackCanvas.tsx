@@ -11,6 +11,7 @@ import { drawingExtent, rackLayout } from './geometry';
 import { RackView, type PlacementWrapperProps, type RackGhost } from './RackView';
 import { lodForScale } from '../faceplates/Faceplate';
 import { ShelfPlanView } from './ShelfPlanView';
+import { cx } from '../ui';
 
 /** What a screen reader announces for a device: its label or product name, and how it sits. */
 export function placementA11yName(placement: PlacedPart, part: Part): string {
@@ -59,6 +60,9 @@ export function RackCanvas() {
   const drag = useDragStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 800, h: 600 });
+  // Right-button drag panning: pointer and scroll position when it started.
+  const pan = useRef<{ id: number; x: number; y: number; left: number; top: number } | null>(null);
+  const [panning, setPanning] = useState(false);
 
   useLayoutEffect(() => {
     const el = containerRef.current;
@@ -101,12 +105,39 @@ export function RackCanvas() {
   return (
     <div
       ref={containerRef}
-      className="relative h-full w-full overflow-auto"
+      className={cx('relative h-full w-full overflow-auto', panning && 'cursor-grabbing [&_*]:!cursor-grabbing')}
       onClick={() => {
         select(null);
         selectCable(null);
       }}
+      // Hold the right mouse button and drag to pan around the rack.
+      onContextMenu={(e) => e.preventDefault()}
+      onPointerDown={(e) => {
+        if (e.button !== 2 || e.pointerType !== 'mouse') return;
+        const el = containerRef.current;
+        if (!el) return;
+        e.preventDefault();
+        el.setPointerCapture(e.pointerId);
+        pan.current = { id: e.pointerId, x: e.clientX, y: e.clientY, left: el.scrollLeft, top: el.scrollTop };
+        setPanning(true);
+      }}
+      onPointerUp={(e) => {
+        if (pan.current?.id !== e.pointerId) return;
+        pan.current = null;
+        setPanning(false);
+      }}
+      onPointerCancel={() => {
+        pan.current = null;
+        setPanning(false);
+      }}
       onPointerMove={(e) => {
+        const p = pan.current;
+        if (p && p.id === e.pointerId) {
+          const el = containerRef.current!;
+          el.scrollLeft = p.left - (e.clientX - p.x);
+          el.scrollTop = p.top - (e.clientY - p.y);
+          return;
+        }
         if (!pendingEnd) return;
         const ctm = rackSvgRef.current?.getScreenCTM();
         if (!ctm) return;

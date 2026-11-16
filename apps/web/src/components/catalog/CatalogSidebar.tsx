@@ -44,7 +44,8 @@ function addToRack(part: Part) {
     addPlacement({ ...shelfSlot, id });
     useUiStore.getState().select(id);
     const shelf = design.placements.find((p) => p.id === shelfSlot.parentId);
-    toast(`${part.name} placed on ${shelf ? displayName(shelf, catalog.get(shelf.partId)) : 'a shelf'}`);
+    const turned = shelfSlot.partId !== part.id ? ', on its side to fit (R to stand it up)' : '';
+    toast(`${part.name} placed on ${shelf ? displayName(shelf, catalog.get(shelf.partId)) : 'a shelf'}${turned}`);
     return;
   }
   const slot = findFreeSlot(design, catalog, part.id, mounting);

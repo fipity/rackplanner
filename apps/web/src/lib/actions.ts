@@ -19,6 +19,7 @@ import { useCatalogStore } from '../store/catalogStore';
 import { useDesignStore } from '../store/designStore';
 import { useUiStore } from '../store/uiStore';
 import { toast } from './toast';
+import { turnedMessage } from '../components/rack/dnd';
 
 function selected() {
   const id = useUiStore.getState().selectedId;
@@ -151,7 +152,8 @@ export function moveSelectedToWall(): void {
     toast(`No room on the wall for ${part.name}`, 'error');
     return;
   }
-  updatePlacement(p.id, { bottomU: slot.bottomU, xMm: slot.xMm, mounting: 'front', parentId: undefined, wall: true });
+  updatePlacement(p.id, { partId: slot.partId, bottomU: slot.bottomU, xMm: slot.xMm, mounting: 'front', parentId: undefined, wall: true });
+  if (slot.partId !== p.partId) toast(turnedMessage(slot.partId, true));
 }
 
 /** Move the selected wall device back into the rack (onto a shelf if it's desktop gear). */
@@ -168,6 +170,7 @@ export function moveSelectedIntoRack(): void {
     toast(`No room in the rack for ${part.name}`, 'error');
     return;
   }
-  updatePlacement(p.id, { bottomU: slot.bottomU, xMm: slot.xMm, mounting: slot.mounting, parentId: slot.parentId, wall: undefined });
-  if (slot.parentId) toast('Placed on shelf');
+  updatePlacement(p.id, { partId: slot.partId, bottomU: slot.bottomU, xMm: slot.xMm, mounting: slot.mounting, parentId: slot.parentId, wall: undefined });
+  if (slot.partId !== p.partId) toast(turnedMessage(slot.partId));
+  else if (slot.parentId) toast('Placed on shelf');
 }
