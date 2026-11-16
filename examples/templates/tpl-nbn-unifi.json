@@ -1,0 +1,276 @@
+{
+  "id": "tpl-nbn-unifi",
+  "name": "nbn + UniFi starter",
+  "description": "DeskPi RackMate T1 with the nbn FTTP box on the wall, a UniFi Cloud Gateway Ultra and Lite 8 PoE switch, and a home server. Swap the nbn box for your connection type.",
+  "design": {
+    "schemaVersion": 2,
+    "id": "tpl-nbn-unifi",
+    "name": "nbn + UniFi starter",
+    "rack": {
+      "width": "10in",
+      "heightU": 8,
+      "depthMm": 212,
+      "numbering": "bottom-up",
+      "frame": "rackmate-t1",
+      "glassDoor": false,
+      "wall": true
+    },
+    "expectedPoeLoadW": null,
+    "placements": [
+      {
+        "id": "p1",
+        "partId": "nokia-xs-010x-q-nbn-fttp",
+        "bottomU": 6,
+        "xMm": 60,
+        "mounting": "front",
+        "wall": true,
+        "label": "nbn FTTP"
+      },
+      {
+        "id": "p2",
+        "partId": "generic-fibre-wall-outlet-sc-apc",
+        "bottomU": 7,
+        "xMm": 60,
+        "mounting": "front",
+        "wall": true
+      },
+      {
+        "id": "p3",
+        "partId": "generic-gpo-double-au",
+        "bottomU": 2,
+        "xMm": 60,
+        "mounting": "front",
+        "wall": true
+      },
+      {
+        "id": "p4",
+        "partId": "deskpi-rackmate-patch-12-keystone-1u",
+        "bottomU": 8,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Patch"
+      },
+      {
+        "id": "p5",
+        "partId": "deskpi-rackmate-shelf-1u",
+        "bottomU": 7,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p6",
+        "partId": "ubiquiti-ucg-ultra",
+        "bottomU": 7,
+        "xMm": 0,
+        "mounting": "front",
+        "parentId": "p5",
+        "label": "Gateway"
+      },
+      {
+        "id": "p7",
+        "partId": "deskpi-rackmate-shelf-1u",
+        "bottomU": 6,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p8",
+        "partId": "ubiquiti-usw-lite-8-poe",
+        "bottomU": 6,
+        "xMm": 0,
+        "mounting": "front",
+        "parentId": "p7",
+        "label": "Switch"
+      },
+      {
+        "id": "p9",
+        "partId": "deskpi-rackmate-vent-1u",
+        "bottomU": 5,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p10",
+        "partId": "deskpi-rackmate-shelf-1u",
+        "bottomU": 4,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p11",
+        "partId": "lenovo-thinkcentre-m920q",
+        "bottomU": 4,
+        "xMm": 0,
+        "mounting": "front",
+        "parentId": "p10",
+        "label": "Home server"
+      },
+      {
+        "id": "p12",
+        "partId": "deskpi-rackmate-blank-2u",
+        "bottomU": 2,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p13",
+        "partId": "power-automatix-pa-pdu6x",
+        "bottomU": 1,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Power"
+      }
+    ],
+    "cables": [
+      {
+        "id": "c1",
+        "a": {
+          "placementId": "p2",
+          "port": {
+            "type": "sc_simplex",
+            "index": 1
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "sc_simplex",
+            "index": 1
+          }
+        },
+        "type": "copper",
+        "color": "#22c55e",
+        "label": "Fibre",
+        "lengthM": 0.5
+      },
+      {
+        "id": "c2",
+        "a": {
+          "placementId": "p1",
+          "port": {
+            "type": "rj45_10g",
+            "index": 1
+          }
+        },
+        "b": {
+          "placementId": "p6",
+          "port": {
+            "type": "rj45_2_5g",
+            "index": 1
+          }
+        },
+        "type": "copper",
+        "color": "#f97316",
+        "label": "WAN (UNI-D)",
+        "lengthM": 1
+      },
+      {
+        "id": "c3",
+        "a": {
+          "placementId": "p6",
+          "port": {
+            "type": "rj45_1g",
+            "index": 1
+          }
+        },
+        "b": {
+          "placementId": "p8",
+          "port": {
+            "type": "rj45_1g",
+            "index": 1
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "label": "Uplink",
+        "lengthM": 0.15
+      },
+      {
+        "id": "c4",
+        "a": {
+          "placementId": "p8",
+          "port": {
+            "type": "rj45_1g",
+            "index": 2
+          }
+        },
+        "b": {
+          "placementId": "p4",
+          "port": {
+            "type": "keystone",
+            "index": 1
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "label": "PoE 1",
+        "lengthM": 0.2
+      },
+      {
+        "id": "c5",
+        "a": {
+          "placementId": "p8",
+          "port": {
+            "type": "rj45_1g",
+            "index": 3
+          }
+        },
+        "b": {
+          "placementId": "p4",
+          "port": {
+            "type": "keystone",
+            "index": 2
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "label": "PoE 2",
+        "lengthM": 0.2
+      },
+      {
+        "id": "c6",
+        "a": {
+          "placementId": "p8",
+          "port": {
+            "type": "rj45_1g",
+            "index": 4
+          }
+        },
+        "b": {
+          "placementId": "p4",
+          "port": {
+            "type": "keystone",
+            "index": 3
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "label": "PoE 3",
+        "lengthM": 0.2
+      },
+      {
+        "id": "c7",
+        "a": {
+          "placementId": "p8",
+          "port": {
+            "type": "rj45_1g",
+            "index": 5
+          }
+        },
+        "b": {
+          "placementId": "p4",
+          "port": {
+            "type": "keystone",
+            "index": 4
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "label": "PoE 4",
+        "lengthM": 0.2
+      }
+    ],
+    "createdAt": "2026-11-10T00:00:00.000Z",
+    "updatedAt": "2026-11-10T00:00:00.000Z"
+  }
+}

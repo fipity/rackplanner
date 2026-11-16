@@ -1,5 +1,10 @@
 import {
+  AIRFLOWS,
+  AIRFLOW_LABELS,
   PORT_TYPE_LABELS,
+  isPassive,
+  placementAirflow,
+  type Airflow,
   alignedX,
   describePowerInput,
   partWidthMm,
@@ -168,6 +173,34 @@ function DeviceCables({ placementId }: { placementId: string }) {
           })}
         </ul>
       )}
+    </Field>
+  );
+}
+
+/** Cooling airflow: catalog (or typical) direction, or your own setting. */
+function AirflowField({ placement, part }: { placement: PlacedPart; part: Part }) {
+  const updatePlacement = useDesignStore((s) => s.updatePlacement);
+  const { airflow, source } = placementAirflow({ ...placement, airflow: undefined }, part);
+  const auto = airflow ? `${source === 'typical' ? 'Typical' : 'Catalog'}: ${AIRFLOW_LABELS[airflow].toLowerCase()}` : 'Unknown';
+  const reversed = placement.mounting === 'rear' && placement.parentId === undefined;
+  return (
+    <Field label="Airflow">
+      <select
+        className={cx(selectClass, 'w-full')}
+        value={placement.airflow ?? ''}
+        aria-label="Airflow"
+        onChange={(e) => updatePlacement(placement.id, { airflow: (e.target.value || undefined) as Airflow | undefined })}
+      >
+        <option value="">{auto}</option>
+        {AIRFLOWS.map((a) => (
+          <option key={a} value={a}>
+            {AIRFLOW_LABELS[a]}
+          </option>
+        ))}
+      </select>
+      <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+        Relative to the device's front panel.{reversed ? ' Mounted on the rear rails, so it blows the other way through the rack.' : ''}
+      </p>
     </Field>
   );
 }
@@ -370,6 +403,8 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
       )}
 
       <MeasuredPower placement={placement} part={part} />
+
+      {!placement.wall && !isPassive(part) && <AirflowField placement={placement} part={part} />}
 
       <DeviceCables placementId={placement.id} />
 

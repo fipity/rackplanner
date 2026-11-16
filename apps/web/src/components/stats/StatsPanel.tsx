@@ -152,6 +152,11 @@ export function StatsPanel() {
         <Row label="Typical draw" value={fmtW(power.typicalW)} hint="Measured power where set, otherwise catalog typical (falling back to max)" />
         <Row label="Max draw" value={fmtW(power.maxW)} hint="Catalog max excludes PoE output" />
         {poe.expectedLoadW ? <Row label="Max incl. PoE load" value={fmtW(power.maxWithPoeW)} /> : null}
+        <Row
+          label="Heat output"
+          value={`${stats.heat.typicalBtuH === stats.heat.maxBtuH ? '' : `${stats.heat.typicalBtuH.toLocaleString()}–`}${stats.heat.maxBtuH.toLocaleString()} BTU/h`}
+          hint="Typical to max draw × 3.412. PoE power delivered to cameras and access points is given off where they are, not in the rack."
+        />
         {ups.count > 0 ? (
           <>
             <Row label={`UPS capacity (${ups.count})`} value={`${fmtW(ups.capacityW)}${ups.capacityVA ? ` / ${ups.capacityVA} VA` : ''}`} />

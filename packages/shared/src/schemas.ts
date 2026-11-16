@@ -106,6 +106,20 @@ export const RenderStyleSchema = z.enum([
 ]);
 export type RenderStyle = z.infer<typeof RenderStyleSchema>;
 
+/**
+ * Cooling airflow, relative to the device's own front panel. Rack servers and
+ * UPSs pull cold air in at the front and blow it out of the back.
+ */
+export const AIRFLOWS = ['front-to-back', 'back-to-front', 'side-to-side', 'passive'] as const;
+export const AirflowSchema = z.enum(AIRFLOWS);
+export type Airflow = z.infer<typeof AirflowSchema>;
+export const AIRFLOW_LABELS: Record<Airflow, string> = {
+  'front-to-back': 'Front to back',
+  'back-to-front': 'Back to front',
+  'side-to-side': 'Side to side',
+  passive: 'Passive (no fans)',
+};
+
 export const BodyFinishSchema = z.enum(['black', 'silver', 'white', 'grey']);
 export type BodyFinish = z.infer<typeof BodyFinishSchema>;
 
@@ -386,6 +400,8 @@ export const PartSchema = z
     render: RenderSpecSchema,
     layout: PartLayoutSchema.optional(),
     powerInput: PowerInputSchema.optional(),
+    /** Cooling airflow; when omitted it's inferred for servers and UPSs and unknown otherwise. */
+    airflow: AirflowSchema.optional(),
     tags: z.array(z.string().min(1)).default([]),
     legacy: z.boolean().optional(),
     sourceUrl: z.url().nullable(),
@@ -464,6 +480,8 @@ export const PlacedPartSchema = z
     label: z.string().max(120).optional(),
     /** Your own measured power draw (W). Overrides catalog typical/max in the stats. */
     measuredW: z.number().nonnegative().max(100000).optional(),
+    /** Your own airflow setting (relative to the device's front), overriding the catalog's. */
+    airflow: AirflowSchema.optional(),
     notes: z.string().max(4000).optional(),
     color: HexColorSchema.optional(),
     /** Per-port colour overrides, keyed "portType:index" (e.g. keystone colours). */

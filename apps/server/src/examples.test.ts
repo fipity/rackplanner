@@ -1,6 +1,7 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createDesign } from '@rackplanner/shared';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { openDb, type Db } from './db/index.js';
@@ -54,5 +55,16 @@ describe('stored v1 designs', () => {
     expect(got.design.schemaVersion).toBe(2);
     expect(got.design.rack.frame).toBe('mini-10in');
     expect(got.revision).toBe(3);
+  });
+});
+
+describe('templates', () => {
+  it('loads every bundled template and they stay valid', async () => {
+    const { loadTemplates } = await import('./templates.js');
+    const warnings: string[] = [];
+    const list = loadTemplates(fileURLToPath(new URL('../../../examples/templates', import.meta.url)), (m) => warnings.push(m));
+    expect(warnings).toEqual([]);
+    expect(list.map((t) => t.id).sort()).toEqual(['tpl-homelab-12u', 'tpl-mini-10in', 'tpl-nbn-unifi', 'tpl-network-cabinet-9u']);
+    for (const t of list) expect(t.design.placements.length).toBeGreaterThan(3);
   });
 });

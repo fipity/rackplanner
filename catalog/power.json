@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 7,
+  "version": 8,
   "title": "Power: UPS & PDU",
   "description": "Rack UPS units from APC, CyberPower and Eaton, plus generic rack PDUs and power strips.",
   "parts": [
@@ -452,7 +452,7 @@
       "formFactor": "rack",
       "heightU": 2,
       "width": "19in",
-      "depthMm": null,
+      "depthMm": 457,
       "mounting": "full-depth",
       "rackWidths": [
         "19in"
@@ -461,7 +461,7 @@
         "typicalW": null,
         "maxW": null
       },
-      "weightKg": null,
+      "weightKg": 28.64,
       "ports": {
         "outlet_nema": 6
       },
@@ -481,8 +481,8 @@
         "smart-ups"
       ],
       "sourceUrl": "https://www.se.com/us/en/product/SMT1500RM2U/apc-smartups-line-interactive-1440va-rackmount-2u-120v-6x-nema-515r-outlets-smartslot-avr-lcd/",
-      "verified": false,
-      "notes": "Outlets from the APC product page; watt rating and dimensions not shown there (1000 W per APC naming convention, unconfirmed).",
+      "verified": true,
+      "notes": "Schneider product data sheet (Feb 2024): 1000 W / 1440 VA, 6 × NEMA 5-15R, NEMA 5-15P cord (2.44 m), 89 × 432 × 457 mm, 28.64 kg.",
       "layout": {
         "layoutVerified": false,
         "sources": [
@@ -641,9 +641,9 @@
         "ups",
         "smart-ups"
       ],
-      "sourceUrl": "https://mayflex.com/shop/product/SMT1500RMI2U",
-      "verified": false,
-      "notes": "Distributor figures; other listings give 477 mm / 26 kg for close variants.",
+      "sourceUrl": "https://www.mouser.com/datasheet/2/357/1/SMT1500RMI2U_document-3069573.pdf",
+      "verified": true,
+      "notes": "Schneider product data sheet: 1000 W / 1500 VA, 4 × IEC C13, IEC C14 inlet, 457 mm deep, 28.64 kg.",
       "layout": {
         "layoutVerified": false,
         "sources": [
@@ -786,7 +786,7 @@
       "weightKg": 42.31,
       "ports": {},
       "ups": {
-        "capacityW": 1980,
+        "capacityW": 1920,
         "capacityVA": 2200
       },
       "render": {
@@ -802,7 +802,7 @@
       ],
       "sourceUrl": "https://www.shi.com/product/34616886/APC-Smart-UPS-SMT2200RM2UC",
       "verified": false,
-      "notes": "Figures for the SMT2200RM2UC variant (reseller).",
+      "notes": "Schneider data via a distributor: 1920 W rated (1980 W maximum configurable); depth and weight are the SMT2200RM2UC figures, not confirmed for this SKU.",
       "layout": {
         "layoutVerified": false,
         "sources": [

@@ -10,6 +10,7 @@ import { PartError } from './catalogRepo.js';
 import { DesignError } from './designsRepo.js';
 import { registerCatalogRoutes } from './routes/catalog.js';
 import { registerDesignRoutes } from './routes/designs.js';
+import { registerTemplateRoutes } from './templates.js';
 
 export interface AppDeps {
   config: Config;
@@ -41,6 +42,7 @@ export async function buildApp({ config, db }: AppDeps): Promise<FastifyInstance
 
   registerCatalogRoutes(app, db, config.catalogDir);
   registerDesignRoutes(app, db);
+  registerTemplateRoutes(app, config.examplesDir);
 
   app.setErrorHandler((err, _req, reply) => {
     if (err instanceof PartError) {

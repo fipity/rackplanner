@@ -9,6 +9,7 @@ import { PartThumb } from '../components/faceplates/PartThumb';
 import { RackCanvas } from '../components/rack/RackCanvas';
 import { RightPanel } from '../components/RightPanel';
 import { SaveIndicator } from '../components/SaveIndicator';
+import { ShareButton } from '../components/ShareDialog';
 import { Toolbar } from '../components/Toolbar';
 import { Button, cx } from '../components/ui';
 import { ApiError, getDesign } from '../lib/api';
@@ -135,6 +136,7 @@ export function EditorPage({ id }: { id: string }) {
         </div>
         <Toolbar />
         <ExportMenu />
+        <ShareButton />
         <Button
           aria-label="Stats"
           title="Stats & warnings"

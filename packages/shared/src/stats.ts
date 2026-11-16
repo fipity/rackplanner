@@ -20,6 +20,7 @@ import {
   partWidthMm,
   type Catalog,
 } from './placement.js';
+import { airflowGroups, wattsToBtuH } from './airflow.js';
 import { cableProblems } from './cables.js';
 import { powerSupplySummary, type PowerSupplySummary } from './power.js';
 import type { CableType, Design, Part, PlacedPart, PortType } from './schemas.js';
@@ -51,7 +52,8 @@ export type WarningCode =
   | 'too-tall'
   | 'power-outlets'
   | 'plug-pack-socket'
-  | 'plug-packs';
+  | 'plug-packs'
+  | 'airflow-mixed';
 
 export interface StatsWarning {
   code: WarningCode;
@@ -77,6 +79,8 @@ export interface DesignStats {
     estimatedCount: number;
     unknownIds: string[];
   };
+  /** Heat given off in the rack (BTU/h), from the draw excluding PoE delivered to remote devices. */
+  heat: { typicalBtuH: number; maxBtuH: number };
   ups: { capacityW: number; capacityVA: number | null; count: number };
   poe: { budgetW: number; expectedLoadW: number | null; sourceCount: number };
   weight: { totalKg: number; unknownIds: string[] };
@@ -314,6 +318,18 @@ export function computeStats(
     warnings.push({ code: 'cable', severity: 'warning', message: pr.message, placementIds: [c.a.placementId, c.b.placementId].filter((id) => placements.some((p) => p.id === id)) });
   }
 
+  const flow = airflowGroups(design, catalog);
+  if (flow['out-rear'].length && flow['out-front'].length) {
+    const [few, many] = flow['out-front'].length <= flow['out-rear'].length ? [flow['out-front'], flow['out-rear']] : [flow['out-rear'], flow['out-front']];
+    const fewOut = few === flow['out-front'] ? 'front' : 'back';
+    warnings.push({
+      code: 'airflow-mixed',
+      severity: 'warning',
+      message: `Mixed airflow: ${list(few)} blow${few.length === 1 ? 's' : ''} hot air out of the rack ${fewOut}, where ${list(many)} draw${many.length === 1 ? 's' : ''} cool air in. Turn ${few.length === 1 ? 'it' : 'them'} round, use a reversed-airflow model, or set the airflow in the inspector if it's wrong.`,
+      placementIds: few,
+    });
+  }
+
   const supply = powerSupplySummary(design, catalog);
   if (supply.relevant) {
     const outlets = supply.mainsSockets + supply.iecOutlets;
@@ -363,6 +379,7 @@ export function computeStats(
       estimatedCount,
       unknownIds: unknownPower,
     },
+    heat: { typicalBtuH: wattsToBtuH(typicalW), maxBtuH: wattsToBtuH(maxW) },
     ups: { capacityW: upsW, capacityVA: upsCount ? upsVA : null, count: upsCount },
     poe: { budgetW: round(poeBudget), expectedLoadW: expected, sourceCount: poeSources },
     weight: { totalKg: round(weightKg, 2), unknownIds: unknownWeight },

@@ -13,3 +13,4 @@ export * from './layout/engine.js';
 export * from './layout/connectors.js';
 export * from './layout/presets.js';
 export { autoFaceLayout } from './layout/auto.js';
+export * from './airflow.js';

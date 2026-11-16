@@ -31,3 +31,10 @@ export const designs = sqliteTable('designs', {
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),
 });
+
+/** Read-only share links: one secret token per shared design. */
+export const shares = sqliteTable('shares', {
+  token: text('token').primaryKey(),
+  designId: text('design_id').notNull().unique(),
+  createdAt: text('created_at').notNull(),
+});

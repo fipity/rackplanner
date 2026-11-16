@@ -82,7 +82,7 @@ export const useDesignStore = create<DesignState>()(
               if (p.id !== id) return p;
               const next: PlacedPart = { ...p, ...patch };
               // Optional fields set to undefined are removed so the design stays schema-clean.
-              for (const k of ['label', 'notes', 'color', 'parentId', 'measuredW', 'wall'] as const) {
+              for (const k of ['label', 'notes', 'color', 'parentId', 'measuredW', 'wall', 'airflow'] as const) {
                 if (k in patch && patch[k] === undefined) delete next[k];
               }
               return next;

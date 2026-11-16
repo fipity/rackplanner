@@ -3,6 +3,7 @@ import { createDesign } from './design.js';
 import type { Catalog } from './placement.js';
 import { PartSchema, type Design, type Part, type PartInput, type PlacedPart } from './schemas.js';
 import { computeStats, placementPower } from './stats.js';
+import { placementAirflow, rackAirflow } from './airflow.js';
 
 function part(o: Partial<PartInput> & Pick<PartInput, 'id'>): Part {
   return PartSchema.parse({
@@ -137,5 +138,29 @@ describe('createDesign', () => {
     expect(d.name).toBe('Lab');
     expect(d.rack).toEqual({ width: '10in', heightU: 12, depthMm: null, numbering: 'bottom-up', frame: 'mini-10in', glassDoor: false });
     expect(d.placements).toEqual([]);
+  });
+});
+
+describe('heat and airflow', () => {
+  it('reports heat from typical and max draw', () => {
+    const s = computeStats(design([pp('a', 'swx', 1)]), catalog);
+    expect(s.heat).toEqual({ typicalBtuH: 68, maxBtuH: 171 });
+  });
+
+  it('assumes servers and UPSs breathe front to back, and reverses gear on the rear rails', () => {
+    expect(placementAirflow(pp('s', 'srv', 3), catalog.get('srv')!)).toEqual({ airflow: 'front-to-back', source: 'typical' });
+    expect(placementAirflow(pp('x', 'swx', 1), catalog.get('swx')!)).toEqual({ airflow: null, source: null });
+    expect(rackAirflow(pp('s', 'srv', 3), catalog.get('srv')!)).toBe('out-rear');
+    expect(rackAirflow(pp('x', 'swx', 1, { mounting: 'rear', airflow: 'front-to-back' }), catalog.get('swx')!)).toBe('out-front');
+    expect(rackAirflow(pp('x', 'swx', 1, { airflow: 'side-to-side' }), catalog.get('swx')!)).toBeNull();
+  });
+
+  it('warns when gear blows exhaust where other gear takes air in', () => {
+    const ok = computeStats(design([pp('s', 'srv', 3), pp('x', 'swx', 1, { airflow: 'front-to-back' })]), catalog);
+    expect(ok.warnings.some((w) => w.code === 'airflow-mixed')).toBe(false);
+    const mixed = computeStats(design([pp('s', 'srv', 3), pp('t', 'srv', 5), pp('x', 'swx', 1, { airflow: 'back-to-front' })]), catalog);
+    const w = mixed.warnings.find((x) => x.code === 'airflow-mixed');
+    expect(w?.placementIds).toEqual(['x']);
+    expect(w?.message).toMatch(/^Mixed airflow: swx blows hot air out of the rack front/);
   });
 });

@@ -1,6 +1,6 @@
-import { PORT_TYPE_LABELS, buildBom, computeStats, type Design, type PortType } from '@rackplanner/shared';
+import { PORT_TYPE_LABELS, buildBom, computeStats, type Catalog, type Design, type PortType } from '@rackplanner/shared';
 import { ArrowLeft, Lightbulb, LightbulbOff, Printer } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { RackView } from '../components/rack/RackView';
 import { Button } from '../components/ui';
 import { getDesign } from '../lib/api';
@@ -9,48 +9,36 @@ import { designPath, navigate } from '../lib/router';
 import { useCatalogStore } from '../store/catalogStore';
 import { useUiStore } from '../store/uiStore';
 
-/** Print-friendly page: both views, stats and the parts list. Always light. */
-export function PrintPage({ id }: { id: string }) {
-  const [design, setDesign] = useState<Design | null>(null);
-  const [error, setError] = useState('');
-  const catalog = useCatalogStore((s) => s.catalog);
-  const ready = useCatalogStore((s) => s.status === 'ready');
+/** Toolbar shared by the print page and read-only share links. */
+export function SheetToolbar({ children }: { children?: ReactNode }) {
   const leds = useUiStore((s) => s.leds);
   const setLeds = useUiStore((s) => s.setLeds);
+  return (
+    <div className="sticky top-0 z-10 flex flex-wrap items-center gap-2 border-b border-zinc-200 bg-white/95 px-4 py-2 backdrop-blur print:hidden">
+      {children}
+      <Button variant="primary" onClick={() => window.print()}>
+        <Printer className="size-4" /> Print
+      </Button>
+      <Button className="text-zinc-700 hover:bg-zinc-100" aria-pressed={leds} onClick={() => setLeds(!leds)}>
+        {leds ? <Lightbulb className="size-4" /> : <LightbulbOff className="size-4" />} {leds ? 'LEDs on' : 'LEDs off (print style)'}
+      </Button>
+    </div>
+  );
+}
 
-  useEffect(() => {
-    getDesign(id).then(
-      (r) => setDesign(r.design),
-      (e) => setError(e instanceof Error ? e.message : String(e)),
-    );
-  }, [id]);
-
-  if (error) return <p className="m-auto p-6 text-sm text-red-600">{error}</p>;
-  if (!design || !ready) return <p className="m-auto p-6 text-sm text-zinc-500">Loading…</p>;
-
+/** Both views, stats, warnings and the parts list. Always light. */
+export function PrintSheet({ design, catalog, stamp }: { design: Design; catalog: Catalog; stamp: string }) {
+  const leds = useUiStore((s) => s.leds);
   const stats = computeStats(design, catalog);
   const bom = buildBom(design, catalog);
   const ports = (Object.entries(stats.ports) as [PortType, number][]).sort((a, b) => b[1] - a[1]);
-
   return (
-    <div className="min-h-full overflow-y-auto bg-white text-zinc-900 print:overflow-visible" style={exportPaletteStyle}>
-      <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-zinc-200 bg-white/95 px-4 py-2 backdrop-blur print:hidden">
-        <Button className="text-zinc-700 hover:bg-zinc-100" onClick={() => navigate(designPath(id))}>
-          <ArrowLeft className="size-4" /> Back to editor
-        </Button>
-        <Button variant="primary" onClick={() => window.print()}>
-          <Printer className="size-4" /> Print
-        </Button>
-        <Button className="text-zinc-700 hover:bg-zinc-100" aria-pressed={leds} onClick={() => setLeds(!leds)}>
-          {leds ? <Lightbulb className="size-4" /> : <LightbulbOff className="size-4" />} {leds ? 'LEDs on' : 'LEDs off (print style)'}
-        </Button>
-      </div>
       <article className="mx-auto max-w-5xl space-y-6 p-6 print:max-w-none print:p-0">
         <header>
           <h1 className="text-2xl font-bold">{design.name}</h1>
           <p className="text-sm text-zinc-600">
             {design.rack.heightU}U {design.rack.width === '19in' ? '19″' : '10″'} rack
-            {design.rack.depthMm ? ` · ${design.rack.depthMm} mm deep` : ''} · {design.placements.length} devices · printed {new Date().toLocaleDateString()}
+            {design.rack.depthMm ? ` · ${design.rack.depthMm} mm deep` : ''} · {design.placements.length} devices · {stamp}
           </p>
         </header>
 
@@ -69,6 +57,10 @@ export function PrintPage({ id }: { id: string }) {
           </div>
           <div>
             <b>Power:</b> {stats.power.typicalW} W typical / {stats.power.maxW} W max
+          </div>
+          <div>
+            <b>Heat:</b> {stats.heat.typicalBtuH === stats.heat.maxBtuH ? '' : `${stats.heat.typicalBtuH}–`}
+            {stats.heat.maxBtuH} BTU/h
           </div>
           <div>
             <b>UPS:</b> {stats.ups.count ? `${stats.ups.capacityW} W` : 'none'}
@@ -128,6 +120,34 @@ export function PrintPage({ id }: { id: string }) {
           {bom.some((r) => r.measuredW !== null) && <p className="mt-1 text-xs text-zinc-500">* measured power (total for that line)</p>}
         </section>
       </article>
+  );
+}
+
+/** Print-friendly page for a design you own. */
+export function PrintPage({ id }: { id: string }) {
+  const [design, setDesign] = useState<Design | null>(null);
+  const [error, setError] = useState('');
+  const catalog = useCatalogStore((s) => s.catalog);
+  const ready = useCatalogStore((s) => s.status === 'ready');
+
+  useEffect(() => {
+    getDesign(id).then(
+      (r) => setDesign(r.design),
+      (e) => setError(e instanceof Error ? e.message : String(e)),
+    );
+  }, [id]);
+
+  if (error) return <p className="m-auto p-6 text-sm text-red-600">{error}</p>;
+  if (!design || !ready) return <p className="m-auto p-6 text-sm text-zinc-500">Loading…</p>;
+
+  return (
+    <div className="min-h-full overflow-y-auto bg-white text-zinc-900 print:overflow-visible" style={exportPaletteStyle}>
+      <SheetToolbar>
+        <Button className="text-zinc-700 hover:bg-zinc-100" onClick={() => navigate(designPath(id))}>
+          <ArrowLeft className="size-4" /> Back to editor
+        </Button>
+      </SheetToolbar>
+      <PrintSheet design={design} catalog={catalog} stamp={`printed ${new Date().toLocaleDateString()}`} />
     </div>
   );
 }

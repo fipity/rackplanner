@@ -1,8 +1,8 @@
 {
   "$schema": "./schema.json",
-  "version": 2,
+  "version": 3,
   "title": "Other switching & routing",
-  "description": "TP-Link Omada (official datasheets), Netgear and Cisco (reseller/distributor figures), and legacy Ubiquiti EdgeMax/UISP gear (techspecs.ui.com).",
+  "description": "TP-Link Omada, Cisco CBS350 and Netgear smart switches (official datasheets), older Cisco Catalyst and the Netgear M4250 (reseller figures), and legacy Ubiquiti EdgeMax/UISP gear (techspecs.ui.com).",
   "parts": [
     {
       "id": "ubiquiti-er-12p",
@@ -355,7 +355,7 @@
       ],
       "power": {
         "typicalW": null,
-        "maxW": null
+        "maxW": 34.4
       },
       "poeBudgetW": 195,
       "weightKg": 3.53,
@@ -374,9 +374,9 @@
         "cbs",
         "poe"
       ],
-      "sourceUrl": "https://www.shi.com/product/40716115/Cisco-Business-350-Series-350-24P-4G",
-      "verified": false,
-      "notes": "Reseller figures."
+      "sourceUrl": "https://www.cisco.com/c/en/us/products/collateral/switches/business-350-series-managed-switches/datasheet-c78-744156.html",
+      "verified": true,
+      "notes": "Cisco datasheet: 445 × 299 × 44 mm, 3.53 kg, 195 W PoE budget. Max power is system power without PoE (239.7 W with PoE at 110 V)."
     },
     {
       "id": "cisco-cbs350-24t-4g",
@@ -412,9 +412,9 @@
         "switch",
         "cbs"
       ],
-      "sourceUrl": "https://zenitel.com/product/cbs350-24t-4g-eu",
-      "verified": false,
-      "notes": "Distributor figures."
+      "sourceUrl": "https://www.cisco.com/c/en/us/products/collateral/switches/business-350-series-managed-switches/datasheet-c78-744156.html",
+      "verified": true,
+      "notes": "Cisco datasheet: 445 × 240 × 44 mm, 2.63 kg, 25.9 W system power (110 V)."
     },
     {
       "id": "cisco-cbs350-24t-4x",
@@ -450,9 +450,9 @@
         "switch",
         "cbs"
       ],
-      "sourceUrl": "https://www.zenitel.com/product/cbs350-24t-4x-eu",
-      "verified": false,
-      "notes": "Distributor figures."
+      "sourceUrl": "https://www.cisco.com/c/en/us/products/collateral/switches/business-350-series-managed-switches/datasheet-c78-744156.html",
+      "verified": true,
+      "notes": "Cisco datasheet: 445 × 240 × 44 mm, 2.78 kg, 27.5 W system power (110 V)."
     },
     {
       "id": "cisco-cbs350-48p-4g",
@@ -490,9 +490,9 @@
         "cbs",
         "poe"
       ],
-      "sourceUrl": "https://network-switch.com/collections/cisco-cbs350-series-switches/products/network-switch-cisco-cbs350-48p-4g",
-      "verified": false,
-      "notes": "Reseller figures. Max power excludes PoE (452 W with PoE)."
+      "sourceUrl": "https://www.cisco.com/c/en/us/products/collateral/switches/business-350-series-managed-switches/datasheet-c78-744156.html",
+      "verified": true,
+      "notes": "Cisco datasheet: 445 × 350 × 44 mm, 5.43 kg, 370 W PoE budget. Max power is system power without PoE (452 W with PoE at 110 V)."
     },
     {
       "id": "ubiquiti-es-16-150w",
@@ -946,7 +946,7 @@
         "maxW": null
       },
       "poeBudgetW": 190,
-      "weightKg": 3.73,
+      "weightKg": 3.78,
       "ports": {
         "rj45_1g": 24,
         "sfp": 4
@@ -962,9 +962,9 @@
         "prosafe",
         "poe"
       ],
-      "sourceUrl": "https://www.dateks.lv/ru/cenas/komutatori/170731-netgear-gs728tp-200eus-24x1gb-poe-4xsfp",
-      "verified": false,
-      "notes": "Reseller figures; PoE budget quoted as 190–192 W (lower used)."
+      "sourceUrl": "https://www.netgear.com/business/wired/switches/smart-cloud/gs728tpv3/",
+      "verified": true,
+      "notes": "Netgear GS728TPv3 page: 440 × 257 × 43.2 mm, 3.78 kg, 190 W PoE budget, 226 W max consumption including PoE (so max W without PoE is left blank)."
     },
     {
       "id": "netgear-gs752tp",
@@ -976,7 +976,7 @@
       "formFactor": "rack",
       "heightU": 1,
       "width": "19in",
-      "depthMm": 316,
+      "depthMm": 310,
       "mounting": "front",
       "rackWidths": [
         "19in"
@@ -986,7 +986,7 @@
         "maxW": null
       },
       "poeBudgetW": 380,
-      "weightKg": 5.1,
+      "weightKg": 4.93,
       "ports": {
         "rj45_1g": 48,
         "sfp": 4
@@ -1002,9 +1002,9 @@
         "prosafe",
         "poe"
       ],
-      "sourceUrl": "https://www.disctech.com/NetGear-GS752TP-48-Port-Smart-Switch",
-      "verified": false,
-      "notes": "Reseller figures; PoE budget quoted as 380–384 W (lower used). Depth 310–316 mm."
+      "sourceUrl": "https://www.netgear.com/business/wired/switches/smart-cloud/gs752tpv2/",
+      "verified": true,
+      "notes": "Netgear GS752TPv2 page: 440 × 310 × 43.2 mm, 4.93 kg, 380 W PoE budget, 446 W max consumption including PoE (so max W without PoE is left blank)."
     },
     {
       "id": "netgear-gs752tpp",
@@ -1042,9 +1042,9 @@
         "prosafe",
         "poe"
       ],
-      "sourceUrl": "https://www.shi.com/product/46228255/NETGEAR-Smart-GS752TPP",
-      "verified": false,
-      "notes": "Reseller figures."
+      "sourceUrl": "https://www.netgear.com/business/wired/switches/smart-cloud/gs752tppv3/",
+      "verified": true,
+      "notes": "Netgear GS752TPPv3 page: 440 × 310 × 43.2 mm, 5.03 kg, 760 W PoE budget, 861 W max consumption including PoE (so max W without PoE is left blank)."
     },
     {
       "id": "ubiquiti-uisp-s-pro-u",

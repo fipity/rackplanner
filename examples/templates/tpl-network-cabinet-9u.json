@@ -1,0 +1,376 @@
+{
+  "id": "tpl-network-cabinet-9u",
+  "name": "Network cabinet 9U",
+  "description": "9U wall cabinet with glass door: 24-port patch panel, UniFi 24 PoE switch, Dream Machine SE, the modem or nbn box on a shelf, and a power strip.",
+  "design": {
+    "schemaVersion": 2,
+    "id": "tpl-network-cabinet-9u",
+    "name": "Network cabinet 9U",
+    "rack": {
+      "width": "19in",
+      "heightU": 9,
+      "depthMm": 450,
+      "numbering": "bottom-up",
+      "frame": "cabinet",
+      "glassDoor": true
+    },
+    "expectedPoeLoadW": null,
+    "placements": [
+      {
+        "id": "p1",
+        "partId": "generic-patch-24-cat6-keystone-1u",
+        "bottomU": 9,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Patch"
+      },
+      {
+        "id": "p2",
+        "partId": "generic-cable-manager-1u-19",
+        "bottomU": 8,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p3",
+        "partId": "ubiquiti-usw-24-poe",
+        "bottomU": 7,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Switch"
+      },
+      {
+        "id": "p4",
+        "partId": "ubiquiti-udm-se",
+        "bottomU": 6,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Gateway"
+      },
+      {
+        "id": "p5",
+        "partId": "generic-brush-1u-19",
+        "bottomU": 5,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p6",
+        "partId": "generic-shelf-2u-400-19",
+        "bottomU": 3,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p7",
+        "partId": "generic-fibre-ont",
+        "bottomU": 3,
+        "xMm": 0,
+        "mounting": "front",
+        "parentId": "p6",
+        "label": "Modem / NTD"
+      },
+      {
+        "id": "p8",
+        "partId": "generic-vented-blank-1u-19",
+        "bottomU": 2,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p9",
+        "partId": "generic-pdu-1u-6-au",
+        "bottomU": 1,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Power"
+      }
+    ],
+    "cables": [
+      {
+        "id": "c1",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 1
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 1
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c2",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 2
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 2
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c3",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 3
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 3
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c4",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 4
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 4
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c5",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 5
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 5
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c6",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 6
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 6
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c7",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 7
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 7
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c8",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 8
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 8
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c9",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 9
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 9
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c10",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 10
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 10
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c11",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 11
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 11
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c12",
+        "a": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 12
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 12
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c13",
+        "a": {
+          "placementId": "p4",
+          "port": {
+            "type": "rj45_1g",
+            "index": 1
+          }
+        },
+        "b": {
+          "placementId": "p3",
+          "port": {
+            "type": "rj45_1g",
+            "index": 24
+          }
+        },
+        "type": "copper",
+        "color": "#f97316",
+        "label": "Uplink",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c14",
+        "a": {
+          "placementId": "p7",
+          "port": {
+            "type": "rj45_1g",
+            "index": 1
+          }
+        },
+        "b": {
+          "placementId": "p4",
+          "port": {
+            "type": "rj45_2_5g",
+            "index": 1
+          }
+        },
+        "type": "copper",
+        "color": "#ef4444",
+        "label": "WAN",
+        "lengthM": 0.5
+      }
+    ],
+    "createdAt": "2026-11-10T00:00:00.000Z",
+    "updatedAt": "2026-11-10T00:00:00.000Z"
+  }
+}

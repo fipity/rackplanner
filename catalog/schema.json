@@ -4322,6 +4322,15 @@
             ],
             "additionalProperties": false
           },
+          "airflow": {
+            "type": "string",
+            "enum": [
+              "front-to-back",
+              "back-to-front",
+              "side-to-side",
+              "passive"
+            ]
+          },
           "tags": {
             "default": [],
             "type": "array",

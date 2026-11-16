@@ -10,6 +10,7 @@ import { EditorPage } from './pages/EditorPage';
 import { FaceplateGallery } from './pages/FaceplateGallery';
 import { HomePage } from './pages/HomePage';
 import { PrintPage } from './pages/PrintPage';
+import { SharedPage } from './pages/SharedPage';
 import { useCatalogStore } from './store/catalogStore';
 import { applyTheme, useUiStore } from './store/uiStore';
 
@@ -40,9 +41,11 @@ export function App() {
   const theme = useUiStore((s) => s.theme);
   const builder = useUiStore((s) => s.builder);
 
+  // Share links are public: they bring their own parts and never touch the catalog API.
+  const shared = route.name === 'shared';
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (!shared) void load();
+  }, [load, shared]);
 
   useEffect(() => {
     if (theme !== 'system') return;
@@ -58,7 +61,9 @@ export function App() {
   );
 
   let page;
-  if (status === 'error') {
+  if (route.name === 'shared') {
+    page = <SharedPage key={route.token} token={route.token} />;
+  } else if (status === 'error') {
     page = (
       <div className="m-auto max-w-md p-6 text-center">
         <p className="mb-3 font-semibold">Couldn't load the parts catalog</p>

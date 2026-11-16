@@ -85,3 +85,27 @@ export function saveDesignOnUnload(design: Design, revision: number): void {
     /* page is going away anyway */
   }
 }
+
+// ---------------------------------------------------------------------------
+// Read-only share links
+// ---------------------------------------------------------------------------
+
+const ShareSchema = z.object({ share: z.object({ token: z.string(), createdAt: z.string() }).nullable() });
+export type ShareInfo = NonNullable<z.infer<typeof ShareSchema>['share']>;
+
+const shareUrl = (id: string) => `/api/designs/${encodeURIComponent(id)}/share`;
+export const getShareApi = (id: string) => request(shareUrl(id), ShareSchema).then((r) => r.share);
+export const createShareApi = (id: string) => request(shareUrl(id), ShareSchema, { method: 'POST', body: '{}' }).then((r) => r.share!);
+export const deleteShareApi = (id: string) => request(shareUrl(id), null, { method: 'DELETE' });
+
+const SharedDesignSchema = z.object({ design: DesignSchema, parts: z.array(PartSchema) });
+export type SharedDesign = z.infer<typeof SharedDesignSchema>;
+export const getSharedDesign = (token: string) => request(`/api/shared/${encodeURIComponent(token)}`, SharedDesignSchema);
+
+// ---------------------------------------------------------------------------
+// Templates (starting points for new designs)
+// ---------------------------------------------------------------------------
+
+const TemplateSchema = z.object({ id: z.string(), name: z.string(), description: z.string(), design: DesignSchema });
+export type Template = z.infer<typeof TemplateSchema>;
+export const listTemplates = () => request('/api/templates', z.object({ templates: z.array(TemplateSchema) })).then((r) => r.templates);

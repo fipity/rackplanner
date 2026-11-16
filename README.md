@@ -10,7 +10,7 @@ Runs as a single Docker container with a SQLite database, or as a [desktop app f
 
 - **Detailed faceplates, front and rear:** every device is drawn as SVG from catalog data: RJ45 jacks with link/activity LEDs and latch notches, metallic SFP/QSFP cages, USB, HDMI, IEC and AU/NZ power, keystones, drive trays, displays, vents, fans and PSUs. Popular gear has a researched, sourced layout; everything else gets a sensible generated one. No logos or product photos.
 - **Style presets:** UniFi-style silver/white/black, server bezel, NAS grey, PDU, UPS, patch and brush panels and more, all fine in light and dark mode. Lit LEDs, or switch them off for a clean print look.
-- **Rack frames:** 2-post, 4-post, enclosed cabinet (with glass door) and 10″ mini racks including the **DeskPi RackMate T1 / T2**, with rails, cage-nut holes at EIA spacing and free-slot hints.
+- **Rack frames:** 2-post, 4-post, enclosed cabinet (with glass door) and 10″ mini racks including the **DeskPi RackMate T1 / T2**, with rails, EIA hole spacing (square cage-nut holes, or round tapped #10-32 holes on the RackMate rails) and free-slot hints.
 - **Shelf plans:** a top-down view of every shelf showing how devices fit side by side, with overhangs flagged.
 - **Placement:** drag and drop with U snapping, collision checks, front / rear / full-depth mounting, partial-width gear and desktop gear on shelves. Warns when something is too wide, deep or tall for its shelf.
 - **Wall area:** an optional wall beside the rack for wall-mounted gear: nbn connection boxes, modems, and data, TV, phone, fibre and power wall plates, cabled to the rack like anything else.
@@ -18,7 +18,8 @@ Runs as a single Docker container with a SQLite database, or as a [desktop app f
 - **Cables:** colour-coded port-to-port patch cables, with tooltips on every port ("Port 17 — 1 GbE (PoE+)").
 - **Zoom-aware detail:** simplified blocks when zoomed out and full detail up close, so a full 32U rack stays smooth.
 - **Catalog:** full UniFi lineup plus MikroTik, Synology, QNAP, UGREEN, TP-Link, Netgear, Cisco, Dell, HPE, Supermicro, APC, CyberPower, Eaton, DeskPi, Raspberry Pi and generic passive gear, with search, filters and a **custom part builder**.
-- **Designs, stats and exports:** autosave, undo / redo, power / UPS / PoE / weight totals with warnings, and PNG / SVG / PDF / CSV / JSON exports.
+- **Designs, stats and exports:** start empty or from a **template**, autosave, undo / redo, power / heat / UPS / PoE / weight totals with warnings (including mixed airflow), and PNG / SVG / PDF / CSV / JSON exports.
+- **Read-only share links:** send someone a link to view a design, with no login needed.
 
 ## Gallery
 
@@ -126,7 +127,7 @@ The first build takes a few minutes. The container restarts automatically (`rest
 |---|---|---|
 | `RACKPLANNER_PORT` | `8085` | Host port. Change it, then run `docker compose up -d` |
 | `PUID` / `PGID` | `1000` | Owner of `./data` on the host (run `id` to see yours) |
-| `BASIC_AUTH_USER` / `BASIC_AUTH_PASS` | empty | Set both to require a password. `/api/health` stays open |
+| `BASIC_AUTH_USER` / `BASIC_AUTH_PASS` | empty | Set both to require a password. `/api/health` and read-only share links stay open |
 | `LOG_LEVEL` | `info` | `debug`, `warn`, `error`, `silent`… |
 
 ### Updating
@@ -191,7 +192,11 @@ Cables between the front and the rear (or to a device on the other face) are dra
 
 ## Designs
 
-The home screen lists your designs with live thumbnails. Create a new one by picking a width, a height preset and an optional depth. Rename, duplicate or delete designs from each card's menu, and **Import** a design exported as JSON. JSON exports include any custom parts the design uses, so they move cleanly between RackPlanner installs.
+The home screen lists your designs with live thumbnails. Create a new one by picking a width, a height preset and an optional depth, or start from a **template**: a 10″ mini rack, an nbn + UniFi starter in a DeskPi RackMate T1, a 12U 19″ homelab, or a 9U network cabinet. Rename, duplicate or delete designs from each card's menu, and **Import** a design exported as JSON. JSON exports include any custom parts the design uses, so they move cleanly between RackPlanner installs.
+
+### Sharing
+
+**Share** in the editor creates a read-only link (`/s/<token>`). Anyone with it sees both views, the stats and the parts list, and can print it or download it as PDF or JSON (to import into their own RackPlanner). They can't change anything. The link always shows the latest saved version. **Stop sharing** turns it off for good; sharing again makes a new link. Share links work without the basic-auth password: only the share page, its static files and `GET /api/shared/<token>` are open, so a link only reveals the one design behind it. In the desktop app the server only listens on this computer, so links only work there.
 
 Changes save automatically as you work. If the same design is saved from another tab or device, you're asked whether to keep your version or load the latest one.
 
@@ -201,10 +206,15 @@ The **Stats** tab, next to the device details, updates live:
 
 - **Space:** U used and free (a U counts as used if anything occupies it, front or rear), plus device and passive counts.
 - **Power:** typical and max draw. A device's **measured power** (e.g. from a smart plug or PDU reading) replaces catalog figures. When a part only publishes one figure, it's used for both. Catalog max power excludes PoE output, so the **expected PoE load** you enter is added on top before comparing against total **UPS capacity**.
+- **Heat:** the rack's heat output in BTU/h (typical to max draw × 3.412). PoE power delivered to cameras and access points is given off where they are, not in the rack.
 - **PoE:** total PoE budget of the switches and gateways in the rack, compared with your expected PoE load.
 - **Weight** and **port counts** by type.
 - **Cables:** count by type and total length.
-- **Warnings:** devices deeper than the rack, gear deeper than its shelf, desktop gear not on a shelf, collisions or bad widths (e.g. after an import), parts missing from the catalog, UPS or PoE overload, cable problems, and devices with no power data. Click a warning to select the device.
+- **Warnings:** devices deeper than the rack, gear deeper than its shelf, desktop gear not on a shelf, collisions or bad widths (e.g. after an import), parts missing from the catalog, UPS or PoE overload, cable problems, mixed airflow (one device blowing hot air out of the rack face where another draws cool air in), and devices with no power data. Click a warning to select the device.
+
+### Airflow
+
+Rack servers and UPSs are assumed to breathe front to back; other gear has no airflow unless its catalog entry sets one (`airflow`: `front-to-back`, `back-to-front`, `side-to-side` or `passive`). Set your own in the inspector's **Airflow** field. Airflow is relative to the device's front panel, so gear mounted on the rear rails blows the other way through the rack.
 
 ## Exports
 
@@ -300,6 +310,9 @@ Each catalog entry can describe its front, rear and top faces declaratively; the
 | GET / POST | `/api/designs` | List / create (`{name, rack}` or import `{design}`) |
 | GET / PUT / DELETE | `/api/designs/:id` | Load / save (`{design, revision, force?}`, 409 on conflict) / delete |
 | POST | `/api/designs/:id/duplicate` | Copy a design |
+| GET / POST / DELETE | `/api/designs/:id/share` | Read / create / revoke the design's read-only share link |
+| GET | `/api/shared/:token` | A shared design and the parts it uses (open without basic auth) |
+| GET | `/api/templates` | Starting-point designs (`examples/templates/*.json`) |
 
 ## Development
 
@@ -323,7 +336,7 @@ npm run screenshots               # builds, starts a scratch server, captures, o
 
 It starts the built server on a temporary database (the example designs in `examples/` seed themselves), drives Chromium, writes palette-optimised PNGs, the drag-and-drop GIF and the device SVGs, and fails if `docs/images/` grows past 15 MB. If the browser runs under a different Node version from the server (for example inside the `mcr.microsoft.com/playwright` image), start the server yourself on an empty `DATA_DIR` and pass `BASE_URL=http://127.0.0.1:<port>`.
 
-`npm run examples` rebuilds `examples/*.json` from the catalog, checking every placement and cable.
+`npm run examples` rebuilds `examples/*.json` and the templates in `examples/templates/` from the catalog, checking every placement and cable.
 
 ### Visual tests
 
@@ -345,7 +358,7 @@ packages/shared   zod schemas, placement engine, faceplate layout engine, stats,
 apps/server       Fastify API (SQLite via better-sqlite3 + Drizzle) + static hosting of the built web app
 apps/web          React + Vite + Tailwind editor (SVG rendering, dnd-kit, zustand + zundo, jsPDF)
 catalog/          parts catalog JSON seed files (+ UNVERIFIED.md)
-examples/         example designs, added to the design list once
+examples/         example designs, added to the design list once; templates/ for the New design dialog
 scripts/          catalog validator, example builder, screenshot pipeline, research scripts
 docs/images/      generated README images
 ```

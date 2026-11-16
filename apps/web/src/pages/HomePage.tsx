@@ -20,8 +20,10 @@ import {
   deleteDesignApi,
   duplicateDesignApi,
   listDesigns,
+  listTemplates,
   saveDesignApi,
   type StoredDesign,
+  type Template,
 } from '../lib/api';
 import { designPath, navigate } from '../lib/router';
 import { toast } from '../lib/toast';
@@ -44,13 +46,35 @@ function NewDesignDialog({ onClose }: { onClose: () => void }) {
   const [heightU, setHeightU] = useState(12);
   const [depth, setDepth] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
+  const [start, setStart] = useState<'blank' | 'template'>('blank');
+  const [templates, setTemplates] = useState<Template[] | null>(null);
+  const [templateId, setTemplateId] = useState<string | null>(null);
+  const catalog = useCatalogStore((s) => s.catalog);
   useEffect(() => {
     if (ref.current && !ref.current.open) ref.current.showModal();
   }, []);
+  useEffect(() => {
+    if (start !== 'template' || templates) return;
+    listTemplates().then(
+      (t) => {
+        setTemplates(t);
+        setTemplateId((id) => id ?? t[0]?.id ?? null);
+      },
+      (e) => {
+        toast(e instanceof Error ? e.message : 'Could not load templates', 'error');
+        setTemplates([]);
+      },
+    );
+  }, [start, templates]);
+  const template = templates?.find((t) => t.id === templateId);
   const create = async () => {
+    if (start === 'template' && !template) return;
     setBusy(true);
     try {
-      const { design } = await createDesignApi({ name: name.trim() || undefined, rack: { width, heightU, depthMm: depth } });
+      const { design } =
+        start === 'template' && template
+          ? await createDesignApi({ name: name.trim() || template.name, design: template.design })
+          : await createDesignApi({ name: name.trim() || undefined, rack: { width, heightU, depthMm: depth } });
       navigate(designPath(design.id));
     } catch (e) {
       toast(e instanceof Error ? e.message : 'Could not create design', 'error');
@@ -66,7 +90,10 @@ function NewDesignDialog({ onClose }: { onClose: () => void }) {
         e.preventDefault();
         onClose();
       }}
-      className="m-auto w-[min(26rem,calc(100vw-2rem))] rounded-xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-2xl backdrop:bg-black/40 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+      className={cx(
+        'm-auto rounded-xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-2xl backdrop:bg-black/40 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100',
+        start === 'template' ? 'w-[min(44rem,calc(100vw-2rem))]' : 'w-[min(26rem,calc(100vw-2rem))]',
+      )}
     >
       <form
         onSubmit={(e) => {
@@ -78,54 +105,90 @@ function NewDesignDialog({ onClose }: { onClose: () => void }) {
           <h2 className="text-lg font-semibold">New rack design</h2>
           <label className="block space-y-1">
             <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Name</span>
-            <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Office rack" autoFocus />
+            <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} placeholder={template && start === 'template' ? template.name : 'e.g. Office rack'} autoFocus />
           </label>
           <div className="space-y-1">
-            <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Width</span>
+            <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Start from</span>
             <div>
-              <Segmented label="Rack width" value={width} onChange={setWidth} options={[{ value: '19in', label: '19″' }, { value: '10in', label: '10″' }]} />
+              <Segmented label="Start from" value={start} onChange={setStart} options={[{ value: 'blank', label: 'Empty rack' }, { value: 'template', label: 'Template' }]} />
             </div>
           </div>
-          <div className="space-y-1">
-            <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Height</span>
-            <div className="flex flex-wrap gap-1">
-              {RACK_HEIGHT_PRESETS.map((u) => (
+          {start === 'template' ? (
+            <div role="radiogroup" aria-label="Template" className="grid max-h-[55vh] gap-2 overflow-y-auto sm:grid-cols-2">
+              {templates === null && <p className="text-sm text-zinc-500">Loading…</p>}
+              {templates?.length === 0 && <p className="text-sm text-zinc-500">No templates found.</p>}
+              {templates?.map((t) => (
                 <button
-                  key={u}
+                  key={t.id}
                   type="button"
-                  onClick={() => setHeightU(u)}
+                  role="radio"
+                  aria-checked={t.id === templateId}
+                  onClick={() => setTemplateId(t.id)}
                   className={cx(
-                    'h-8 min-w-10 rounded-md border px-2 text-sm font-medium',
-                    heightU === u ? 'border-blue-600 bg-blue-600 text-white' : 'border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800',
+                    'flex gap-3 rounded-lg border p-2 text-left',
+                    t.id === templateId ? 'border-blue-600 ring-2 ring-blue-600/30' : 'border-zinc-200 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800',
                   )}
                 >
-                  {u}U
+                  <div className="flex h-28 w-20 shrink-0 items-center justify-center rounded bg-zinc-100 p-1 dark:bg-zinc-950">
+                    <RackView design={t.design} catalog={catalog} view="front" cables={[]} lod="low" className="h-full w-auto max-w-full" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold">{t.name}</div>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">{t.description}</p>
+                  </div>
                 </button>
               ))}
-              <select aria-label="Other height" className={selectClass} value={heightU} onChange={(e) => setHeightU(Number(e.target.value))}>
-                {heights.map((u) => (
-                  <option key={u} value={u}>
-                    {u}U
-                  </option>
-                ))}
-              </select>
             </div>
-          </div>
-          <label className="block space-y-1">
-            <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Depth (optional)</span>
-            <select className={cx(selectClass, 'w-full')} value={depth ?? ''} onChange={(e) => setDepth(e.target.value ? Number(e.target.value) : null)}>
-              <option value="">Not specified</option>
-              {RACK_DEPTH_PRESETS.map((d) => (
-                <option key={d} value={d}>
-                  {d} mm
-                </option>
-              ))}
-            </select>
-          </label>
+          ) : (
+            <>
+              <div className="space-y-1">
+                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Width</span>
+                <div>
+                  <Segmented label="Rack width" value={width} onChange={setWidth} options={[{ value: '19in', label: '19″' }, { value: '10in', label: '10″' }]} />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Height</span>
+                <div className="flex flex-wrap gap-1">
+                  {RACK_HEIGHT_PRESETS.map((u) => (
+                    <button
+                      key={u}
+                      type="button"
+                      onClick={() => setHeightU(u)}
+                      className={cx(
+                        'h-8 min-w-10 rounded-md border px-2 text-sm font-medium',
+                        heightU === u ? 'border-blue-600 bg-blue-600 text-white' : 'border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800',
+                      )}
+                    >
+                      {u}U
+                    </button>
+                  ))}
+                  <select aria-label="Other height" className={selectClass} value={heightU} onChange={(e) => setHeightU(Number(e.target.value))}>
+                    {heights.map((u) => (
+                      <option key={u} value={u}>
+                        {u}U
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <label className="block space-y-1">
+                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Depth (optional)</span>
+                <select className={cx(selectClass, 'w-full')} value={depth ?? ''} onChange={(e) => setDepth(e.target.value ? Number(e.target.value) : null)}>
+                  <option value="">Not specified</option>
+                  {RACK_DEPTH_PRESETS.map((d) => (
+                    <option key={d} value={d}>
+                      {d} mm
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
+          )}
         </div>
         <div className="flex justify-end gap-2 border-t border-zinc-200 px-5 py-3 dark:border-zinc-800">
           <Button onClick={onClose}>Cancel</Button>
-          <Button variant="primary" type="submit" disabled={busy}>
+          <Button variant="primary" type="submit" disabled={busy || (start === 'template' && !template)}>
             Create
           </Button>
         </div>

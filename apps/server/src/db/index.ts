@@ -42,6 +42,11 @@ const MIGRATIONS: string[] = [
      key TEXT PRIMARY KEY,
      value TEXT NOT NULL
    );`,
+  `CREATE TABLE shares (
+     token TEXT PRIMARY KEY,
+     design_id TEXT NOT NULL UNIQUE REFERENCES designs(id) ON DELETE CASCADE,
+     created_at TEXT NOT NULL
+   );`,
 ];
 
 export function migrate(sqlite: Database.Database): number {

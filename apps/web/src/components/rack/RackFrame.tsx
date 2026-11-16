@@ -1,16 +1,18 @@
 /**
- * Rack frame drawings: rails with square cage-nut holes at EIA-310 spacing
- * (three per U), U numbers, posts, top and bottom panels, per frame style.
+ * Rack frame drawings: rails with square cage-nut holes (or round tapped
+ * holes on DeskPi RackMate rails) at EIA-310 spacing (three per U), U numbers, posts, top and bottom panels, per frame style.
  * Product frames (DeskPi RackMate T1/T2) use their published outer sizes.
  */
 import { Fragment, memo } from 'react';
-import { U_MM, type Rack } from '@rackplanner/shared';
+import { RACK_FRAME_INFO, U_MM, type Rack } from '@rackplanner/shared';
 import type { Lod } from '../faceplates/Faceplate';
 import { LABEL_COL, RAIL, uTopToY, type RackLayout } from './geometry';
 
 /** Hole centres below the top of each U (EIA-310: 6.35, 22.225, 38.1 mm). */
 export const HOLE_OFFSETS = [6.35, 22.225, 38.1];
 const HOLE = 9.5;
+/** #10-32 tapped hole: 4.83 mm major diameter. */
+const TAPPED_R = 2.42;
 
 interface FrameProps {
   layout: RackLayout;
@@ -27,6 +29,7 @@ function Rails({ layout, lod }: { layout: RackLayout; lod: Lod }) {
   const { rack, innerX, opening, railX, top } = layout;
   const units = Array.from({ length: rack.heightU }, (_, i) => i + 1);
   const h = rack.heightU * U_MM;
+  const tapped = RACK_FRAME_INFO[rack.frame ?? 'open-4post']?.holes === 'tapped';
   return (
     <>
       {[railX, innerX + opening].map((rx) => (
@@ -36,9 +39,16 @@ function Rails({ layout, lod }: { layout: RackLayout; lod: Lod }) {
           <rect x={rx === railX ? rx + RAIL - 0.8 : rx} y={top} width={0.8} height={h} fill="#000" opacity={0.3} />
           {lod !== 'low' &&
             units.flatMap((u) =>
-              HOLE_OFFSETS.map((off) => (
-                <use key={`${u}-${off}`} href="#rp-cagehole" x={rx + (RAIL - HOLE) / 2} y={uTopToY(layout, u + 1) + off - HOLE / 2} width={HOLE} height={HOLE} />
-              )),
+              HOLE_OFFSETS.map((off) =>
+                tapped ? (
+                  <g key={`${u}-${off}`} data-hole="tapped">
+                    <circle cx={rx + RAIL / 2} cy={uTopToY(layout, u + 1) + off} r={TAPPED_R} fill="var(--rack-hole)" />
+                    <circle cx={rx + RAIL / 2} cy={uTopToY(layout, u + 1) + off} r={TAPPED_R - 0.7} fill="none" stroke="#fff" strokeOpacity={0.14} strokeWidth={0.35} strokeDasharray="0.5 0.45" />
+                  </g>
+                ) : (
+                  <use key={`${u}-${off}`} href="#rp-cagehole" x={rx + (RAIL - HOLE) / 2} y={uTopToY(layout, u + 1) + off - HOLE / 2} width={HOLE} height={HOLE} />
+                ),
+              ),
             )}
           {lod === 'low' &&
             units.map((u) => <rect key={u} x={rx + RAIL / 2 - 1.5} y={uTopToY(layout, u + 1) + U_MM / 2 - 1.5} width={3} height={3} fill="var(--rack-hole)" />)}

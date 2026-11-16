@@ -1,0 +1,230 @@
+{
+  "id": "tpl-mini-10in",
+  "name": "10″ mini rack",
+  "description": "8U 10-inch rack: patch panel, 8-port switch, Raspberry Pi mount, a mini PC on a shelf and an AU power strip.",
+  "design": {
+    "schemaVersion": 2,
+    "id": "tpl-mini-10in",
+    "name": "10″ mini rack",
+    "rack": {
+      "width": "10in",
+      "heightU": 8,
+      "depthMm": 300,
+      "numbering": "bottom-up",
+      "frame": "mini-10in",
+      "glassDoor": false
+    },
+    "expectedPoeLoadW": null,
+    "placements": [
+      {
+        "id": "p1",
+        "partId": "generic-patch-12-cat6-10in",
+        "bottomU": 8,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Patch"
+      },
+      {
+        "id": "p2",
+        "partId": "generic-switch-8p-10in",
+        "bottomU": 7,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Switch"
+      },
+      {
+        "id": "p3",
+        "partId": "generic-brush-1u-10in",
+        "bottomU": 6,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p4",
+        "partId": "generic-pi-mount-1u-10in",
+        "bottomU": 5,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Pi cluster"
+      },
+      {
+        "id": "p5",
+        "partId": "generic-shelf-2u-10in",
+        "bottomU": 3,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p6",
+        "partId": "lenovo-thinkcentre-m920q",
+        "bottomU": 3,
+        "xMm": 0,
+        "mounting": "front",
+        "parentId": "p5",
+        "label": "mini PC"
+      },
+      {
+        "id": "p7",
+        "partId": "generic-vented-1u-10in",
+        "bottomU": 2,
+        "xMm": 0,
+        "mounting": "front"
+      },
+      {
+        "id": "p8",
+        "partId": "generic-pdu-10in-4-au",
+        "bottomU": 1,
+        "xMm": 0,
+        "mounting": "front",
+        "label": "Power"
+      }
+    ],
+    "cables": [
+      {
+        "id": "c1",
+        "a": {
+          "placementId": "p2",
+          "port": {
+            "type": "rj45_1g",
+            "index": 1
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 1
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.15
+      },
+      {
+        "id": "c2",
+        "a": {
+          "placementId": "p2",
+          "port": {
+            "type": "rj45_1g",
+            "index": 2
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 2
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.15
+      },
+      {
+        "id": "c3",
+        "a": {
+          "placementId": "p2",
+          "port": {
+            "type": "rj45_1g",
+            "index": 3
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 3
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.15
+      },
+      {
+        "id": "c4",
+        "a": {
+          "placementId": "p2",
+          "port": {
+            "type": "rj45_1g",
+            "index": 4
+          }
+        },
+        "b": {
+          "placementId": "p1",
+          "port": {
+            "type": "keystone",
+            "index": 4
+          }
+        },
+        "type": "copper",
+        "color": "#3b82f6",
+        "lengthM": 0.15
+      },
+      {
+        "id": "c5",
+        "a": {
+          "placementId": "p4",
+          "port": {
+            "type": "rj45_1g",
+            "index": 1
+          }
+        },
+        "b": {
+          "placementId": "p2",
+          "port": {
+            "type": "rj45_1g",
+            "index": 5
+          }
+        },
+        "type": "copper",
+        "color": "#22c55e",
+        "label": "Pi 1",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c6",
+        "a": {
+          "placementId": "p4",
+          "port": {
+            "type": "rj45_1g",
+            "index": 2
+          }
+        },
+        "b": {
+          "placementId": "p2",
+          "port": {
+            "type": "rj45_1g",
+            "index": 6
+          }
+        },
+        "type": "copper",
+        "color": "#22c55e",
+        "label": "Pi 2",
+        "lengthM": 0.3
+      },
+      {
+        "id": "c7",
+        "a": {
+          "placementId": "p6",
+          "port": {
+            "type": "rj45_1g",
+            "index": 1
+          }
+        },
+        "b": {
+          "placementId": "p2",
+          "port": {
+            "type": "rj45_1g",
+            "index": 8
+          }
+        },
+        "type": "copper",
+        "color": "#a855f7",
+        "label": "mini PC",
+        "lengthM": 0.5
+      }
+    ],
+    "createdAt": "2026-11-10T00:00:00.000Z",
+    "updatedAt": "2026-11-10T00:00:00.000Z"
+  }
+}

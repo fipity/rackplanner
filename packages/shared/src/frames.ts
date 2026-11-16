@@ -14,6 +14,8 @@ export interface RackFrameInfo {
   /** External W × D × H in mm (H includes handles). */
   outerMm?: { w: number; d: number; h: number };
   supportsDoor: boolean;
+  /** Rail holes: square cage-nut holes, or round tapped holes (screws go straight in). Both on EIA-310 spacing. */
+  holes?: 'square' | 'tapped';
   sources: readonly string[];
   /** Drawing allowances in mm: panels above/below the rails, posts outside the rails, carry handle. */
   draw: { top: number; bottom: number; post: number; handle: number };
@@ -54,27 +56,31 @@ export const RACK_FRAME_INFO: Record<RackFrame, RackFrameInfo> = {
   },
   'rackmate-t1': {
     label: 'DeskPi RackMate T1 (8U)',
-    description: '10-inch 8U desktop cabinet, die-cast aluminium frame, acrylic sides, open front and rear, twin top handles.',
+    description: '10-inch 8U desktop cabinet, die-cast aluminium frame, acrylic sides, open front and rear, twin top handles, tapped #10-32 rails.',
     widths: ['10in'],
     fixedU: 8,
     depthMm: 212,
     innerWidthMm: 212,
     outerMm: { w: 281, d: 200, h: 451 },
     supportsDoor: false,
-    sources: ['https://wiki.deskpi.com/rackmate/rackmate-t1'],
+    // Tapped #10-32 rails (rackify.net RackMate T0/T1/T2 comparison; GeeekPi listings).
+    holes: 'tapped',
+    sources: ['https://wiki.deskpi.com/rackmate/rackmate-t1', 'https://rackify.net/blogs/learn/deskpi-rackmate-t0-vs-t1-vs-t2'],
     // 451 mm overall − 33 mm handles − 8 × 44.45 mm leaves 62.4 mm of top and bottom frame.
     draw: { top: 31.2, bottom: 31.2, post: 13.5, handle: 33 },
   },
   'rackmate-t2': {
     label: 'DeskPi RackMate T2 (12U)',
-    description: '10-inch 12U desktop rack, transparent acrylic sides, open front and rear, top handle.',
+    description: '10-inch 12U desktop rack, transparent acrylic sides, open front and rear, top handle, tapped #10-32 rails.',
     widths: ['10in'],
     fixedU: 12,
     depthMm: 260,
     innerWidthMm: 212,
     outerMm: { w: 281, d: 260, h: 629 },
     supportsDoor: false,
-    sources: ['https://wiki.deskpi.com/rackmate/rackmate-t2'],
+    // Tapped #10-32 rails (rackify.net RackMate T0/T1/T2 comparison; GeeekPi listings).
+    holes: 'tapped',
+    sources: ['https://wiki.deskpi.com/rackmate/rackmate-t2', 'https://rackify.net/blogs/learn/deskpi-rackmate-t0-vs-t1-vs-t2'],
     // 596 mm chassis − 12 × 44.45 mm leaves 62.6 mm of top and bottom frame; handle adds 33 mm.
     draw: { top: 31.3, bottom: 31.3, post: 13.5, handle: 33 },
   },
