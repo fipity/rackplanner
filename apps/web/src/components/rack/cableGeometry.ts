@@ -1,5 +1,6 @@
 import { occupancyOf, samePort, type CableEnd, type Catalog, type Design, type Part, type PlacedPart } from '@rackplanner/shared';
 import { faceFor, portPositions } from '../faceplates/Faceplate';
+import { routedLengthMm } from './cableRoutes';
 import { placementDeviceBox, rackLayout, shelfTrayMm, type DeviceBox, type View } from './geometry';
 
 export interface EndPoint {
@@ -49,13 +50,16 @@ export function cablePath(a: { x: number; y: number }, b: { x: number; y: number
   return `M${a.x} ${a.y} C${a.x} ${a.y + sag} ${b.x} ${b.y + sag} ${b.x} ${b.y}`;
 }
 
-/** Straight-line distance between two ends in mm (front view geometry). */
+/**
+ * Distance between two ends in mm: along the routed path when the cable runs
+ * through cable managers, otherwise straight-line (front view geometry).
+ */
 export function cableDistanceMm(design: Pick<Design, 'rack' | 'placements'>, catalog: Catalog, a: CableEnd, b: CableEnd): number | null {
   const views: View[] = ['front', 'rear'];
   for (const v of views) {
     const pa = cableEndPoint(design, catalog, a, v);
     const pb = cableEndPoint(design, catalog, b, v);
-    if (pa && pb && pa.visible && pb.visible) return Math.hypot(pa.x - pb.x, pa.y - pb.y);
+    if (pa && pb && pa.visible && pb.visible) return routedLengthMm(design, catalog, a, b, v) ?? Math.hypot(pa.x - pb.x, pa.y - pb.y);
   }
   const pa = cableEndPoint(design, catalog, a, 'front');
   const pb = cableEndPoint(design, catalog, b, 'front');

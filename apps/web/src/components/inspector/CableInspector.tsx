@@ -155,7 +155,7 @@ export function CableInspector({ cable }: { cable: Cable }) {
           />
           <span className="text-xs text-zinc-500">m</span>
           {suggested !== null && suggested !== cable.lengthM && (
-            <Button className="border border-zinc-300 text-xs dark:border-zinc-700" onClick={() => updateCable(cable.id, { lengthM: suggested })} title="Distance between the ends plus slack, rounded up to a standard length">
+            <Button className="border border-zinc-300 text-xs dark:border-zinc-700" onClick={() => updateCable(cable.id, { lengthM: suggested })} title="Length along the cable's route (through cable managers when there are any) plus slack, rounded up to a standard length">
               Use {suggested} m
             </Button>
           )}

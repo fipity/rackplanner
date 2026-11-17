@@ -103,8 +103,8 @@
         "10in"
       ],
       "power": {
-        "typicalW": null,
-        "maxW": null
+        "typicalW": 9.2,
+        "maxW": 90
       },
       "weightKg": null,
       "ports": {
@@ -120,9 +120,9 @@
         "mini-pc",
         "needs-shelf"
       ],
-      "sourceUrl": null,
+      "sourceUrl": "https://downloads.dell.com/rdoc/dell%20optiplex%203060%20micro%20form%20factor,d10u,d10u003,dell%20regulatory%20and%20environmental%20datasheet.pdf",
       "verified": false,
-      "notes": "Dimensions from memory/common listings; check before relying on them."
+      "notes": "Power from Dell's Product Compliance Datasheet for regulatory model D10U (ErP Lot 3 appendix, tested at 230 V): idle 7.5 to 9.2 W across the three tested configurations; the highest is used. Max is the 90 W power adapter's rating (a ceiling, not a measured draw; Dell lists 65, 90 and 130 W adapters). Dimensions from memory/common listings; check before relying on them."
     },
     {
       "id": "hp-elitedesk-800-g4-mini",
@@ -143,8 +143,8 @@
         "10in"
       ],
       "power": {
-        "typicalW": null,
-        "maxW": null
+        "typicalW": 13.6,
+        "maxW": 65
       },
       "weightKg": null,
       "ports": {
@@ -160,9 +160,9 @@
         "mini-pc",
         "needs-shelf"
       ],
-      "sourceUrl": null,
+      "sourceUrl": "https://h20195.www2.hp.com/v2/getpdf.aspx/c06040430.pdf",
       "verified": false,
-      "notes": "Dimensions from memory/common listings; check before relying on them."
+      "notes": "Power from HP QuickSpecs c06040430 (Desktop Mini energy table, ENERGY STAR test method, typically configured): 13.6 W short idle and 12.2 W long idle at 115 V. Max is the 65 W power adapter's rating (a ceiling, not a measured draw; a 90 W adapter is also offered). Dimensions from memory/common listings; check before relying on them."
     },
     {
       "id": "intel-nuc-13-pro-slim",
@@ -202,7 +202,7 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Dimensions from memory/common listings; check before relying on them."
+      "notes": "Dimensions from memory/common listings; check before relying on them. No power figures: Intel (now ASUS) publishes the adapter rating but no typical draw for the NUC 13 Pro."
     },
     {
       "id": "intel-nuc-13-pro-tall",
@@ -242,7 +242,7 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Dimensions from memory/common listings; check before relying on them."
+      "notes": "Dimensions from memory/common listings; check before relying on them. No power figures: Intel (now ASUS) publishes the adapter rating but no typical draw for the NUC 13 Pro."
     },
     {
       "id": "lenovo-thinkcentre-m720q",
@@ -263,8 +263,8 @@
         "10in"
       ],
       "power": {
-        "typicalW": null,
-        "maxW": null
+        "typicalW": 8.8,
+        "maxW": 65
       },
       "weightKg": null,
       "ports": {
@@ -282,7 +282,7 @@
       ],
       "sourceUrl": null,
       "verified": false,
-      "notes": "Same 1L \"Tiny\" chassis as the M920q; weight not confirmed."
+      "notes": "Same 1L \"Tiny\" chassis as the M920q; weight not confirmed. Power: 8.8 W short idle (8.5 W long idle) from Lenovo's ENERGY STAR certification record for the M720q; Lenovo's PSREF sheets give no idle figure. Max is the 65 W power adapter's rating (a ceiling, not a measured draw)."
     },
     {
       "id": "lenovo-thinkcentre-m920q",
@@ -303,8 +303,8 @@
         "10in"
       ],
       "power": {
-        "typicalW": null,
-        "maxW": null
+        "typicalW": 7.1,
+        "maxW": 65
       },
       "weightKg": 1.32,
       "ports": {
@@ -322,7 +322,7 @@
       ],
       "sourceUrl": "https://www.shi.com/product/35698554/Lenovo-ThinkCentre-M920q-10RS",
       "verified": false,
-      "notes": "Reseller spec sheet."
+      "notes": "Reseller spec sheet. Power: 7.1 W short idle (6.4 W long idle) from Lenovo's ENERGY STAR certification record for the M920q (type 10RR); Lenovo's PSREF sheets give no idle figure. Max is the 65 W power adapter's rating (a ceiling, not a measured draw; 90 W adapters are offered for faster CPUs)."
     },
     {
       "id": "generic-cable-modem",

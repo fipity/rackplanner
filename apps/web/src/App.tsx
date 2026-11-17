@@ -1,8 +1,8 @@
-import { DndContext, MouseSensor, TouchSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core';
 import { useEffect } from 'react';
 import { CustomPartBuilder } from './components/catalog/CustomPartBuilder';
 import { GlobalFaceplateDefs } from './components/faceplates/Defs';
-import { handleDragCancel, handleDragEnd, handleDragMove, handleDragStart } from './components/rack/dnd';
+import { OneFingerTouchSensor, handleDragCancel, handleDragEnd, handleDragMove, handleDragStart } from './components/rack/dnd';
 import { Button, cx } from './components/ui';
 import { navigate, useRoute } from './lib/router';
 import { useToastStore } from './lib/toast';
@@ -57,7 +57,7 @@ export function App() {
 
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
+    useSensor(OneFingerTouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
   );
 
   let page;

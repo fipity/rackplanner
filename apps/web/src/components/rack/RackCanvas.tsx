@@ -63,6 +63,21 @@ export function RackCanvas() {
   // Right-button drag panning: pointer and scroll position when it started.
   const pan = useRef<{ id: number; x: number; y: number; left: number; top: number } | null>(null);
   const [panning, setPanning] = useState(false);
+  // Touch screens: fingers currently down, and a two-finger pan in progress
+  // (midpoint and scroll position when the second finger landed).
+  const touches = useRef(new Map<number, { x: number; y: number }>());
+  const touchPan = useRef<{ x: number; y: number; left: number; top: number } | null>(null);
+  const midpoint = () => {
+    const pts = [...touches.current.values()].slice(0, 2);
+    return { x: (pts[0]!.x + pts[1]!.x) / 2, y: (pts[0]!.y + pts[1]!.y) / 2 };
+  };
+  const endTouch = (id: number) => {
+    touches.current.delete(id);
+    if (touches.current.size < 2 && touchPan.current) {
+      touchPan.current = null;
+      setPanning(false);
+    }
+  };
 
   useLayoutEffect(() => {
     const el = containerRef.current;
@@ -112,6 +127,36 @@ export function RackCanvas() {
       }}
       // Hold the right mouse button and drag to pan around the rack.
       onContextMenu={(e) => e.preventDefault()}
+      onPointerDownCapture={(e) => {
+        // Two fingers down: pan with their midpoint (right-drag needs a mouse).
+        if (e.pointerType !== 'touch') return;
+        touches.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        const el = containerRef.current;
+        if (touches.current.size === 2 && el) {
+          const m = midpoint();
+          touchPan.current = { x: m.x, y: m.y, left: el.scrollLeft, top: el.scrollTop };
+          setPanning(true);
+          // Stop a long-press drag of the device under the first finger from starting.
+          e.stopPropagation();
+        }
+      }}
+      onPointerMoveCapture={(e) => {
+        if (e.pointerType !== 'touch' || !touches.current.has(e.pointerId)) return;
+        touches.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        const p = touchPan.current;
+        const el = containerRef.current;
+        if (!p || !el) return;
+        const m = midpoint();
+        el.scrollLeft = p.left - (m.x - p.x);
+        el.scrollTop = p.top - (m.y - p.y);
+        e.stopPropagation();
+      }}
+      onPointerUpCapture={(e) => {
+        if (e.pointerType === 'touch') endTouch(e.pointerId);
+      }}
+      onPointerCancelCapture={(e) => {
+        if (e.pointerType === 'touch') endTouch(e.pointerId);
+      }}
       onPointerDown={(e) => {
         if (e.button !== 2 || e.pointerType !== 'mouse') return;
         const el = containerRef.current;

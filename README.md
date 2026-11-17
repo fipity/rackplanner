@@ -179,7 +179,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <registry>/rackplanner
 | Delete / duplicate | <kbd>Del</kbd> / <kbd>Ctrl</kbd>+<kbd>D</kbd> |
 | Undo / redo | <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> |
 | Zoom | <kbd>+</kbd> / <kbd>-</kbd>, <kbd>0</kbd> to fit, or <kbd>Ctrl</kbd>+scroll |
-| Pan | Hold the right mouse button and drag |
+| Pan | Hold the right mouse button and drag; on a tablet, drag with two fingers |
 | Measured power | Select a device and enter watts in *Measured power* |
 | Export / print | **Export** menu in the header |
 
@@ -188,6 +188,8 @@ Changing the rack width, height or depth so that some parts no longer fit asks f
 ## Cables
 
 Turn on **Cables** mode (<kbd>C</kbd>) and every drawn port becomes clickable. Click one end, then the other, to add a cable. You can connect two ports, or a port to a whole device when the port isn't drawn (e.g. the NIC on a desktop NAS). The cable type is guessed from the ports (copper, DAC, fibre, coax, phone or power) and can be changed. Select a cable to set its colour, change either end's port, add a label, or set a length. **Use … m** suggests a standard patch-lead length from the distance between the ends, plus slack.
+
+When the rack has cable managers or brush panels, cables are routed the way they'd be dressed: from the port into the nearest manager (within about 2½U), along it, and up or down the side of the rack beside the posts when the two ends use different managers. Cables sharing a manager or a side run are spread a little apart, so they read as a bundle. D-ring and finger-duct managers work on the face they're mounted on; brush panels work from both sides, and a front-to-rear cable is drawn to the brush panel it passes through (marked with a small ring). Without any managers, cables are drawn as a loose curve between the ends, as before. The **Use … m** suggestion measures along the routed path.
 
 Cables between the front and the rear (or to a device on the other face) are drawn dashed. The eye button hides them all. Deleting a device removes its cables, and undo brings everything back. Warnings flag two cables on one port, ports that don't exist on a device, and cables to deleted devices. The CSV, PDF and printable parts lists include a cable shopping list grouped by type and length.
 

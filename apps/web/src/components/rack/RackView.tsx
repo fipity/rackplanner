@@ -23,6 +23,7 @@ import { Faceplate, bodyHeight, faceFor, portPositions, type Lod } from '../face
 import { FaceplateDefs } from '../faceplates/Defs';
 import { GlassDoor, RackFrame } from './RackFrame';
 import { cableEndPoint, cablePath } from './cableGeometry';
+import { routeCables, type CableRoute } from './cableRoutes';
 import { drawingExtent, placementDeviceBox, rackLayout, shelfTrayMm, wallArea, type DeviceBox, type View } from './geometry';
 import { WallArea } from './WallArea';
 
@@ -116,6 +117,7 @@ export function RackView({
     }
     return placementDeviceBox(layout, part, occ, view, p.parentId !== undefined, lift);
   };
+  const routes = showCables && cables.length > 0 ? routeCables(design, catalog, cables, view) : new Map<string, CableRoute>();
   const wallW = wallWidthMm(design, catalog);
   const wall = wallArea(layout, wallW, view);
   const extent = drawingExtent(layout, wallW, view);
@@ -265,7 +267,9 @@ export function RackView({
             const a = cableEndPoint(design, catalog, c.a, view);
             const b = cableEndPoint(design, catalog, c.b, view);
             if (!a || !b || (!a.visible && !b.visible)) return null;
-            const d = cablePath(a, b);
+            // Through cable managers / brush panels when there are any nearby.
+            const route = routes.get(c.id);
+            const d = route ? route.d : cablePath(a, b);
             const crossFace = !a.visible || !b.visible;
             const selected = selectedCableId === c.id;
             return (
@@ -273,6 +277,7 @@ export function RackView({
                 {selected && <path d={d} fill="none" stroke="#60a5fa" strokeWidth={5} strokeOpacity={0.55} strokeLinecap="round" />}
                 <path d={d} fill="none" stroke="#0b0c0e" strokeWidth={2.9} strokeOpacity={0.55} strokeLinecap="round" strokeDasharray={crossFace ? '5 3' : undefined} />
                 <path d={d} fill="none" stroke={c.color} strokeWidth={1.8} strokeLinecap="round" strokeDasharray={crossFace ? '5 3' : undefined} />
+                {route?.through && <circle cx={route.through.x} cy={route.through.y} r={1.6} fill="#0b0c0e" stroke={c.color} strokeWidth={0.6} />}
                 {[a, b].map((pt, i) =>
                   pt.visible ? (
                     <rect key={i} x={pt.x - 1.9} y={pt.y - 1.9} width={3.8} height={3.8} rx={0.6} fill={c.color} stroke="#0b0c0e" strokeWidth={0.5} />

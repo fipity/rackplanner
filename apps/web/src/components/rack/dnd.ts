@@ -7,7 +7,7 @@
  * `useDragStore` so the canvas can draw a ghost and the tooltip can explain
  * collisions.
  */
-import type { DragEndEvent, DragMoveEvent, DragStartEvent } from '@dnd-kit/core';
+import { TouchSensor, type DragEndEvent, type DragMoveEvent, type DragStartEvent } from '@dnd-kit/core';
 import {
   SIDE_SUFFIX,
   U_MM,
@@ -188,4 +188,34 @@ export function turnedMessage(partId: string, wall = false): string {
 export function handleDragCancel(): void {
   startPointer = null;
   useDragStore.getState().end();
+}
+
+/**
+ * dnd-kit's TouchSensor, but a second finger landing cancels the drag (pending
+ * or started), so a two-finger pan on the rack never drags a device.
+ */
+export class OneFingerTouchSensor extends TouchSensor {
+  constructor(props: ConstructorParameters<typeof TouchSensor>[0]) {
+    super(props);
+    const doc = (props.event.target as Node | null)?.ownerDocument ?? document;
+    let done = false;
+    const stop = () => {
+      done = true;
+      doc.removeEventListener('touchstart', onStart, true);
+      doc.removeEventListener('touchend', onEnd, true);
+      doc.removeEventListener('touchcancel', onEnd, true);
+    };
+    const onStart = (e: TouchEvent) => {
+      if (done || e.touches.length < 2) return;
+      stop();
+      // handleCancel is private in the typings but is the sensor's own abort path.
+      (this as unknown as { handleCancel(): void }).handleCancel();
+    };
+    const onEnd = (e: TouchEvent) => {
+      if (e.touches.length === 0) stop();
+    };
+    doc.addEventListener('touchstart', onStart, true);
+    doc.addEventListener('touchend', onEnd, true);
+    doc.addEventListener('touchcancel', onEnd, true);
+  }
 }
