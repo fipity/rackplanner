@@ -52,6 +52,10 @@ interface DesignState {
   updatePlacement: (id: string, patch: PlacementPatch) => void;
   /** Removes the placement and anything sitting on it. */
   removePlacement: (id: string) => void;
+  /** Add several placements in one undo step (a mount and the devices it holds). */
+  addPlacements: (ps: PlacedPart[]) => void;
+  /** Replace the placement list (dropping cables to placements that are gone) in one undo step. */
+  setPlacements: (placements: PlacedPart[]) => void;
   setExpectedPoe: (w: number | null) => void;
   addCable: (c: Cable) => void;
   updateCable: (id: string, patch: Partial<Omit<Cable, 'id'>>) => void;
@@ -74,6 +78,13 @@ export const useDesignStore = create<DesignState>()(
           return { design: touch({ ...s.design, rack, placements: syncShelfChildren(placements), cables }) };
         }),
       addPlacement: (p) => set((s) => ({ design: touch({ ...s.design, placements: [...s.design.placements, p] }) })),
+      addPlacements: (ps) => set((s) => ({ design: touch({ ...s.design, placements: syncShelfChildren([...s.design.placements, ...ps]) }) })),
+      setPlacements: (placements) =>
+        set((s) => {
+          const ids = new Set(placements.map((p) => p.id));
+          const cables = s.design.cables.filter((c) => ids.has(c.a.placementId) && ids.has(c.b.placementId));
+          return { design: touch({ ...s.design, placements: syncShelfChildren(placements), cables }) };
+        }),
       updatePlacement: (id, patch) =>
         set((s) => ({
           design: touch({
@@ -82,7 +93,7 @@ export const useDesignStore = create<DesignState>()(
               if (p.id !== id) return p;
               const next: PlacedPart = { ...p, ...patch };
               // Optional fields set to undefined are removed so the design stays schema-clean.
-              for (const k of ['label', 'notes', 'color', 'parentId', 'measuredW', 'wall', 'airflow'] as const) {
+              for (const k of ['label', 'notes', 'color', 'parentId', 'measuredW', 'wall', 'airflow', 'print'] as const) {
                 if (k in patch && patch[k] === undefined) delete next[k];
               }
               return next;

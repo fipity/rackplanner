@@ -8,6 +8,7 @@ import { DesignSchema, PartSchema, type Design, type Part } from './schemas.js';
 import { CABLE_TYPE_LABELS } from './cables.js';
 import { placementPower } from './stats.js';
 import { uprightId } from './turn.js';
+import { ThumbnailIdSchema } from './printed/schema.js';
 
 export const EXPORT_FORMAT = 'rackplanner-design';
 
@@ -18,6 +19,11 @@ export const DesignExportSchema = z.object({
   design: DesignSchema,
   /** Custom parts the design uses, so it can be imported on another instance. */
   customParts: z.array(PartSchema).default([]),
+  /**
+   * Cached thumbnails of 3D-printed parts, keyed by thumbnail id, as base64
+   * image data. Optional: exports can leave them out.
+   */
+  thumbnails: z.record(ThumbnailIdSchema, z.string().max(7_000_000).regex(/^[A-Za-z0-9+/=]+$/)).optional(),
 });
 export type DesignExport = z.infer<typeof DesignExportSchema>;
 
@@ -28,7 +34,14 @@ export function buildDesignExport(design: Design, catalog: Catalog, now = new Da
   return { format: EXPORT_FORMAT, formatVersion: 1, exportedAt: now.toISOString(), design, customParts };
 }
 
-export type ImportResult = { ok: true; design: Design; customParts: Part[] } | { ok: false; error: string };
+/** Thumbnail ids used by a set of parts. */
+export function thumbnailIds(parts: readonly Part[]): string[] {
+  return [...new Set(parts.map((p) => p.printed?.thumbnail).filter((t): t is string => !!t))];
+}
+
+export type ImportResult =
+  | { ok: true; design: Design; customParts: Part[]; thumbnails: Record<string, string> }
+  | { ok: false; error: string };
 
 /** Parse an exported file, or a bare design JSON, with readable errors. */
 export function parseDesignImport(text: string): ImportResult {
@@ -42,11 +55,11 @@ export function parseDesignImport(text: string): ImportResult {
   if (isWrapper) {
     const r = DesignExportSchema.safeParse(raw);
     if (!r.success) return { ok: false, error: describe(r.error) };
-    return { ok: true, design: r.data.design, customParts: r.data.customParts };
+    return { ok: true, design: r.data.design, customParts: r.data.customParts, thumbnails: r.data.thumbnails ?? {} };
   }
   const r = DesignSchema.safeParse(raw);
   if (!r.success) return { ok: false, error: describe(r.error) };
-  return { ok: true, design: r.data, customParts: [] };
+  return { ok: true, design: r.data, customParts: [], thumbnails: {} };
 }
 
 function describe(err: z.ZodError): string {
@@ -75,6 +88,8 @@ export interface BomRow {
   labels: string[];
   sourceUrl: string | null;
   missing: boolean;
+  /** 3D-printed parts: where the model is, who designed it, and its licence. */
+  printed?: { url: string; designer: string | null; designerUrl: string | null; licence: string | null };
 }
 
 export function buildBom(design: Pick<Design, 'placements'> & { cables?: Design['cables'] }, catalog: Catalog): BomRow[] {
@@ -103,6 +118,10 @@ export function buildBom(design: Pick<Design, 'placements'> & { cables?: Design[
         sourceUrl: part?.sourceUrl ?? null,
         missing: !part,
       };
+      if (part?.printed) {
+        const src = part.printed.source;
+        row.printed = { url: src.url, designer: src.designer, designerUrl: src.designerUrl, licence: src.licence };
+      }
       rows.set(key, row);
     }
     row.qty++;
@@ -148,6 +167,9 @@ const BOM_COLUMNS: [string, (r: BomRow) => string | number | null][] = [
   ['Weight kg each', (r) => r.weightKg],
   ['Labels', (r) => r.labels.join('; ')],
   ['Spec URL', (r) => r.sourceUrl],
+  ['Model URL (3D print)', (r) => r.printed?.url ?? null],
+  ['Designer', (r) => r.printed?.designer ?? null],
+  ['Licence', (r) => r.printed?.licence ?? null],
 ];
 
 function csvCell(v: string | number | null): string {

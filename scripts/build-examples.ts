@@ -75,9 +75,11 @@ function rackmateT1(): Design {
   const gw = b.onShelf(shelfGw, 'ubiquiti-ucg-ultra', 0);
   b.add('power-automatix-pa-pdu6x', 5, { label: 'Power' });
   b.add('deskpi-rackmate-vent-1u', 4);
-  // U3 left open so the NVR can breathe.
-  const shelfNvr = b.add('deskpi-rackmate-shelf-1u', 1);
-  const nvr = b.onShelf(shelfNvr, 'ubiquiti-unvr-instant', 0, { notes: 'Too wide and deep for the 212 × 200 mm shelf: check the fit, or wall-mount it with the included bracket.' });
+  // U3 left open so the NVR can breathe. The NVR sits in a 3D-printed 2U
+  // MakerWorld mount (U1–2); it's 220 mm deep in a 212 mm rack, so the stats
+  // warn about the depth (the T1's open back leaves room for it to stick out).
+  const mount = b.add('makerworld-2424584-unvr-instant-10in-mount', 1, { label: 'NVR mount' });
+  const nvr = b.onShelf(mount, 'ubiquiti-unvr-instant', 1, { notes: '220 mm deep: sticks out about 8 mm past the T1’s 212 mm frame at the back.' });
   for (let i = 1; i <= 4; i++) b.cable(port(sw, 'rj45_1g', i), port(patch, 'keystone', i), BLUE, `PoE ${i}`, 0.2);
   b.cable(port(pi, 'rj45_1g', 1), port(sw, 'rj45_1g', 5), '#22c55e', 'Pi 4', 0.3);
   b.cable(port(nvr, 'rj45_1g', 1), port(sw, 'rj45_1g', 6), '#a855f7', 'NVR uplink', 0.5);

@@ -102,6 +102,19 @@ export const FaceplateDefs = memo(function FaceplateDefs() {
       <pattern id="rp-shelf-slots" width="9" height="40" patternUnits="userSpaceOnUse">
         <rect x="2" y="4" width="4.5" height="32" rx="2.2" fill="#000" fillOpacity="0.45" />
       </pattern>
+      {/* 3D-printed parts: faint layer lines (0.6 mm) and a matte shade over the filament colour. */}
+      <pattern id="rp-layer-lines" width="8" height="0.6" patternUnits="userSpaceOnUse">
+        <rect x="0" y="0.44" width="8" height="0.16" fill="#000" fillOpacity="0.16" />
+        <rect x="0" y="0" width="8" height="0.1" fill="#fff" fillOpacity="0.07" />
+      </pattern>
+      <linearGradient id="rp-print-matte" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#fff" stopOpacity="0.1" />
+        <stop offset="0.5" stopColor="#fff" stopOpacity="0" />
+        <stop offset="1" stopColor="#000" stopOpacity="0.16" />
+      </linearGradient>
+      <symbol id="rp-printer" viewBox="0 0 24 24">
+        <path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+      </symbol>
 
       {/* --- Connector symbols at nominal size (mm). currentColor = housing / body colour. --- */}
       <symbol id="rp-rj45" viewBox="0 0 13.6 11.6">

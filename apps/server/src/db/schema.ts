@@ -1,5 +1,5 @@
-import type { Design, Part } from '@rackplanner/shared';
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import type { Design, ModelDetails, Part } from '@rackplanner/shared';
+import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const parts = sqliteTable('parts', {
   id: text('id').primaryKey(),
@@ -38,3 +38,21 @@ export const shares = sqliteTable('shares', {
   designId: text('design_id').notNull().unique(),
   createdAt: text('created_at').notNull(),
 });
+
+/** Cached model-page details for 3D-printed parts (one row per model link). */
+export const printedSources = sqliteTable(
+  'printed_sources',
+  {
+    site: text('site').notNull(),
+    modelId: text('model_id').notNull(),
+    /** '' when the link named no print profile. */
+    profileId: text('profile_id').notNull().default(''),
+    url: text('url').notNull(),
+    status: text('status', { enum: ['ok', 'failed'] }).notNull(),
+    details: text('details', { mode: 'json' }).$type<ModelDetails>(),
+    thumbnail: text('thumbnail'),
+    error: text('error'),
+    fetchedAt: text('fetched_at').notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.site, t.modelId, t.profileId] })],
+);

@@ -16,6 +16,7 @@ import { Badge, Button, Segmented, cx, inputClass, selectClass } from '../compon
 import {
   ApiError,
   createDesignApi,
+  uploadThumbnail,
   createPart,
   deleteDesignApi,
   duplicateDesignApi,
@@ -332,12 +333,23 @@ export function HomePage() {
 
   /** Import an exported design (plus any custom parts it carries). */
   const importFile = async (file: File) => {
-    if (file.size > 5 * 1024 * 1024) return toast('That file is too large to be a design', 'error');
+    if (file.size > 40 * 1024 * 1024) return toast('That file is too large to be a design', 'error');
     const parsed = parseDesignImport(await file.text());
     if (!parsed.ok) return toast(parsed.error, 'error');
     const { catalog, upsert } = useCatalogStore.getState();
     try {
-      for (const part of parsed.customParts) {
+      // Embedded 3D-print thumbnails: store them (re-validated server side) and point the parts at them.
+      const thumbIds = new Map<string, string | null>();
+      for (const [oldId, data] of Object.entries(parsed.thumbnails)) {
+        try {
+          thumbIds.set(oldId, await uploadThumbnail(data));
+        } catch {
+          thumbIds.set(oldId, null);
+        }
+      }
+      for (const raw of parsed.customParts) {
+        const thumb = raw.printed?.thumbnail;
+        const part = raw.printed && thumb && thumbIds.has(thumb) ? { ...raw, printed: { ...raw.printed, thumbnail: thumbIds.get(thumb) ?? null } } : raw;
         if (catalog.has(part.id)) continue;
         try {
           upsert(await createPart(part));

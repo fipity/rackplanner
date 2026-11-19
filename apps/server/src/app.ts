@@ -10,14 +10,17 @@ import { PartError } from './catalogRepo.js';
 import { DesignError } from './designsRepo.js';
 import { registerCatalogRoutes } from './routes/catalog.js';
 import { registerDesignRoutes } from './routes/designs.js';
+import { registerPrintedRoutes, type PrintedRouteOptions } from './routes/printed.js';
 import { registerTemplateRoutes } from './templates.js';
 
 export interface AppDeps {
   config: Config;
   db: Db;
+  /** Overrides for the 3D-printed part fetcher (tests). */
+  printed?: Partial<PrintedRouteOptions>;
 }
 
-export async function buildApp({ config, db }: AppDeps): Promise<FastifyInstance> {
+export async function buildApp({ config, db, printed }: AppDeps): Promise<FastifyInstance> {
   const app = Fastify({ logger: { level: config.logLevel }, bodyLimit: 5 * 1024 * 1024, forceCloseConnections: 'idle' });
 
   if (config.basicAuth) registerBasicAuth(app, config.basicAuth);
@@ -43,6 +46,7 @@ export async function buildApp({ config, db }: AppDeps): Promise<FastifyInstance
   registerCatalogRoutes(app, db, config.catalogDir);
   registerDesignRoutes(app, db);
   registerTemplateRoutes(app, config.examplesDir);
+  registerPrintedRoutes(app, db, { thumbnailDir: path.join(config.dataDir, 'thumbnails'), ...printed });
 
   app.setErrorHandler((err, _req, reply) => {
     if (err instanceof PartError) {

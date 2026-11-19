@@ -20,14 +20,15 @@ Runs as a single Docker container with a SQLite database, or as a [desktop app f
 - **Catalog:** full UniFi lineup plus MikroTik, Synology, QNAP, UGREEN, TP-Link, Netgear, Cisco, Dell, HPE, Supermicro, APC, CyberPower, Eaton, DeskPi, Raspberry Pi and generic passive gear, with search, filters and a **custom part builder**.
 - **Designs, stats and exports:** start empty or from a **template**, autosave, undo / redo, power / heat / UPS / PoE / weight totals with warnings (including mixed airflow), and PNG / SVG / PDF / CSV / JSON exports.
 - **Read-only share links:** send someone a link to view a design, with no login needed.
+- **3D-printed parts:** paste a MakerWorld link to turn a printed mount, shelf or panel into a part, linked to the device it holds, with designer credit, licence and print status.
 
 ## Gallery
 
 | | |
 |---|---|
-| ![Front view of the My RackMate T1 build: 12-port keystone patch panel, Lite 8 PoE switch and Raspberry Pi 4 on a shelf, Cloud Gateway Ultra, AU power board, vented panel and the NVR Instant at the bottom](docs/images/rackmate-t1-front.png) | ![Rear view of the same build: punch-down backs of the patch panel, the gateway's network ports and USB-C power, and the NVR's ports](docs/images/rackmate-t1-rear.png) |
+| ![Front view of the My RackMate T1 build: 12-port keystone patch panel, Lite 8 PoE switch and Raspberry Pi 4 on a shelf, Cloud Gateway Ultra, AU power board, vented panel and the NVR Instant in a 3D-printed 2U mount at the bottom](docs/images/rackmate-t1-front.png) | ![Rear view of the same build: punch-down backs of the patch panel, the gateway's network ports and USB-C power, and the NVR's ports](docs/images/rackmate-t1-rear.png) |
 | **My RackMate T1, front:** a 10″ 8U DeskPi RackMate T1 with desktop UniFi gear on shelves. | **And the rear:** each device's rear panel, seen through the open back. |
-| ![A populated 24U 19-inch cabinet with a UniFi gateway, switches, patch panels, NVR, UNAS, Synology NAS, Dell servers, a PDU and an APC UPS](docs/images/full-19in-rack.png) | ![Top-down shelf plans showing the switch and Raspberry Pi side by side, the gateway, and the NVR overhanging its shelf in red](docs/images/rackmate-t1-shelves.png) |
+| ![A populated 24U 19-inch cabinet with a UniFi gateway, switches, patch panels, NVR, UNAS, Synology NAS, Dell servers, a PDU and an APC UPS](docs/images/full-19in-rack.png) | ![Top-down shelf plans showing the switch and Raspberry Pi side by side, the gateway, and the NVR in its printed mount](docs/images/rackmate-t1-shelves.png) |
 | **A full 24U 19″ cabinet:** UniFi, servers, NAS, patch panels, PDU and UPS. | **Shelf plans:** how desktop gear fits on each shelf, with overhangs hatched red. |
 | ![The editor in light mode showing the 24U homelab rack](docs/images/light-mode.png) | ![The same editor view in dark mode](docs/images/dark-mode.png) |
 | **Light mode** | **Dark mode** |
@@ -224,9 +225,10 @@ Rack servers and UPSs are assumed to breathe front to back; other gear has no ai
 | Format | Contents |
 |---|---|
 | PNG / SVG | Front, rear, or both side by side, with title. SVG is fully vector |
-| PDF | Page 1: front + rear views (landscape for short racks). Page 2: parts list, summary and warnings |
-| CSV | Bill of materials: brand, model, quantity, U, power, weight, labels, spec URL, plus cables by type and length |
-| JSON | Full design plus the custom parts it uses (re-importable) |
+| PDF | Page 1: front + rear views (landscape for short racks). Page 2: parts list, 3D-printed parts (model URL, designer, licence), summary and warnings |
+| CSV | Bill of materials: brand, model, quantity, U, power, weight, labels, spec URL, model URL / designer / licence for 3D-printed parts, plus cables by type and length |
+| JSON | Full design plus the custom parts it uses (re-importable), with 3D-printed parts' cached pictures unless you pick *JSON without 3D-print thumbnails* |
+| Parts to print | 3D-printed parts with picture, filament, status, model link, designer and licence. Printable, or CSV / Markdown |
 | Printable view | Light layout with both views, stats and the parts list. Print from the browser |
 
 Images and PDFs always use full detail, whatever the editor's zoom. Tick **Print style (LEDs off)** in the Export menu (or use the LED button on the printable view) for a cleaner look without lit status LEDs.
@@ -260,6 +262,27 @@ On first start the catalog is loaded into the SQLite database in `./data`. When 
 ### Custom parts
 
 Use the **+** button in the catalog to build your own device, with a live front and rear faceplate preview. Pick a style preset, then tick **Custom layout** to place regions yourself (ports, SFP cages, drive bays, display, vents, fans, PSUs, labels…) with % positions, or press **Start from generated layout** to begin from what the app would draw. The builder warns when the layout's ports don't match the port list or regions overlap. The **copy** icon on any catalog part (or *Customise a copy* in the inspector) starts from an existing part. Custom parts are stored in the database, appear under *My custom parts*, and are never overwritten by catalog updates.
+
+### 3D-printed parts
+
+![The My RackMate T1 example with the 3D-printed NVR mount selected: the UniFi NVR Instant sits inside the 2U mount at the bottom of the rack, and the details panel shows a placeholder model picture, the designer credit, licence, print status, filament colour and a View on MakerWorld button](docs/images/3d-printed-part.png)
+
+Click **Add 3D-printed part** (in the catalog, or at the top of the custom part builder) and paste a MakerWorld model link. Any form works: with or without `/en/`, the name slug or `#profileId-…`. RackPlanner keeps a cleaned link and reads the model page **once**, when you paste it: title, designer, licence, print profile, a short description and the cover picture, from the page's public meta tags and embedded JSON. Print files (STL / 3MF) are never downloaded; the part links to the model page.
+
+MakerWorld often blocks automated requests. When it does, nothing breaks: the name comes from the link (`unifi-nvr-instant-10-inch-rackmount` → "UniFi NVR Instant 10 Inch Rackmount"), the other fields stay editable, you can paste or upload a picture yourself, and **Refresh details** tries again later.
+
+Before saving you check and edit what was guessed from the title:
+
+- **Rack width** (10″ / 19″) and **U height** (`1U`, `2U`, `1.5U`…). When the title has no height it defaults to 1U, highlighted so you check it.
+- **Part type:** rackmount (holds a device), shelf, blank, cable management, patch panel / keystone, ear / bracket, other.
+- **Device it holds:** the title is matched against the catalog ("UniFi NVR Instant" → the UniFi NVR Instant). Confirm it, pick another, add more (e.g. 2 × Raspberry Pi) or remove it.
+- Name, depth, front / rear, **filament colour**, notes and **print status** (planned, printing, printed, installed).
+
+The part is saved as a custom catalog part tagged `3d-printed` (filter the catalog with **3D printed**), reusable in any design. Placing a mount places the devices it holds inside it, showing their real front panels through the cutout; dragging the mount moves them too, and removing it asks whether to keep them (moved to the nearest free shelf) or remove them as well. The stats warn when a device is too wide, tall or deep for its mount or the rack.
+
+Printed parts are drawn in their filament colour, matte, with printed-on rack ears, faint layer lines up close and a small printer badge. Selecting one shows its picture, the designer (linked), the licence (NonCommercial / NoDerivatives are called out), print status and filament per placement, and **View on MakerWorld**. The stats count printed parts and how many are still to print, and **Export → Parts to print** lists them with picture, colour, status and link (printable, or CSV / Markdown). The CSV bill of materials, the PDF and the printable view include each printed part's model URL, designer and licence, and JSON exports carry the source details plus the cached pictures (or choose **JSON without 3D-print thumbnails**).
+
+Pictures are resized to 600 px and kept in `./data/thumbnails`, so they show offline. Fetching is locked down: only `https://makerworld.com` pages (and pictures from MakerWorld's image host, `bblmw.com`), checked on the parsed hostname for every redirect, never private or local addresses, a 10 s timeout, 2 MB pages and 5 MB images, images checked by decoding them, all fetched text stripped to plain text, and at most 10 fetches a minute. The `My RackMate T1` example holds its NVR Instant in [a MakerWorld mount](https://makerworld.com/en/models/2424584-unifi-nvr-instant-10-inch-rackmount#profileId-2659248). The NVR is 220 mm deep in the T1's 212 mm frame, so that example shows a depth warning. Printables and Thingiverse links aren't supported yet; each site is a small "source adapter" (`packages/shared/src/printed/sources.ts`).
 
 ### Regenerating the researched catalog
 
@@ -316,6 +339,10 @@ Each catalog entry can describe its front, rear and top faces declaratively; the
 | GET / POST / DELETE | `/api/designs/:id/share` | Read / create / revoke the design's read-only share link |
 | GET | `/api/shared/:token` | A shared design and the parts it uses (open without basic auth) |
 | GET | `/api/templates` | Starting-point designs (`examples/templates/*.json`) |
+| POST | `/api/printed/resolve` | `{url}`: parse a MakerWorld link and read the model page once (cached; `fetched: false` with a reason when it's blocked) |
+| POST | `/api/printed/refresh` | `{url}`: read the model page again |
+| POST | `/api/thumbnails` | `{data}` (base64 or data: URL, ≤ 5 MB): store a picture, returns its id |
+| GET | `/api/thumbnails/:id` | A stored picture (WebP, open without basic auth like share links) |
 
 ## Development
 
@@ -337,7 +364,7 @@ npx playwright install chromium   # once
 npm run screenshots               # builds, starts a scratch server, captures, optimises
 ```
 
-It starts the built server on a temporary database (the example designs in `examples/` seed themselves), drives Chromium, writes palette-optimised PNGs, the drag-and-drop GIF and the device SVGs, and fails if `docs/images/` grows past 15 MB. If the browser runs under a different Node version from the server (for example inside the `mcr.microsoft.com/playwright` image), start the server yourself on an empty `DATA_DIR` and pass `BASE_URL=http://127.0.0.1:<port>`.
+3D-printed parts in screenshots always show a generated placeholder picture: model pictures belong to their designers and never go in the repository. It starts the built server on a temporary database (the example designs in `examples/` seed themselves), drives Chromium, writes palette-optimised PNGs, the drag-and-drop GIF and the device SVGs, and fails if `docs/images/` grows past 15 MB. If the browser runs under a different Node version from the server (for example inside the `mcr.microsoft.com/playwright` image), start the server yourself on an empty `DATA_DIR` and pass `BASE_URL=http://127.0.0.1:<port>`.
 
 `npm run examples` rebuilds `examples/*.json` and the templates in `examples/templates/` from the catalog, checking every placement and cable.
 

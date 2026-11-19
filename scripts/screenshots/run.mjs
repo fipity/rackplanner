@@ -85,6 +85,35 @@ async function openDesign(page, id, { view = 'Front' } = {}) {
 
 const rackSvg = (page) => page.locator('svg[aria-label*="rack,"]').first();
 
+const PLACEHOLDER_ID = 'f'.repeat(64);
+let placeholderPng = null;
+/**
+ * Point every 3D-printed part at a generated placeholder picture (catalog
+ * responses are rewritten, thumbnail requests answered locally), so no
+ * designer's image ever ends up in docs/images.
+ */
+async function usePlaceholderThumbnails(page) {
+  placeholderPng ??= await sharp({
+    create: { width: 600, height: 450, channels: 3, background: '#d4d4d8' },
+  })
+    .composite([
+      {
+        input: Buffer.from(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="450"><rect x="150" y="120" width="300" height="210" rx="18" fill="none" stroke="#71717a" stroke-width="10"/><path d="M200 300 l80-90 60 60 40-40 70 70z" fill="#a1a1aa"/><circle cx="380" cy="180" r="24" fill="#a1a1aa"/><text x="300" y="400" font-family="sans-serif" font-size="34" fill="#52525b" text-anchor="middle">Model picture</text></svg>',
+        ),
+      },
+    ])
+    .png()
+    .toBuffer();
+  await page.route('**/api/catalog', async (route) => {
+    const res = await route.fetch();
+    const body = await res.json();
+    for (const part of body.parts) if (part.printed) part.printed.thumbnail = PLACEHOLDER_ID;
+    await route.fulfill({ response: res, json: body });
+  });
+  await page.route('**/api/thumbnails/*', (route) => route.fulfill({ contentType: 'image/png', body: placeholderPng }));
+}
+
 async function save(name, buf) {
   const file = path.join(out, name);
   // Palette PNGs: large flat areas compress well and stay visually lossless.
@@ -110,11 +139,15 @@ async function save(name, buf) {
     await p.context().close();
   }
 
-  // Shelf plans (top-down view) of the build.
-  await page.getByRole('radio', { name: 'Shelves' }).click();
-  await page.waitForTimeout(300);
-  await save('rackmate-t1-shelves.png', await page.locator('[data-shot=shelf-plans]').screenshot());
   await page.context().close();
+
+  // Shelf plans (top-down view) of the build: tall enough for every shelf and mount.
+  const plans = await newPage({ width: 1600, height: 1700 });
+  await openDesign(plans, T1);
+  await plans.getByRole('radio', { name: 'Shelves' }).click();
+  await plans.waitForTimeout(300);
+  await save('rackmate-t1-shelves.png', await plans.locator('[data-shot=shelf-plans]').screenshot());
+  await plans.context().close();
 }
 {
   const page = await newPage({ width: 2100, height: 2700, scale: 1 });
@@ -138,6 +171,19 @@ for (const scheme of ['light', 'dark']) {
   await page.getByLabel('Search parts').fill('switch');
   await page.waitForTimeout(400);
   await save('catalog.png', await page.screenshot({ clip: { x: 0, y: 0, width: 760, height: 1000 } }));
+  await page.context().close();
+}
+{
+  // 3D-printed part: the MakerWorld mount holding the NVR, with its details
+  // panel. Model pictures belong to their designers, so the screenshot never
+  // shows a real one: every printed part gets a generated placeholder.
+  const page = await newPage({ width: 1600, height: 1000 });
+  await usePlaceholderThumbnails(page);
+  await openDesign(page, T1);
+  await page.locator('svg[aria-label*="rack,"] [role="button"][aria-label="NVR mount"]').click({ position: { x: 6, y: 6 } });
+  await page.waitForSelector('[aria-label="3D-printed part"]');
+  await page.waitForTimeout(300);
+  await save('3d-printed-part.png', await page.screenshot({ clip: { x: 300, y: 0, width: 1300, height: 1000 } }));
   await page.context().close();
 }
 {

@@ -5,8 +5,9 @@ directories:
   output: dist
   buildResources: build
 
-# The server bundle has no runtime dependencies except better-sqlite3, whose
-# Node-API prebuilds work in Electron as-is, so nothing needs rebuilding.
+# The server bundle has no runtime dependencies except better-sqlite3 and
+# sharp, whose Node-API prebuilds work in Electron as-is, so nothing needs
+# rebuilding.
 npmRebuild: false
 files:
   - main.js
@@ -16,8 +17,12 @@ files:
   - "!node_modules/better-sqlite3/binding.gyp"
   - "!node_modules/node-addon-api/**"
   - "!node_modules/better-sqlite3/prebuilds/{darwin-*,linuxmusl-*,*-arm64}.node"
+  - "!node_modules/@img/*-{darwin,linuxmusl,wasm32}-*/**"
+  - "!node_modules/@img/*-{arm,arm64,ppc64,s390x,riscv64,ia32}/**"
 asarUnpack:
   - node_modules/better-sqlite3/prebuilds/*.node
+  # sharp's native module and libvips must be real files on disk.
+  - node_modules/@img/**
 extraResources:
   - from: resources/web
     to: web
@@ -35,6 +40,7 @@ win:
       arch: [x64]
   files:
     - "!node_modules/better-sqlite3/prebuilds/linux-*.node"
+    - "!node_modules/@img/*-linux-*/**"
 nsis:
   oneClick: false
   perMachine: false
@@ -56,6 +62,7 @@ linux:
       arch: [x64]
   files:
     - "!node_modules/better-sqlite3/prebuilds/win32-*.node"
+    - "!node_modules/@img/*-win32-*/**"
 deb:
   packageName: rackplanner
   artifactName: rackplanner_${version}_amd64.deb

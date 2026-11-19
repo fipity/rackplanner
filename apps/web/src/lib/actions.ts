@@ -5,7 +5,11 @@ import {
   findFreeSlot,
   findShelfSlot,
   findWallSlot,
+  heldDevicePlacements,
+  mountChildren,
   newId,
+  removeMountKeepDevices,
+  type PlacedPart,
   partWidthMm,
   shelfGeometry,
   shelfXCandidates,
@@ -30,8 +34,56 @@ function selected() {
 export function deleteSelected(): void {
   const p = selected();
   if (!p) return;
-  useDesignStore.getState().removePlacement(p.id);
+  requestRemove(p.id);
+}
+
+/**
+ * Remove a placement. A 3D-printed mount that holds devices asks first
+ * whether to keep them (see MountRemovalDialog).
+ */
+export function requestRemove(id: string): void {
+  const { design, removePlacement } = useDesignStore.getState();
+  const { catalog } = useCatalogStore.getState();
+  if (mountChildren(design, id, catalog).length) {
+    useUiStore.getState().setMountRemoval({ placementId: id });
+    return;
+  }
+  removePlacement(id);
   useUiStore.getState().select(null);
+}
+
+/** Finish removing a printed mount: keep its devices (moved out) or remove them too. */
+export function removeMount(id: string, keepDevices: boolean): void {
+  const { design, removePlacement, setPlacements } = useDesignStore.getState();
+  const { catalog } = useCatalogStore.getState();
+  useUiStore.getState().setMountRemoval(null);
+  useUiStore.getState().select(null);
+  if (!keepDevices) {
+    removePlacement(id);
+    return;
+  }
+  const r = removeMountKeepDevices(design, id, catalog);
+  setPlacements(r.placements);
+  const where = { shelf: 'onto a shelf', rack: 'into free rack space', wall: 'onto the wall' };
+  const msgs = r.moved.map((m) => `${m.name} moved ${where[m.where]}`);
+  if (r.removed.length) msgs.push(`no room for ${r.removed.map((m) => m.name).join(', ')}, removed`);
+  toast(msgs.join('; ') || 'Mount removed', r.removed.length ? 'error' : 'info');
+}
+
+/**
+ * Add a new placement from the catalog. A 3D-printed mount brings the devices
+ * it's made for with it (one undo step).
+ */
+export function addNewPlacement(p: PlacedPart): void {
+  const { design, addPlacements } = useDesignStore.getState();
+  const { catalog } = useCatalogStore.getState();
+  const held = heldDevicePlacements(design, p, catalog, () => newId('p_'));
+  addPlacements([p, ...held]);
+  useUiStore.getState().select(p.id);
+  if (held.length) {
+    const names = [...new Set(held.map((h) => catalog.get(h.partId)?.name ?? h.partId))];
+    toast(`Added with ${names.join(', ')} inside`);
+  }
 }
 
 export function duplicateSelected(): void {

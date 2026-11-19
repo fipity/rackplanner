@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { MAX_RACK_U, MIN_RACK_U } from './units.js';
+import { PlacedPrintSchema, PrintedSpecSchema } from './printed/schema.js';
 
 // ---------------------------------------------------------------------------
 // Enumerations
@@ -403,6 +404,8 @@ export const PartSchema = z
     /** Cooling airflow; when omitted it's inferred for servers and UPSs and unknown otherwise. */
     airflow: AirflowSchema.optional(),
     tags: z.array(z.string().min(1)).default([]),
+    /** 3D-printed parts: where the model comes from, what it holds, filament and print status. */
+    printed: PrintedSpecSchema.optional(),
     legacy: z.boolean().optional(),
     sourceUrl: z.url().nullable(),
     verified: z.boolean(),
@@ -415,6 +418,9 @@ export const PartSchema = z
     }
     if (p.width === '19in' && !p.rackWidths.includes('19in')) {
       ctx.addIssue({ code: 'custom', message: '19in-wide parts must list 19in in rackWidths', path: ['rackWidths'] });
+    }
+    if (p.printed && !p.tags.includes('3d-printed')) {
+      ctx.addIssue({ code: 'custom', message: '3D-printed parts must be tagged 3d-printed', path: ['tags'] });
     }
     if (p.power.typicalW !== null && p.power.maxW !== null && p.power.typicalW > p.power.maxW) {
       ctx.addIssue({ code: 'custom', message: 'Typical power cannot exceed max power', path: ['power'] });
@@ -484,6 +490,8 @@ export const PlacedPartSchema = z
     airflow: AirflowSchema.optional(),
     notes: z.string().max(4000).optional(),
     color: HexColorSchema.optional(),
+    /** 3D-printed parts: this copy's print status and filament colour (default: the part's). */
+    print: PlacedPrintSchema.optional(),
     /** Per-port colour overrides, keyed "portType:index" (e.g. keystone colours). */
     portColors: z.record(z.string().regex(/^[a-z0-9_]+:[0-9]+$/), HexColorSchema).optional(),
   })

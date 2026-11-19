@@ -31,6 +31,8 @@ export interface FaceplateProps {
   portColors?: Record<string, string> | undefined;
   /** Hover tooltips on ports. */
   tooltips?: boolean | undefined;
+  /** 3D-printed parts: filament colour (defaults to the part's). */
+  filament?: string | undefined;
 }
 
 /** Detail level for a zoom (CSS px per mm). */
@@ -55,9 +57,10 @@ function turnTransform(view: View, uw: number, uh: number, ix: number, by: numbe
   return view === 'front' ? `translate(${ix + uh} ${by}) rotate(90)` : `translate(${ix} ${by + uw}) rotate(-90)`;
 }
 
-export const Faceplate = memo(function Faceplate({ part, w, h, ears, view, label, color, lod = 'high', leds = true, portColors, tooltips = false }: FaceplateProps) {
+export const Faceplate = memo(function Faceplate({ part, w, h, ears, view, label, color, lod = 'high', leds = true, portColors, tooltips = false, filament }: FaceplateProps) {
   const face = view === 'front' ? 'front' : 'rear';
   const earW = ears ? RAIL : 0;
+  if (part.printed) return <PrintedFace part={part} w={w} h={h} ears={ears} view={view} lod={lod} label={label} color={color} filament={filament ?? part.printed.filament} />;
 
   const upright = uprightPart(part);
   if (upright) {
@@ -133,6 +136,99 @@ export const Faceplate = memo(function Faceplate({ part, w, h, ears, view, label
     </g>
   );
 });
+
+// ---------------------------------------------------------------------------
+// 3D-printed parts
+// ---------------------------------------------------------------------------
+
+/** Relative luminance (0 dark … 1 light) of a #rrggbb colour. */
+function luminance(hex: string): number {
+  const n = parseInt(hex.slice(1), 16);
+  const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * c[0]! + 0.7152 * c[1]! + 0.0722 * c[2]!;
+}
+
+/**
+ * A 3D-printed part: one matte piece in the filament colour with the rack
+ * ears printed on (round screw holes), faint layer lines up close, and a
+ * cutout for the device a mount holds (the device is drawn in it by RackView).
+ */
+function PrintedFace({ part, w, h, ears, view, lod, label, color, filament }: { part: Part; w: number; h: number; ears: boolean; view: View; lod: Lod; label?: string | undefined; color?: string | undefined; filament: string }) {
+  const kind = part.printed!.kind;
+  const earW = ears ? RAIL : 0;
+  const ix = earW;
+  const iw = w - earW * 2;
+  const light = luminance(filament) > 0.45;
+  const edge = light ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.6)';
+  const hole = light ? '#2b2b2b' : '#050505';
+  const front = view === 'front';
+  const units = Math.max(0.5, Math.round((h / U_MM) * 2) / 2);
+  const holeYs: number[] = [];
+  for (let u = 0; u < Math.ceil(units); u++) for (const off of HOLE_OFFSETS) if (u * U_MM + off < h - 2) holeYs.push(u * U_MM + off);
+  const screwYs = holeYs.filter((_, i) => i % 3 === 1 || holeYs.length < 3);
+  const rim = 1.5;
+  const opening = part.shelf ? Math.min(iw - 4, part.shelf.usableWidthMm + 2) : 0;
+  return (
+    <g>
+      <title>3D printed: {part.name}</title>
+      <rect x={0.2} y={0.3} width={w - 0.4} height={h - 0.6} rx={ears ? 1.6 : 1} fill={filament} stroke={edge} strokeWidth={0.45} />
+      <rect x={0.2} y={0.3} width={w - 0.4} height={h - 0.6} rx={ears ? 1.6 : 1} fill="url(#rp-print-matte)" />
+      {lod === 'high' && <rect x={0.6} y={0.7} width={w - 1.2} height={h - 1.4} fill="url(#rp-layer-lines)" />}
+      {ears && lod !== 'low' && (
+        <>
+          {/* Where the ears meet the faceplate. */}
+          <rect x={RAIL - 0.4} y={0.8} width={0.4} height={h - 1.6} fill="#000" opacity={0.18} />
+          <rect x={w - RAIL} y={0.8} width={0.4} height={h - 1.6} fill="#000" opacity={0.18} />
+          {[RAIL / 2, w - RAIL / 2].map((cx) => (
+            <g key={cx}>
+              {holeYs.map((y) => (
+                <circle key={y} cx={cx} cy={y} r={2.5} fill={hole} opacity={screwYs.includes(y) ? 1 : 0.85} />
+              ))}
+              {lod === 'high' && front && screwYs.map((y) => <use key={`s${y}`} href="#rp-screw-black" x={cx - 2.3} y={y - 2.3} width={4.6} height={4.6} />)}
+            </g>
+          ))}
+        </>
+      )}
+      {part.shelf && opening > 2 && (
+        <g>
+          <rect x={ix + (iw - opening) / 2} y={rim} width={opening} height={h - rim * 2} rx={1.2} fill="#070707" opacity={0.92} stroke={light ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.16)'} strokeWidth={0.5} />
+          {lod !== 'low' && <rect x={ix + (iw - opening) / 2} y={rim} width={opening} height={0.6} fill="#000" opacity={0.6} />}
+        </g>
+      )}
+      {kind === 'patch-panel' && lod !== 'low' && (
+        <g>
+          {(() => {
+            const n = Math.max(1, Math.floor((iw - 16) / 17));
+            const gap = (iw - n * 14.5) / (n + 1);
+            const kh = Math.min(17, h - 8);
+            return Array.from({ length: n }, (_, i) => <rect key={i} x={ix + gap + i * (14.5 + gap)} y={(h - kh) / 2} width={14.5} height={kh} rx={0.8} fill={hole} />);
+          })()}
+        </g>
+      )}
+      {kind === 'cable-management' && lod !== 'low' && (
+        <g>
+          <rect x={ix + 8} y={h * 0.32} width={iw - 16} height={h * 0.36} rx={h * 0.18} fill={hole} />
+          {lod === 'high' &&
+            (() => {
+              const n = Math.max(2, Math.floor((iw - 16) / 18));
+              return Array.from({ length: n }, (_, i) => <rect key={i} x={ix + 8 + ((i + 0.5) * (iw - 16)) / n - 1} y={h * 0.32} width={2} height={h * 0.18} fill={filament} />);
+            })()}
+        </g>
+      )}
+      {lod !== 'low' && front && (
+        <g transform={`translate(${ix + 2} ${Math.min(2, h * 0.08)})`} aria-label="3D printed">
+          <rect width={6.2} height={6.2} rx={1.2} fill="#fff" opacity={0.88} />
+          <use href="#rp-printer" x={0.85} y={0.85} width={4.5} height={4.5} color="#111827" />
+        </g>
+      )}
+      {color && <rect x={ix + 0.3} y={h - 6} width={2.4} height={5} fill={color} />}
+      {label && <LabelTag x={ix + iw} y={0} text={label} />}
+    </g>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Ears, shelf, label tag

@@ -15,7 +15,9 @@
 import {
   checkPlacement,
   descendantsOf,
+  deviceHeightMm,
   displayName,
+  isPrintedMount,
   occupancyOf,
   partWidthMm,
   shelfHeadroomMm,
@@ -27,6 +29,7 @@ import { cableProblems } from './cables.js';
 import { powerSupplySummary, type PowerSupplySummary } from './power.js';
 import type { CableType, Design, Part, PlacedPart, PortType } from './schemas.js';
 import { EPS, U_MM } from './units.js';
+import { TO_PRINT, type PrintStatus } from './printed/schema.js';
 
 export const PASSIVE_CATEGORIES: ReadonlySet<string> = new Set([
   'blank',
@@ -55,7 +58,8 @@ export type WarningCode =
   | 'power-outlets'
   | 'plug-pack-socket'
   | 'plug-packs'
-  | 'airflow-mixed';
+  | 'airflow-mixed'
+  | 'mount-fit';
 
 export interface StatsWarning {
   code: WarningCode;
@@ -89,7 +93,21 @@ export interface DesignStats {
   ports: Partial<Record<PortType, number>>;
   cables: { count: number; byType: Partial<Record<CableType, number>>; totalLengthM: number; withoutLength: number };
   powerSupply: PowerSupplySummary;
+  /** 3D-printed parts placed in the design, and how many still need printing (planned or printing). */
+  printed: { count: number; toPrint: number };
   warnings: StatsWarning[];
+}
+
+/** Print status of a placed printed part (its own, else the part's default); null for other parts. */
+export function placementPrintStatus(p: PlacedPart, part: Part | undefined): PrintStatus | null {
+  if (!part?.printed) return null;
+  return p.print?.status ?? part.printed.status;
+}
+
+/** Filament colour of a placed printed part; null for other parts. */
+export function placementFilament(p: PlacedPart, part: Part | undefined): string | null {
+  if (!part?.printed) return null;
+  return p.print?.filament ?? part.printed.filament;
 }
 
 export function isPassive(part: Part): boolean {
@@ -138,6 +156,8 @@ export function computeStats(
   let passiveCount = 0;
   const desktopLoose: string[] = [];
   const unknownParts: string[] = [];
+  let printedCount = 0;
+  let toPrint = 0;
 
   placements.forEach((p, index) => {
     const part = catalog.get(p.partId);
@@ -207,9 +227,31 @@ export function computeStats(
       });
     }
 
-    if (p.parentId !== undefined) {
-      const shelf = placements.find((q) => q.id === p.parentId);
-      const shelfPart = shelf && catalog.get(shelf.partId);
+    const status = placementPrintStatus(p, part);
+    if (status) {
+      printedCount++;
+      if (TO_PRINT.has(status)) toPrint++;
+    }
+
+    const parentPlacement = p.parentId !== undefined ? placements.find((q) => q.id === p.parentId) : undefined;
+    const parentPart = parentPlacement && catalog.get(parentPlacement.partId);
+    if (parentPlacement && parentPart && isPrintedMount(parentPart)) {
+      // Inside a 3D-printed mount: does it fit the opening, and the rack?
+      const mountName = displayName(parentPlacement, parentPart);
+      const room = { w: parentPart.shelf!.usableWidthMm, h: Math.round(shelfHeadroomMm(part, parentPart) * 10) / 10, d: parentPart.shelf!.usableDepthMm };
+      const misfit: string[] = [];
+      if (partWidthMm(part) > room.w + EPS) misfit.push(`${partWidthMm(part)} mm wide (opening ${room.w} mm)`);
+      if (deviceHeightMm(part) > room.h + EPS) misfit.push(`${Math.round(deviceHeightMm(part) * 10) / 10} mm tall (${parentPart.heightU}U leaves ${room.h} mm)`);
+      if (part.depthMm !== null && part.depthMm > room.d + EPS) misfit.push(`${part.depthMm} mm deep (mount ${room.d} mm)`);
+      if (misfit.length) {
+        warnings.push({ code: 'mount-fit', severity: 'warning', message: `${name} doesn't fit ${mountName}: ${misfit.join(', ')}`, placementIds: [p.id, parentPlacement.id] });
+      }
+      if (rack.depthMm !== null && part.depthMm !== null && part.depthMm > rack.depthMm + EPS) {
+        warnings.push({ code: 'too-deep', severity: 'warning', message: `${name} is ${part.depthMm} mm deep; the rack is ${rack.depthMm} mm`, placementIds: [p.id] });
+      }
+    } else if (p.parentId !== undefined) {
+      const shelf = parentPlacement;
+      const shelfPart = parentPart;
       if (shelfPart?.shelf && part.depthMm !== null && part.depthMm > shelfPart.shelf.usableDepthMm + EPS) {
         warnings.push({
           code: 'shelf-too-shallow',
@@ -388,6 +430,7 @@ export function computeStats(
     ports,
     cables: { count: cables.length, byType, totalLengthM: round(totalLengthM, 2), withoutLength },
     powerSupply: supply,
+    printed: { count: printedCount, toPrint },
     warnings,
   };
 }

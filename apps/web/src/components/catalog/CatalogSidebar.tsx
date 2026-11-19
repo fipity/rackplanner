@@ -1,10 +1,10 @@
 import { useDraggable } from '@dnd-kit/core';
 import { displayName, findFreeSlot, findShelfSlot, findWallSlot, newId, type Part, type RackWidth } from '@rackplanner/shared';
-import { ensureWall } from '../../lib/actions';
-import { Copy, Filter, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
+import { addNewPlacement, ensureWall } from '../../lib/actions';
+import { Copy, Filter, Pencil, Plus, Printer, Search, Trash2, X } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { deletePart } from '../../lib/api';
-import { activeFilterCount, categoryLabel, facet, filterCatalog } from '../../lib/catalogFilter';
+import { activeFilterCount, categoryLabel, facet, filterCatalog, isPrinted } from '../../lib/catalogFilter';
 import { toast } from '../../lib/toast';
 import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
@@ -14,7 +14,7 @@ import { PartThumb } from '../faceplates/PartThumb';
 import type { DragData } from '../rack/dnd';
 import { Badge, Button, cx, inputClass, selectClass } from '../ui';
 
-function addToRack(part: Part) {
+export function addToRack(part: Part) {
   const { design, addPlacement } = useDesignStore.getState();
   const { catalog } = useCatalogStore.getState();
   const view = useUiStore.getState().view;
@@ -54,6 +54,10 @@ function addToRack(part: Part) {
     return;
   }
   const id = newId('p_');
+  if (part.printed) {
+    addNewPlacement({ ...slot, id });
+    return;
+  }
   addPlacement({ ...slot, id });
   useUiStore.getState().select(id);
   if (part.formFactor === 'desktop') {
@@ -78,7 +82,9 @@ const CatalogItem = memo(function CatalogItem({
   const disabled = reason !== undefined;
   const { setNodeRef, listeners, attributes, isDragging } = useDraggable({ id: `catalog:${part.id}`, data, disabled });
   const openBuilder = useUiStore((s) => s.openBuilder);
+  const openPrinted = useUiStore((s) => s.openPrinted);
   const custom = part.source === 'custom';
+  const edit = () => (part.printed ? openPrinted({ mode: 'edit', partId: part.id }) : openBuilder({ mode: 'edit', partId: part.id }));
   return (
     <li className="group relative [contain-intrinsic-size:auto_76px] [content-visibility:auto]">
       <div
@@ -111,6 +117,12 @@ const CatalogItem = memo(function CatalogItem({
             {part.formFactor === 'desktop' && <Badge tone="amber">shelf</Badge>}
             {part.formFactor === 'wall' && <Badge tone="amber">wall</Badge>}
             {part.poeBudgetW ? <Badge tone="green">PoE {part.poeBudgetW}W</Badge> : null}
+            {isPrinted(part) && (
+              <Badge tone="green" title="3D printed">
+                <Printer className="mr-0.5 size-3" aria-hidden />
+                3D
+              </Badge>
+            )}
             {part.legacy && <Badge>legacy</Badge>}
             {reason && <span className="text-[11px] text-red-600 dark:text-red-400">{reason}</span>}
           </div>
@@ -120,7 +132,7 @@ const CatalogItem = memo(function CatalogItem({
       <div className="absolute top-1 right-1 hidden gap-0.5 rounded-md bg-white/95 p-0.5 shadow-sm group-hover:flex group-focus-within:flex dark:bg-zinc-900/95">
         {custom ? (
           <>
-            <button type="button" aria-label={`Edit ${part.name}`} title="Edit" onClick={() => openBuilder({ mode: 'edit', partId: part.id })} className="rounded p-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+            <button type="button" aria-label={`Edit ${part.name}`} title="Edit" onClick={edit} className="rounded p-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
               <Pencil className="size-3.5" />
             </button>
             <button type="button" aria-label={`Delete ${part.name}`} title="Delete" onClick={() => onDelete(part)} className="rounded p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-950">
@@ -198,6 +210,10 @@ function Filters() {
         <input type="checkbox" checked={filters.onlyCustom} onChange={(e) => setFilters({ onlyCustom: e.target.checked })} />
         Only custom
       </label>
+      <label className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+        <input type="checkbox" checked={filters.onlyPrinted} onChange={(e) => setFilters({ onlyPrinted: e.target.checked })} />
+        3D printed
+      </label>
       {activeFilterCount(filters) > 0 && (
         <button type="button" onClick={resetFilters} className="col-span-2 text-left text-blue-600 hover:underline dark:text-blue-400">
           Clear filters
@@ -212,7 +228,7 @@ export function CatalogSidebar() {
   const retired = useCatalogStore((s) => s.retired);
   const status = useCatalogStore((s) => s.status);
   const rackWidth = useDesignStore((s) => s.design.rack.width);
-  const { showIncompatible, filters, openBuilder } = useUiStore();
+  const { showIncompatible, filters, openBuilder, openPrinted } = useUiStore();
   const [query, setQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [doomed, setDoomed] = useState<Part | null>(null);
@@ -275,6 +291,9 @@ export function CatalogSidebar() {
             <Plus className="size-4" />
           </Button>
         </div>
+        <Button onClick={() => openPrinted({ mode: 'create' })} className="w-full border border-zinc-300 dark:border-zinc-700">
+          <Printer className="size-4" /> Add 3D-printed part
+        </Button>
         {showFilters && <Filters />}
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto p-2">

@@ -21,7 +21,7 @@ import {
   type PortType,
   type RenderStyle,
 } from '@rackplanner/shared';
-import { Plus, Trash2, X } from 'lucide-react';
+import { Plus, Printer, Trash2, X } from 'lucide-react';
 import { cloneElement, isValidElement, useEffect, useId, useMemo, useRef, useState, type ReactElement, type ReactNode } from 'react';
 import { ApiError, createPart, updatePart } from '../../lib/api';
 import { categoryLabel } from '../../lib/catalogFilter';
@@ -303,6 +303,11 @@ export function CustomPartBuilder() {
     >
       <header className="flex items-center justify-between border-b border-zinc-200 px-5 py-3 dark:border-zinc-800">
         <h2 className="text-lg font-semibold">{title}</h2>
+        {builder?.mode === 'create' && (
+          <Button onClick={() => useUiStore.getState().openPrinted({ mode: 'create' })} className="mr-auto ml-3 border border-zinc-300 dark:border-zinc-700" title="Make a part from a MakerWorld model link">
+            <Printer className="size-4" /> Add 3D-printed part
+          </Button>
+        )}
         <Button aria-label="Close" onClick={close} className="px-1.5">
           <X className="size-4" />
         </Button>

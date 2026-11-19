@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 4,
+  "version": 5,
   "title": "10-inch mini-rack",
   "description": "DeskPi RackMate accessories and generic 10\" panels, shelves, mounts and PDUs.",
   "parts": [
@@ -1639,6 +1639,73 @@
           ]
         }
       }
+    },
+    {
+      "id": "makerworld-2424584-unvr-instant-10in-mount",
+      "brand": "3D printed",
+      "model": "UniFi NVR Instant 10\" rackmount (MakerWorld 2424584)",
+      "name": "UniFi NVR Instant 10\" 2U rackmount (3D printed)",
+      "category": "mount",
+      "subcategory": "device-mount",
+      "formFactor": "rack",
+      "heightU": 2,
+      "width": "10in",
+      "depthMm": 220,
+      "mounting": "front",
+      "rackWidths": [
+        "10in"
+      ],
+      "power": {
+        "typicalW": null,
+        "maxW": null
+      },
+      "weightKg": null,
+      "ports": {},
+      "shelf": {
+        "usableWidthMm": 222,
+        "usableDepthMm": 220
+      },
+      "render": {
+        "style": "shelf",
+        "body": "black",
+        "preset": "generic-black"
+      },
+      "tags": [
+        "3d-printed",
+        "makerworld",
+        "rackmount",
+        "mount",
+        "unifi",
+        "10in"
+      ],
+      "printed": {
+        "kind": "rackmount",
+        "source": {
+          "site": "makerworld",
+          "modelId": "2424584",
+          "profileId": "2659248",
+          "url": "https://makerworld.com/en/models/2424584-unifi-nvr-instant-10-inch-rackmount#profileId-2659248",
+          "title": null,
+          "designer": null,
+          "designerUrl": null,
+          "licence": null,
+          "profileName": null,
+          "description": null,
+          "fetchedAt": null
+        },
+        "holds": [
+          {
+            "partId": "ubiquiti-unvr-instant",
+            "qty": 1
+          }
+        ],
+        "filament": "#1c1c1c",
+        "status": "planned",
+        "thumbnail": null
+      },
+      "sourceUrl": "https://makerworld.com/en/models/2424584-unifi-nvr-instant-10-inch-rackmount#profileId-2659248",
+      "verified": false,
+      "notes": "3D-printed faceplate that holds the UniFi NVR Instant in a 10\" rack. Model page: MakerWorld 2424584, print profile 2659248. MakerWorld blocks scripted requests, so the designer, licence and exact height weren't read automatically: 2U assumed (the NVR is 47 mm tall, more than 1U), opening and depth taken from the NVR (220 × 220 mm). Open the model page for the designer's credit and licence."
     },
     {
       "id": "power-automatix-pa-pdu6x",

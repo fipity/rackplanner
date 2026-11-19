@@ -109,3 +109,47 @@ export const getSharedDesign = (token: string) => request(`/api/shared/${encodeU
 const TemplateSchema = z.object({ id: z.string(), name: z.string(), description: z.string(), design: DesignSchema });
 export type Template = z.infer<typeof TemplateSchema>;
 export const listTemplates = () => request('/api/templates', z.object({ templates: z.array(TemplateSchema) })).then((r) => r.templates);
+
+// ---------------------------------------------------------------------------
+// 3D-printed parts
+// ---------------------------------------------------------------------------
+
+const ResolveSchema = z.object({
+  parsed: z.object({ site: z.literal('makerworld'), modelId: z.string(), slug: z.string().nullable(), profileId: z.string().nullable(), canonicalUrl: z.string() }),
+  details: z
+    .object({
+      title: z.string().nullable(),
+      designer: z.string().nullable(),
+      designerUrl: z.string().nullable(),
+      description: z.string().nullable(),
+      licence: z.string().nullable(),
+      profileName: z.string().nullable(),
+    })
+    .nullable(),
+  thumbnail: z.string().nullable(),
+  fetched: z.boolean(),
+  reason: z.string().nullable(),
+  fetchedAt: z.string(),
+  cached: z.boolean(),
+});
+export type ResolvedModel = z.infer<typeof ResolveSchema>;
+
+/** Paste a link: the server fetches the page once (cached). */
+export const resolvePrinted = (url: string, refresh = false) =>
+  request(`/api/printed/${refresh ? 'refresh' : 'resolve'}`, ResolveSchema, { method: 'POST', body: JSON.stringify({ url }) });
+
+/** Store an image (base64 or data: URL); returns its thumbnail id. */
+export const uploadThumbnail = (data: string) =>
+  request('/api/thumbnails', z.object({ id: z.string() }), { method: 'POST', body: JSON.stringify({ data }) }).then((r) => r.id);
+
+export const thumbnailUrl = (id: string) => `/api/thumbnails/${id}`;
+
+/** A stored thumbnail as base64 (for JSON exports), or null if it's gone. */
+export async function thumbnailBase64(id: string): Promise<string | null> {
+  const res = await fetch(thumbnailUrl(id));
+  if (!res.ok) return null;
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}

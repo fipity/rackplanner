@@ -46,6 +46,11 @@ export interface FilterInput {
   showIncompatible: boolean;
 }
 
+/** 3D-printed: custom printed parts and catalog entries tagged 3d-printed. */
+export function isPrinted(part: Part): boolean {
+  return !!part.printed || part.tags.includes('3d-printed');
+}
+
 function matchesHeight(part: Part, height: string): boolean {
   if (!height) return true;
   if (height === 'tall') return part.heightU >= 4;
@@ -59,6 +64,7 @@ export function filterCatalog({ parts, retired, query, filters, rackWidth, showI
   for (const part of parts) {
     if (retired.has(part.id)) continue;
     if (filters.onlyCustom && part.source !== 'custom') continue;
+    if (filters.onlyPrinted && !isPrinted(part)) continue;
     if (filters.brand && part.brand !== filters.brand) continue;
     if (filters.category && part.category !== filters.category) continue;
     if (!matchesHeight(part, filters.height)) continue;
@@ -99,5 +105,5 @@ export function facet(parts: readonly Part[], retired: ReadonlySet<string>, key:
 }
 
 export function activeFilterCount(f: CatalogFilters): number {
-  return [f.brand, f.category, f.height, f.poe !== 'any', f.rackWidth !== 'any', f.hideLegacy, f.onlyCustom].filter(Boolean).length;
+  return [f.brand, f.category, f.height, f.poe !== 'any', f.rackWidth !== 'any', f.hideLegacy, f.onlyCustom, f.onlyPrinted].filter(Boolean).length;
 }

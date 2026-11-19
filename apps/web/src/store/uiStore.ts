@@ -15,6 +15,8 @@ export interface CatalogFilters {
   rackWidth: 'any' | '19in' | '10in';
   hideLegacy: boolean;
   onlyCustom: boolean;
+  /** Only 3D-printed parts. */
+  onlyPrinted: boolean;
 }
 
 export const DEFAULT_FILTERS: CatalogFilters = {
@@ -25,10 +27,15 @@ export const DEFAULT_FILTERS: CatalogFilters = {
   rackWidth: 'any',
   hideLegacy: false,
   onlyCustom: false,
+  onlyPrinted: false,
 };
 
 /** Part being edited in the custom part builder (null = closed). */
 export type BuilderState = { mode: 'create' | 'edit' | 'copy'; partId?: string } | null;
+/** 3D-printed part dialog: add from a link, or edit an existing printed part (null = closed). */
+export type PrintedDialogState = { mode: 'create'; url?: string } | { mode: 'edit'; partId: string } | null;
+/** A printed mount being removed while it holds devices: ask what to do with them. */
+export type MountRemoval = { placementId: string } | null;
 export type Zoom = 'fit' | number; // number = CSS px per mm
 
 interface UiState {
@@ -55,6 +62,8 @@ interface UiState {
   panelOpen: boolean;
   filters: CatalogFilters;
   builder: BuilderState;
+  printedDialog: PrintedDialogState;
+  mountRemoval: MountRemoval;
   select: (id: string | null) => void;
   setView: (v: View) => void;
   setZoom: (z: Zoom) => void;
@@ -73,6 +82,8 @@ interface UiState {
   setFilters: (patch: Partial<CatalogFilters>) => void;
   resetFilters: () => void;
   openBuilder: (b: BuilderState) => void;
+  openPrinted: (p: PrintedDialogState) => void;
+  setMountRemoval: (m: MountRemoval) => void;
 }
 
 const THEME_KEY = 'rackplanner.theme';
@@ -102,6 +113,8 @@ export const useUiStore = create<UiState>()((set, get) => ({
   panelOpen: false,
   filters: DEFAULT_FILTERS,
   builder: null,
+  printedDialog: null,
+  mountRemoval: null,
   select: (selectedId) => set(selectedId ? { selectedId, selectedCableId: null, rightTab: 'details' } : { selectedId }),
   setView: (view) => set({ view }),
   setZoom: (zoom) => set({ zoom }),
@@ -131,4 +144,6 @@ export const useUiStore = create<UiState>()((set, get) => ({
   setFilters: (patch) => set({ filters: { ...get().filters, ...patch } }),
   resetFilters: () => set({ filters: DEFAULT_FILTERS }),
   openBuilder: (builder) => set({ builder }),
+  openPrinted: (printedDialog) => set({ printedDialog, ...(printedDialog ? { builder: null } : {}) }),
+  setMountRemoval: (mountRemoval) => set({ mountRemoval }),
 }));

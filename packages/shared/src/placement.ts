@@ -86,6 +86,14 @@ export function partWidthMm(part: Part): number {
   }
 }
 
+/**
+ * A 3D-printed rackmount: a faceplate that holds devices inside its own U
+ * space (a shelf in engine terms, but what it holds never pokes out of it).
+ */
+export function isPrintedMount(part: Part | undefined): boolean {
+  return !!part?.shelf && part.printed?.kind === 'rackmount';
+}
+
 export function isFullWidth(part: Part, rackWidth: RackWidth): boolean {
   return partWidthMm(part) >= openingMm(rackWidth) - EPS;
 }
@@ -175,11 +183,12 @@ export function occupancyOf(
         ? parentOcc.x0 + (parentOcc.x1 - parentOcc.x0 - width) / 2
         : parentOcc.x0 + inset + placement.xMm;
     // Items stand on the shelf's tray, which sits at the bottom of the shelf's
-    // own U, so they start in that U rather than above it.
+    // own U, so they start in that U rather than above it. A printed mount's
+    // devices sit inside it, within its own U (the stats warn if they're too tall).
     return {
       placementId: placement.id,
       u0: parentOcc.u0,
-      u1: parentOcc.u0 + part.heightU,
+      u1: isPrintedMount(parentPart) ? parentOcc.u1 : parentOcc.u0 + part.heightU,
       x0,
       x1: x0 + width,
       faces: parentOcc.faces,
@@ -394,11 +403,22 @@ export function snapBottomU(part: Part, rawBottomU: number, rack: Rack): number 
  */
 /** Room above a shelf's tray within the U span an item on it reserves (mm). */
 export function shelfHeadroomMm(part: Part, shelfPart: Part): number {
+  // A printed mount's opening: its own height less a rim top and bottom.
+  if (isPrintedMount(shelfPart)) return shelfPart.heightU * U_MM - 2 * MOUNT_RIM_MM;
   return part.heightU * U_MM - Math.min(4, shelfPart.heightU * U_MM * 0.12);
 }
 
-/** Is a device taller than the room its U span leaves above a shelf's tray? */
+/** Rim of a printed mount above and below its opening (mm). */
+export const MOUNT_RIM_MM = 1.5;
+
+/** Physical height of a device (mm): measured for desktop gear, else its U height. */
+export function deviceHeightMm(part: Part): number {
+  return part.heightMm ?? part.heightU * U_MM;
+}
+
+/** Is a device taller than the room its U span leaves above a shelf's tray (or inside a mount)? */
 export function tooTallForShelf(part: Part, shelfPart: Part): boolean {
+  if (isPrintedMount(shelfPart)) return deviceHeightMm(part) > shelfHeadroomMm(part, shelfPart) + EPS;
   return part.heightMm !== undefined && part.heightMm > shelfHeadroomMm(part, shelfPart) + EPS;
 }
 
@@ -817,7 +837,7 @@ export function findShelfSlot(
   const part = catalog.get(partId);
   if (!part || part.formFactor !== 'desktop') return null;
   const shelves = design.placements
-    .filter((p) => p.parentId === undefined && catalog.get(p.partId)?.shelf)
+    .filter((p) => p.parentId === undefined && catalog.get(p.partId)?.shelf && (p.id === preferShelfId || !isPrintedMount(catalog.get(p.partId))))
     .sort((a, b) => Number(b.id === preferShelfId) - Number(a.id === preferShelfId) || b.bottomU - a.bottomU);
   // Each orientation's first valid spot; the turned one wins if only it stands clear of the shelf above.
   const tries = orientationsOf(part, catalog).map((p) => {

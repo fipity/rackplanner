@@ -3,6 +3,7 @@ import {
   AIRFLOW_LABELS,
   PORT_TYPE_LABELS,
   isPassive,
+  isPrintedMount,
   placementAirflow,
   type Airflow,
   alignedX,
@@ -33,6 +34,7 @@ import { useDesignStore } from '../../store/designStore';
 import { useUiStore } from '../../store/uiStore';
 import { PartThumb } from '../faceplates/PartThumb';
 import { CableInspector } from './CableInspector';
+import { PrintedDetails } from './PrintedDetails';
 import { Badge, Button, cx, inputClass, selectClass } from '../ui';
 
 const SWATCHES = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'];
@@ -278,11 +280,11 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
                 const shelf = design.placements.find((p) => p.id === placement.parentId);
                 return (
                   <>
-                    {' · on '}
+                    {isPrintedMount(shelf && catalog.get(shelf.partId)) ? ' · in ' : ' · on '}
                     <button
                       type="button"
                       className="text-blue-700 hover:underline dark:text-blue-400"
-                      title="Select the shelf"
+                      title="Select what it sits on"
                       onClick={() => shelf && useUiStore.getState().select(shelf.id)}
                     >
                       {shelf ? displayName(shelf, catalog.get(shelf.partId)) : 'a shelf'}
@@ -293,6 +295,8 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
           </div>
         </div>
       </div>
+
+      {basePart.printed && <PrintedDetails placement={placement} part={basePart} />}
 
       <Field label="Label / hostname">
         <CommitText
@@ -432,7 +436,9 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
         {part.notes && <p className="text-xs text-zinc-500 dark:text-zinc-400">{part.notes}</p>}
         <Button
           onClick={() =>
-            useUiStore.getState().openBuilder(basePart.source === 'custom' ? { mode: 'edit', partId: basePart.id } : { mode: 'copy', partId: basePart.id })
+            basePart.printed
+              ? useUiStore.getState().openPrinted({ mode: 'edit', partId: basePart.id })
+              : useUiStore.getState().openBuilder(basePart.source === 'custom' ? { mode: 'edit', partId: basePart.id } : { mode: 'copy', partId: basePart.id })
           }
           className="w-full border border-zinc-300 dark:border-zinc-700"
         >

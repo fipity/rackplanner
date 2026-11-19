@@ -1,6 +1,8 @@
 import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core';
 import { useEffect } from 'react';
 import { CustomPartBuilder } from './components/catalog/CustomPartBuilder';
+import { PrintedPartDialog } from './components/catalog/PrintedPartDialog';
+import { MountRemovalDialog } from './components/MountRemovalDialog';
 import { GlobalFaceplateDefs } from './components/faceplates/Defs';
 import { OneFingerTouchSensor, handleDragCancel, handleDragEnd, handleDragMove, handleDragStart } from './components/rack/dnd';
 import { Button, cx } from './components/ui';
@@ -10,6 +12,7 @@ import { EditorPage } from './pages/EditorPage';
 import { FaceplateGallery } from './pages/FaceplateGallery';
 import { HomePage } from './pages/HomePage';
 import { PrintPage } from './pages/PrintPage';
+import { PartsToPrintPage } from './pages/PartsToPrintPage';
 import { SharedPage } from './pages/SharedPage';
 import { useCatalogStore } from './store/catalogStore';
 import { applyTheme, useUiStore } from './store/uiStore';
@@ -40,6 +43,8 @@ export function App() {
   const { status, error, load } = useCatalogStore();
   const theme = useUiStore((s) => s.theme);
   const builder = useUiStore((s) => s.builder);
+  const printedDialog = useUiStore((s) => s.printedDialog);
+  const mountRemoval = useUiStore((s) => s.mountRemoval);
 
   // Share links are public: they bring their own parts and never touch the catalog API.
   const shared = route.name === 'shared';
@@ -77,6 +82,8 @@ export function App() {
     page = <EditorPage key={route.id} id={route.id} />;
   } else if (route.name === 'print') {
     page = <PrintPage key={route.id} id={route.id} />;
+  } else if (route.name === 'parts') {
+    page = <PartsToPrintPage key={route.id} id={route.id} />;
   } else if (route.name === 'gallery') {
     page = <FaceplateGallery />;
   } else if (route.name === 'home') {
@@ -104,6 +111,8 @@ export function App() {
       <GlobalFaceplateDefs />
       <div className="flex h-full flex-col">{page}</div>
       {builder && <CustomPartBuilder key={`${builder.mode}:${builder.partId ?? ''}`} />}
+      {printedDialog && <PrintedPartDialog key={printedDialog.mode === 'edit' ? printedDialog.partId : 'create'} />}
+      {mountRemoval && <MountRemovalDialog key={mountRemoval.placementId} />}
       <Toasts />
     </DndContext>
   );

@@ -4339,6 +4339,201 @@
               "minLength": 1
             }
           },
+          "printed": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "rackmount",
+                  "shelf",
+                  "blank",
+                  "cable-management",
+                  "patch-panel",
+                  "bracket",
+                  "other"
+                ]
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "site": {
+                    "type": "string",
+                    "enum": [
+                      "makerworld"
+                    ]
+                  },
+                  "modelId": {
+                    "type": "string",
+                    "pattern": "^[0-9]{1,15}$"
+                  },
+                  "profileId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^[0-9]{1,15}$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "title": {
+                    "default": null,
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "designer": {
+                    "default": null,
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 120
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "designerUrl": {
+                    "default": null,
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "licence": {
+                    "default": null,
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 120
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "profileName": {
+                    "default": null,
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "description": {
+                    "default": null,
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 1000
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "fetchedAt": {
+                    "default": null,
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "site",
+                  "modelId",
+                  "profileId",
+                  "url"
+                ],
+                "additionalProperties": false
+              },
+              "holds": {
+                "default": [],
+                "maxItems": 8,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "qty": {
+                      "default": 1,
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 12
+                    }
+                  },
+                  "required": [
+                    "partId"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "filament": {
+                "default": "#1c1c1c",
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$"
+              },
+              "status": {
+                "default": "planned",
+                "type": "string",
+                "enum": [
+                  "planned",
+                  "printing",
+                  "printed",
+                  "installed"
+                ]
+              },
+              "thumbnail": {
+                "default": null,
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "source"
+            ],
+            "additionalProperties": false
+          },
           "legacy": {
             "type": "boolean"
           },

@@ -20,7 +20,8 @@
     "dist:win": "node prepare.mjs && electron-builder --win nsis"
   },
   "dependencies": {
-    "better-sqlite3": "13.0.3"
+    "better-sqlite3": "13.0.3",
+    "sharp": "0.34.4"
   },
   "devDependencies": {
     "electron": "45.2.3",

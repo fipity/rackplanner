@@ -19,6 +19,7 @@ import {
   type Mounting,
   type Part,
 } from '@rackplanner/shared';
+import { addNewPlacement } from '../../lib/actions';
 import { toast } from '../../lib/toast';
 import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
@@ -172,6 +173,10 @@ export function handleDragEnd(_e: DragEndEvent): void {
   }
 
   const id = newId('p_');
+  if (useCatalogStore.getState().catalog.get(c.partId)?.printed) {
+    addNewPlacement({ ...c, id });
+    return;
+  }
   store.addPlacement({ ...c, id });
   useUiStore.getState().select(id);
   if (c.partId !== active.partId) toast(turnedMessage(c.partId, !!c.wall));

@@ -2,30 +2,13 @@
  * Export actions. Loaded on demand (dynamic import) so jsPDF and the SVG
  * renderer don't weigh down the editor.
  */
-import { bomToCsv, buildBom, buildDesignExport, computeStats, type Catalog, type Design } from '@rackplanner/shared';
+import { bomToCsv, buildBom, buildDesignExport, computeStats, licenceInfo, thumbnailIds, type Catalog, type Design } from '@rackplanner/shared';
+import { thumbnailBase64 } from '../api';
 import type { View } from '../../components/rack/geometry';
 import { renderSheet, svgToPng } from './render';
 
-export function fileStem(design: Design): string {
-  return (
-    design.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .slice(0, 60) || 'rack'
-  );
-}
-
-export function download(blob: Blob, filename: string): void {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 10_000);
-}
+export { download, fileStem } from './download';
+import { download, fileStem } from './download';
 
 const viewsFor = (which: View | 'both'): View[] => (which === 'both' ? ['front', 'rear'] : [which]);
 
@@ -48,8 +31,15 @@ export function exportCsv(design: Design, catalog: Catalog): void {
   download(new Blob([bomToCsv(buildBom(design, catalog))], { type: 'text/csv;charset=utf-8' }), `${fileStem(design)}-bom.csv`);
 }
 
-export function exportJson(design: Design, catalog: Catalog): void {
+/** JSON export. Cached 3D-print thumbnails are embedded (base64) unless `thumbnails: false`. */
+export async function exportJson(design: Design, catalog: Catalog, opts: { thumbnails?: boolean } = {}): Promise<void> {
   const data = buildDesignExport(design, catalog);
+  const ids = thumbnailIds(data.customParts);
+  if (opts.thumbnails !== false && ids.length) {
+    const entries = await Promise.all(ids.map(async (id) => [id, await thumbnailBase64(id)] as const));
+    const thumbnails = Object.fromEntries(entries.filter((e): e is readonly [string, string] => e[1] !== null));
+    if (Object.keys(thumbnails).length) data.thumbnails = thumbnails;
+  }
   download(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), `${fileStem(design)}.rackplanner.json`);
 }
 
@@ -98,6 +88,25 @@ export async function exportPdf(design: Design, catalog: Catalog, opts: ExportOp
     ]),
   });
 
+  // 3D-printed parts: where the models are, credit and licence.
+  const printed = rows.filter((r) => r.printed);
+  if (printed.length) {
+    const y = (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? margin + 20;
+    autoTable(doc, {
+      startY: y + 6,
+      margin: { left: margin, right: margin },
+      styles: { fontSize: 8, cellPadding: 1.5, overflow: 'linebreak' },
+      headStyles: { fillColor: [22, 128, 61] },
+      columnStyles: { 1: { cellWidth: 70 } },
+      head: [['3D-printed part', 'Model', 'Designer', 'Licence']],
+      body: printed.map((r) => {
+        const lic = licenceInfo(r.printed!.licence);
+        const flags = lic ? [lic.nonCommercial && 'non-commercial', lic.noDerivatives && 'no derivatives'].filter(Boolean).join(', ') : '';
+        return [`${r.qty}× ${r.name}`, r.printed!.url, r.printed!.designer ?? '—', (r.printed!.licence ?? 'not stated') + (flags ? ` (${flags})` : '')];
+      }),
+    });
+  }
+
   // Stats + warnings
   const stats = computeStats(design, catalog);
   const lastY = (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? margin + 20;
@@ -108,6 +117,7 @@ export async function exportPdf(design: Design, catalog: Catalog, opts: ExportOp
     ['UPS capacity', stats.ups.count ? `${stats.ups.capacityW} W` : 'none'],
     ['PoE budget', `${stats.poe.budgetW} W${stats.poe.expectedLoadW !== null ? ` (expected load ${stats.poe.expectedLoadW} W)` : ''}`],
     ['Weight', `${stats.weight.totalKg} kg${stats.weight.unknownIds.length ? ` (+${stats.weight.unknownIds.length} unknown)` : ''}`],
+    ...(stats.printed.count ? [['3D-printed parts', `${stats.printed.count} (${stats.printed.toPrint} still to print)`] as [string, string]] : []),
   ];
   autoTable(doc, {
     startY: lastY + 8,

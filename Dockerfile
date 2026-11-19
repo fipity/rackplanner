@@ -14,16 +14,18 @@ RUN npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build
 
-# ---- deps: the only runtime dependency left after bundling is the native
-# better-sqlite3 module (musl build for alpine, same version as the lockfile).
+# ---- deps: the only runtime dependencies left after bundling are the native
+# better-sqlite3 and sharp (thumbnails) modules, musl builds for alpine, same
+# versions as the lockfile.
 FROM node:22-alpine AS deps
 # Toolchain only used if better-sqlite3 has no prebuilt binary for this platform.
 RUN apk add --no-cache python3 make g++
 WORKDIR /deps
 COPY package-lock.json /tmp/package-lock.json
 RUN V=$(node -p "require('/tmp/package-lock.json').packages['node_modules/better-sqlite3'].version") \
+ && S=$(node -p "require('/tmp/package-lock.json').packages['node_modules/sharp'].version") \
  && npm init -y >/dev/null \
- && npm install --omit=dev --no-audit --no-fund --no-package-lock "better-sqlite3@$V" \
+ && npm install --omit=dev --no-audit --no-fund --no-package-lock "better-sqlite3@$V" "sharp@$S" \
  && rm -rf node_modules/better-sqlite3/deps node_modules/better-sqlite3/src node_modules/better-sqlite3/build/Release/obj* \
  && npm cache clean --force
 

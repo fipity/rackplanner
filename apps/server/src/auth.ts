@@ -17,6 +17,7 @@ export function isPublicPath(method: string, url: string): boolean {
   if (method !== 'GET' && method !== 'HEAD') return false;
   return (
     pathname.startsWith('/api/shared/') ||
+    /^\/api\/thumbnails\/[a-f0-9]{64}$/.test(pathname) ||
     /^\/s\/[A-Za-z0-9_-]+\/?$/.test(pathname) ||
     pathname.startsWith('/assets/') ||
     /^\/[A-Za-z0-9_.-]+\.(?:svg|png|ico|webmanifest|txt)$/.test(pathname)

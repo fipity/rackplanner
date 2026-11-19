@@ -83,19 +83,20 @@
     },
     {
       "id": "p9",
-      "partId": "deskpi-rackmate-shelf-1u",
+      "partId": "makerworld-2424584-unvr-instant-10in-mount",
       "bottomU": 1,
       "xMm": 0,
-      "mounting": "front"
+      "mounting": "front",
+      "label": "NVR mount"
     },
     {
       "id": "p10",
       "partId": "ubiquiti-unvr-instant",
       "bottomU": 1,
-      "xMm": 0,
+      "xMm": 1,
       "mounting": "front",
       "parentId": "p9",
-      "notes": "Too wide and deep for the 212 × 200 mm shelf: check the fit, or wall-mount it with the included bracket."
+      "notes": "220 mm deep: sticks out about 8 mm past the T1’s 212 mm frame at the back."
     }
   ],
   "cables": [

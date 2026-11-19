@@ -47,6 +47,19 @@ const MIGRATIONS: string[] = [
      design_id TEXT NOT NULL UNIQUE REFERENCES designs(id) ON DELETE CASCADE,
      created_at TEXT NOT NULL
    );`,
+  // 3D-printed parts: model page details fetched once per link (or the failure), cached.
+  `CREATE TABLE printed_sources (
+     site TEXT NOT NULL,
+     model_id TEXT NOT NULL,
+     profile_id TEXT NOT NULL DEFAULT '',
+     url TEXT NOT NULL,
+     status TEXT NOT NULL CHECK (status IN ('ok', 'failed')),
+     details TEXT,
+     thumbnail TEXT,
+     error TEXT,
+     fetched_at TEXT NOT NULL,
+     PRIMARY KEY (site, model_id, profile_id)
+   );`,
 ];
 
 export function migrate(sqlite: Database.Database): number {

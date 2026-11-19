@@ -1,4 +1,4 @@
-import { PORT_TYPE_LABELS, buildBom, computeStats, type Catalog, type Design, type PortType } from '@rackplanner/shared';
+import { PORT_TYPE_LABELS, buildBom, computeStats, licenceInfo, type Catalog, type Design, type PortType } from '@rackplanner/shared';
 import { ArrowLeft, Lightbulb, LightbulbOff, Printer } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { RackView } from '../components/rack/RackView';
@@ -71,6 +71,11 @@ export function PrintSheet({ design, catalog, stamp }: { design: Design; catalog
           <div>
             <b>Weight:</b> {stats.weight.totalKg} kg
           </div>
+          {stats.printed.count > 0 && (
+            <div>
+              <b>3D printed:</b> {stats.printed.count} ({stats.printed.toPrint} to print)
+            </div>
+          )}
           <div>
             <b>Ports:</b> {ports.map(([t, n]) => `${n}× ${PORT_TYPE_LABELS[t]}`).join(', ') || '—'}
           </div>
@@ -108,6 +113,23 @@ export function PrintSheet({ design, catalog, stamp }: { design: Design; catalog
                   <td className="px-1.5 py-1">
                     {r.name}
                     {r.labels.length > 0 && <div className="text-xs text-zinc-500">{r.labels.join(', ')}</div>}
+                    {r.printed && (
+                      <div className="text-xs text-zinc-600">
+                        3D printed ·{' '}
+                        <a href={r.printed.url} className="text-blue-700 underline">
+                          {r.printed.url.replace(/^https:\/\//, '')}
+                        </a>
+                        {' · design by '}
+                        {r.printed.designer ? (r.printed.designerUrl ? <a href={r.printed.designerUrl} className="text-blue-700 underline">{r.printed.designer}</a> : r.printed.designer) : 'unknown'}
+                        {' · '}
+                        {r.printed.licence ?? 'licence not stated'}
+                        {(() => {
+                          const lic = licenceInfo(r.printed.licence);
+                          const f = lic ? [lic.nonCommercial && 'non-commercial', lic.noDerivatives && 'no derivatives'].filter(Boolean).join(', ') : '';
+                          return f ? <b> ({f})</b> : null;
+                        })()}
+                      </div>
+                    )}
                   </td>
                   <td className="px-1.5 py-1 tabular-nums">{r.totalU || r.heightU}</td>
                   <td className="px-1.5 py-1 tabular-nums">{r.measuredW !== null ? `${r.measuredW}*` : (r.typicalW ?? '—')}</td>

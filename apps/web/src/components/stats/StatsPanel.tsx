@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
 import { useUiStore } from '../../store/uiStore';
+import { navigate, partsToPrintPath } from '../../lib/router';
 import { Badge, cx, inputClass } from '../ui';
 
 const fmtW = (w: number) => `${w.toLocaleString(undefined, { maximumFractionDigits: 1 })} W`;
@@ -124,6 +125,7 @@ export function useDesignStats() {
 
 export function StatsPanel() {
   const stats = useDesignStats();
+  const designId = useDesignStore((s) => s.design.id);
   const { power, ups, poe, weight } = stats;
   const usedPct = stats.rackU ? stats.usedU / stats.rackU : 0;
   const upsTone = ups.count ? (power.typicalWithPoeW > ups.capacityW ? 'bad' : power.maxWithPoeW > ups.capacityW ? 'warn' : 'ok') : undefined;
@@ -134,6 +136,20 @@ export function StatsPanel() {
 
   return (
     <div className="space-y-5">
+      {stats.printed.count > 0 && (
+        <Block
+          title="3D printed"
+          aside={
+            <button type="button" className="text-xs text-blue-700 hover:underline dark:text-blue-400" onClick={() => navigate(partsToPrintPath(designId))}>
+              Parts to print
+            </button>
+          }
+        >
+          <Row label="3D-printed parts" value={stats.printed.count} />
+          <Row label="Still to print" value={stats.printed.toPrint} hint="Planned or printing" />
+        </Block>
+      )}
+
       <Block title="Space" aside={<span className="text-xs text-zinc-500">{stats.deviceCount} devices · {stats.passiveCount} passive</span>}>
         <Row label="Used" value={`${stats.usedU} / ${stats.rackU}U`} />
         <Meter value={stats.usedU} max={stats.rackU} tone={usedPct >= 1 ? 'warn' : 'ok'} />

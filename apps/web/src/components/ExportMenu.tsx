@@ -1,6 +1,6 @@
-import { Download, FileJson, FileSpreadsheet, FileText, Image, Printer } from 'lucide-react';
+import { Download, FileJson, FileSpreadsheet, FileText, Image, ListChecks, Printer } from 'lucide-react';
 import { useRef, useState, type ComponentType } from 'react';
-import { designPath, navigate } from '../lib/router';
+import { designPath, navigate, partsToPrintPath } from '../lib/router';
 import { toast } from '../lib/toast';
 import { useCatalogStore } from '../store/catalogStore';
 import { useDesignStore } from '../store/designStore';
@@ -30,6 +30,7 @@ export function ExportMenu() {
   };
   const d = () => useDesignStore.getState().design;
   const c = () => useCatalogStore.getState().catalog;
+  const hasPrinted = useDesignStore((st) => st.design.placements.some((p) => !!useCatalogStore.getState().catalog.get(p.partId)?.printed));
 
   const actions: Action[] = [
     { label: 'PDF (views + parts list)', icon: FileText, run: withExport((m) => m.exportPdf(d(), c(), o())) },
@@ -43,6 +44,7 @@ export function ExportMenu() {
     'sep',
     { label: 'CSV bill of materials', icon: FileSpreadsheet, run: withExport((m) => m.exportCsv(d(), c())) },
     { label: 'JSON (full design)', icon: FileJson, run: withExport((m) => m.exportJson(d(), c())) },
+    ...(hasPrinted ? [{ label: 'JSON without 3D-print thumbnails', icon: FileJson, run: withExport((m) => m.exportJson(d(), c(), { thumbnails: false })) }] : []),
     'sep',
     {
       label: 'Printable view',
@@ -52,6 +54,18 @@ export function ExportMenu() {
         navigate(`${designPath(d().id)}/print`);
       },
     },
+    ...(hasPrinted
+      ? [
+          {
+            label: 'Parts to print',
+            icon: ListChecks,
+            run: () => {
+              setOpen(false);
+              navigate(partsToPrintPath(d().id));
+            },
+          },
+        ]
+      : []),
   ];
 
   return (

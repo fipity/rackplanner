@@ -6,7 +6,10 @@
 import { Fragment, type ComponentType, type ReactNode, type Ref } from 'react';
 import {
   PORT_TYPE_LABELS,
+  U_MM,
+  isPrintedMount,
   occupancyOf,
+  placementFilament,
   overlaps,
   portKey,
   samePort,
@@ -113,6 +116,12 @@ export function RackView({
     if (p.parentId !== undefined) {
       const shelf = list.find((q) => q.id === p.parentId);
       const shelfPart = shelf && catalog.get(shelf.partId);
+      // In a printed mount the device sits centred in the opening (its box is just its body).
+      if (isPrintedMount(shelfPart)) {
+        const box = placementDeviceBox(layout, part, occ, view, true, 0);
+        const bh = Math.min(box.h, part.heightMm ?? part.heightU * U_MM);
+        return { ...box, y: box.y + (box.h - bh) / 2, h: bh };
+      }
       if (shelfPart) lift = shelfTrayMm(shelfPart);
     }
     return placementDeviceBox(layout, part, occ, view, p.parentId !== undefined, lift);
@@ -148,6 +157,7 @@ export function RackView({
       tooltips={portTooltips}
       label={extra.label}
       color={extra.color}
+      filament={placementFilament(p, part) ?? undefined}
     />
   );
 
