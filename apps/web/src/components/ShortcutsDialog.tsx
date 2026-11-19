@@ -11,8 +11,8 @@ export const SHORTCUT_GROUPS: { title: string; items: [string, string][] }[] = [
       ['Drag empty space', 'pan'],
       ['Space + drag', 'pan from anywhere, even over a device'],
       ['Middle or right drag', 'pan'],
-      ['Wheel / two-finger scroll', 'pan (any direction on a trackpad)'],
-      ['Shift + wheel', 'pan sideways'],
+      ['Two-finger trackpad scroll', 'pan in any direction'],
+      ['Shift + mouse wheel', 'pan sideways'],
       ['Arrow keys', 'pan when nothing is selected (Shift: faster)'],
       ['One finger on empty space', 'pan (touch)'],
       ['Two-finger pinch', 'zoom and pan (touch)'],
@@ -21,6 +21,7 @@ export const SHORTCUT_GROUPS: { title: string; items: [string, string][] }[] = [
   {
     title: 'Zoom',
     items: [
+      ['Mouse wheel', 'zoom at the cursor'],
       ['Ctrl/⌘ + wheel, trackpad pinch', 'zoom at the cursor'],
       ['+ / −', 'zoom in / out around the centre'],
       ['F or Shift+1', 'fit the rack to the screen'],

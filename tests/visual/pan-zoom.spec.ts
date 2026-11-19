@@ -111,28 +111,51 @@ test('middle-button drag pans', async ({ page, request }) => {
   expect(after.y - before.y).toBeCloseTo(-60, 0);
 });
 
-test('wheel pans vertically, Shift + wheel sideways, trackpad diagonally; the page never scrolls', async ({ page, request }) => {
+test('mouse wheel zooms at the cursor without Ctrl; Shift + wheel and trackpad scroll pan; the page never scrolls', async ({ page, request }) => {
   const id = await newDesign(request, 'pan-wheel', {}, []);
   await open(page, id);
-  const c = await canvasBox(page);
-  await page.mouse.move(c.x + c.width / 2, c.y + c.height / 2);
   let before = await rackBox(page);
+  // Whole pixels: browsers report wheel-event coordinates rounded.
+  const cursor = { x: Math.round(before.x + before.width * 0.3), y: Math.round(before.y + before.height * 0.25) };
+  const rel = { x: (cursor.x - before.x) / before.width, y: (cursor.y - before.y) / before.height };
+  await page.mouse.move(cursor.x, cursor.y);
+  const pct0 = await zoomPct(page);
+  // Two notches towards you: zoom in about 1.2× each, the point under the cursor stays put.
+  await page.mouse.wheel(0, -100);
+  await page.mouse.wheel(0, -100);
+  await expect.poll(() => zoomPct(page)).toBeGreaterThanOrEqual(Math.floor(pct0 * 1.4));
+  let after = await rackBox(page);
+  expect(after.width / before.width).toBeCloseTo(1.197 ** 2, 1);
+  expect(after.x + after.width * rel.x).toBeCloseTo(cursor.x, 0);
+  expect(after.y + after.height * rel.y).toBeCloseTo(cursor.y, 0);
+  // Two notches away: back where it started.
   await page.mouse.wheel(0, 100);
-  await expect.poll(async () => before.y - (await rackBox(page)).y).toBeCloseTo(100, 0);
+  await page.mouse.wheel(0, 100);
+  await expect.poll(async () => (await rackBox(page)).width).toBeCloseTo(before.width, 0);
+  after = await rackBox(page);
+  expect(after.x).toBeCloseTo(before.x, 0);
+  expect(after.y).toBeCloseTo(before.y, 0);
 
+  // Shift + wheel pans sideways.
+  await page.waitForTimeout(200);
   before = await rackBox(page);
   await page.keyboard.down('Shift');
   await page.mouse.wheel(0, 100);
   await page.keyboard.up('Shift');
   await expect.poll(async () => before.x - (await rackBox(page)).x).toBeCloseTo(100, 0);
   expect((await rackBox(page)).y).toBeCloseTo(before.y, 0);
+  expect((await rackBox(page)).width).toBeCloseTo(before.width, 0);
 
+  // A trackpad two-finger scroll (small, diagonal deltas) pans in any direction, no zoom.
+  await page.waitForTimeout(200);
   before = await rackBox(page);
-  await page.mouse.wheel(40, 30);
+  for (let i = 0; i < 5; i++) await page.mouse.wheel(8, 6);
   await expect.poll(async () => before.x - (await rackBox(page)).x).toBeCloseTo(40, 0);
   expect(before.y - (await rackBox(page)).y).toBeCloseTo(30, 0);
+  expect((await rackBox(page)).width).toBeCloseTo(before.width, 0);
 
   expect(await page.evaluate(() => [window.scrollX, window.scrollY, document.scrollingElement?.scrollTop ?? 0])).toEqual([0, 0, 0]);
+  expect(await page.evaluate(() => window.visualViewport?.scale ?? 1)).toBe(1);
 });
 
 test('Ctrl + wheel zooms towards the cursor: the point under it stays put', async ({ page, request }) => {
@@ -260,9 +283,7 @@ test('the rack can be panned far away, then brought back', async ({ page, reques
   await open(page, id);
   const c = await canvasBox(page);
   await expect(page.getByRole('button', { name: 'Back to rack' })).toHaveCount(0);
-  await page.mouse.move(c.x + c.width / 2, c.y + c.height / 2);
-  for (let i = 0; i < 30; i++) await page.mouse.wheel(0, -400);
-  await page.waitForTimeout(100);
+  for (let i = 0; i < 12; i++) await page.keyboard.press('Shift+ArrowUp');
   const far = await rackBox(page);
   // Soft bound: at most one viewport of empty space past the canvas edge, never further.
   expect(far.y).toBeGreaterThan(c.y + c.height);

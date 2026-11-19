@@ -139,3 +139,31 @@ export function toSaved(t: ViewTransform, size: Size): SavedView {
 export function fromSaved(s: SavedView, size: Size): ViewTransform {
   return centreOn({ x: s.cx, y: s.cy }, s.k, size);
 }
+
+export type WheelSource = 'mouse' | 'trackpad';
+
+/**
+ * Guess whether a wheel event came from a mouse wheel (zooms) or a trackpad
+ * two-finger scroll (pans). Browsers don't say, so it goes by the event's
+ * shape: mouse wheels move in lines (Firefox) or coarse whole vertical steps;
+ * trackpads send small, often fractional or diagonal deltas. Events that
+ * follow each other closely keep the first event's verdict, so one trackpad
+ * swipe never flips between panning and zooming.
+ */
+export function wheelSource(
+  e: { deltaX: number; deltaY: number; deltaMode: number },
+  now: number,
+  last: { source: WheelSource; at: number } | null,
+  streamGapMs = 120,
+): WheelSource {
+  if (last && now - last.at < streamGapMs) return last.source;
+  if (e.deltaMode !== 0) return 'mouse';
+  if (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 50) return 'mouse';
+  return 'trackpad';
+}
+
+/** Zoom factor for one mouse-wheel step: about 1.2× per notch, whatever the browser's step size. */
+export function mouseWheelZoomFactor(e: { deltaY: number; deltaMode: number }): number {
+  const px = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaMode === 2 ? e.deltaY * 800 : e.deltaY;
+  return Math.exp(-Math.max(-300, Math.min(300, px)) * 0.0018);
+}

@@ -6,6 +6,8 @@ import {
   constrain,
   fitRect,
   fromSaved,
+  mouseWheelZoomFactor,
+  wheelSource,
   isVisible,
   panBy,
   screenRect,
@@ -155,5 +157,34 @@ describe('saved views', () => {
     const c = screenToWorld(back, { x: 300, y: 450 });
     expect(c.x).toBeCloseTo(saved.cx, 1);
     expect(c.y).toBeCloseTo(saved.cy, 1);
+  });
+});
+
+describe('mouse wheel or trackpad', () => {
+  const ev = (deltaX: number, deltaY: number, deltaMode = 0) => ({ deltaX, deltaY, deltaMode });
+  it.each([
+    ['Chrome mouse notch', ev(0, 100), 'mouse'],
+    ['Chrome mouse notch, other direction', ev(0, -100), 'mouse'],
+    ['Windows mouse notch', ev(0, 120), 'mouse'],
+    ['Firefox mouse (lines)', ev(0, 3, 1), 'mouse'],
+    ['trackpad, small', ev(0, 4), 'trackpad'],
+    ['trackpad, fractional', ev(0, 61.5), 'trackpad'],
+    ['trackpad, diagonal', ev(12, -70), 'trackpad'],
+    ['trackpad, sideways', ev(30, 0), 'trackpad'],
+  ] as const)('%s → %s', (_n, e, want) => expect(wheelSource(e, 1000, null)).toBe(want));
+
+  it('a trackpad swipe stays a pan even when one event looks like a mouse notch', () => {
+    let last = { source: wheelSource(ev(0, 3), 0, null), at: 0 };
+    expect(last.source).toBe('trackpad');
+    last = { source: wheelSource(ev(0, 100), 50, last), at: 50 };
+    expect(last.source).toBe('trackpad');
+    // After a pause, the next event is judged afresh.
+    expect(wheelSource(ev(0, 100), 500, last)).toBe('mouse');
+  });
+
+  it('zooms about 1.2× per notch, in, out, and the same in every browser', () => {
+    expect(mouseWheelZoomFactor({ deltaY: -100, deltaMode: 0 })).toBeCloseTo(1.197, 2);
+    expect(mouseWheelZoomFactor({ deltaY: 100, deltaMode: 0 })).toBeCloseTo(1 / 1.197, 2);
+    expect(mouseWheelZoomFactor({ deltaY: -3, deltaMode: 1 })).toBeCloseTo(mouseWheelZoomFactor({ deltaY: -99, deltaMode: 0 }), 5);
   });
 });

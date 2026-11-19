@@ -476,7 +476,7 @@ function RackSummary() {
           ['C', 'cable mode'],
           ['R', 'turn shelf device on its side'],
           ['Drag empty space / Space+drag', 'pan'],
-          ['Ctrl+scroll / pinch', 'zoom at the cursor'],
+          ['Mouse wheel / pinch', 'zoom at the cursor'],
           ['F / 0', 'fit / 100%'],
         ].map(([k, v]) => (
           <div key={k} className="flex justify-between gap-2">

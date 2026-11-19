@@ -193,13 +193,14 @@ The canvas pans and zooms freely, like a map: you can move well past the rack in
 | Drag empty space | Left mouse button (a click without moving still deselects) |
 | <kbd>Space</kbd> + drag | From anywhere, even over a device (the cursor becomes a hand) |
 | Middle or right mouse button | Drag from anywhere |
-| Mouse wheel / two-finger trackpad scroll | Vertical; trackpads pan in any direction, diagonally too |
-| <kbd>Shift</kbd> + wheel | Horizontal |
+| Two-finger trackpad scroll | Any direction, diagonally too |
+| <kbd>Shift</kbd> + mouse wheel | Horizontal |
 | Arrow keys | Pan when nothing is selected (<kbd>Shift</kbd> for bigger steps). With a device selected, <kbd>↑</kbd> / <kbd>↓</kbd> move it 1U as before |
 | Touch | One finger on empty space pans; two fingers pinch to zoom and pan together |
 
 | Zoom | |
 |---|---|
+| Mouse wheel | Zoom towards the cursor (no key needed) |
 | <kbd>Ctrl</kbd> / <kbd>⌘</kbd> + wheel, trackpad pinch | Zoom towards the cursor |
 | <kbd>+</kbd> / <kbd>-</kbd>, toolbar zoom buttons | Zoom around the centre of the view |
 | Zoom % in the toolbar | Click it to type a zoom level, 10% to 800% (100% = 1 px per mm) |
@@ -209,6 +210,8 @@ The canvas pans and zooms freely, like a map: you can move well past the rack in
 | Minimap | The map button in the canvas corner shows the whole rack with the visible area outlined; click or drag in it to move there. The choice is remembered |
 
 Dragging a device near the edge of the canvas scrolls the view so you can drop it further away. The page itself never scrolls or zooms while you're over the canvas; the sidebars scroll as usual. Exports always show the whole rack, whatever the view.
+
+Browsers don't say whether scrolling comes from a mouse wheel or a trackpad, so RackPlanner goes by how it scrolls: coarse vertical steps (a wheel's notches) zoom, and small, smooth or diagonal movements (two fingers on a trackpad) pan. A mouse with very fine-grained smooth scrolling may pan instead of zooming; hold <kbd>Ctrl</kbd> to zoom with it.
 
 ## Cables
 

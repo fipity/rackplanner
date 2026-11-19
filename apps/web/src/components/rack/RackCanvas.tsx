@@ -13,7 +13,7 @@ import { lodForScale } from '../faceplates/Faceplate';
 import { ShelfPlanView } from './ShelfPlanView';
 import { cx } from '../ui';
 import { canvasRef, clientToSvg, panView, setTransform, syncCanvas, useViewStore } from '../../store/viewStore';
-import { screenToWorld, wheelPixels, wheelZoomFactor, zoomAt, type Pt, type ViewTransform } from './viewport';
+import { mouseWheelZoomFactor, screenToWorld, wheelPixels, wheelSource, wheelZoomFactor, zoomAt, type Pt, type ViewTransform, type WheelSource } from './viewport';
 import { CanvasOverlay } from './CanvasOverlay';
 
 /** What a screen reader announces for a device: its label or product name, and how it sits. */
@@ -136,8 +136,8 @@ export function RackCanvas() {
     };
   }, [plan]);
 
-  // Wheel: pan (two-finger trackpad scroll, mouse wheel, Shift + wheel sideways);
-  // Ctrl/Cmd + wheel and trackpad pinch zoom at the cursor. Native listener:
+  // Wheel: a mouse wheel zooms at the cursor; two-finger trackpad scroll pans;
+  // Shift + wheel pans sideways; Ctrl/Cmd + wheel and trackpad pinch zoom at the cursor. Native listener:
   // React's wheel handler is passive, and the page itself must not scroll or zoom.
   useEffect(() => {
     const el = containerRef.current;
@@ -152,12 +152,21 @@ export function RackCanvas() {
       const r = el.getBoundingClientRect();
       return { x: e.clientX - r.left, y: e.clientY - r.top };
     };
+    let last: { source: WheelSource; at: number } | null = null;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       busy();
       const d = wheelPixels(e, { w: el.clientWidth, h: el.clientHeight });
       const { t } = useViewStore.getState();
+      const now = performance.now();
+      const source = wheelSource(e, now, last);
+      last = { source, at: now };
+      // Ctrl/Cmd + wheel (and trackpad pinch, which browsers send as Ctrl + wheel) zooms at the cursor.
       if (e.ctrlKey || e.metaKey) setTransform(zoomAt(t, t.k * wheelZoomFactor(d.y), local(e)));
+      // Shift + wheel pans sideways.
+      else if (e.shiftKey) panView(-d.x, -d.y);
+      // A mouse wheel zooms at the cursor; a trackpad two-finger scroll pans.
+      else if (source === 'mouse') setTransform(zoomAt(t, t.k * mouseWheelZoomFactor(e), local(e)));
       else panView(-d.x, -d.y);
     };
     // Safari reports trackpad pinches as gesture events.
