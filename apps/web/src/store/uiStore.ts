@@ -64,6 +64,8 @@ interface UiState {
   minimap: boolean;
   /** Keyboard / mouse shortcuts popup. */
   shortcutsOpen: boolean;
+  /** What a plain mouse wheel does: guess per device (wheel zooms, trackpad pans), or always one (remembered). */
+  wheelMode: WheelMode;
   select: (id: string | null) => void;
   setView: (v: View) => void;
   setTheme: (t: Theme) => void;
@@ -83,6 +85,7 @@ interface UiState {
   setMountRemoval: (m: MountRemoval) => void;
   setMinimap: (v: boolean) => void;
   setShortcutsOpen: (v: boolean) => void;
+  setWheelMode: (m: WheelMode) => void;
 }
 
 const THEME_KEY = 'rackplanner.theme';
@@ -95,6 +98,8 @@ export function applyTheme(theme: Theme): void {
 const savedTheme = readLocal(THEME_KEY);
 const LEDS_KEY = 'rackplanner.leds';
 const MINIMAP_KEY = 'rackplanner.minimap';
+const WHEEL_KEY = 'rackplanner.wheel';
+export type WheelMode = 'auto' | 'zoom' | 'pan';
 
 export const useUiStore = create<UiState>()((set, get) => ({
   selectedId: null,
@@ -115,6 +120,7 @@ export const useUiStore = create<UiState>()((set, get) => ({
   mountRemoval: null,
   minimap: readLocal(MINIMAP_KEY) === 'on',
   shortcutsOpen: false,
+  wheelMode: (['auto', 'zoom', 'pan'] as const).find((m) => m === readLocal(WHEEL_KEY)) ?? 'auto',
   select: (selectedId) => set(selectedId ? { selectedId, selectedCableId: null, rightTab: 'details' } : { selectedId }),
   setView: (view) => set({ view }),
   setTheme: (theme) => {
@@ -144,4 +150,8 @@ export const useUiStore = create<UiState>()((set, get) => ({
     set({ minimap });
   },
   setShortcutsOpen: (shortcutsOpen) => set({ shortcutsOpen }),
+  setWheelMode: (wheelMode) => {
+    writeLocal(WHEEL_KEY, wheelMode);
+    set({ wheelMode });
+  },
 }));

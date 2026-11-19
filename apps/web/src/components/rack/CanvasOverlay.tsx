@@ -5,13 +5,21 @@
  */
 import { memo, useRef } from 'react';
 import type { Catalog, Design } from '@rackplanner/shared';
-import { Keyboard, LocateFixed, Map as MapIcon } from 'lucide-react';
+import { Keyboard, LocateFixed, Map as MapIcon, Mouse } from 'lucide-react';
 import { backToRack, contentVisible, setTransform, useViewStore } from '../../store/viewStore';
-import { useUiStore } from '../../store/uiStore';
+import { useUiStore, type WheelMode } from '../../store/uiStore';
 import { RackView } from './RackView';
 import { centreOn, screenToWorld } from './viewport';
 import type { View } from './geometry';
 import { cx } from '../ui';
+
+export const WHEEL_LABEL: Record<WheelMode, string> = { auto: 'Wheel zooms', zoom: 'Wheel always zooms', pan: 'Wheel pans' };
+const WHEEL_TITLE: Record<WheelMode, string> = {
+  auto: 'a mouse wheel zooms, two-finger trackpad scrolling pans',
+  zoom: 'every scroll zooms (trackpads too)',
+  pan: 'scrolling pans; hold Ctrl to zoom',
+};
+const NEXT_WHEEL: Record<WheelMode, WheelMode> = { auto: 'zoom', zoom: 'pan', pan: 'auto' };
 
 const MINI_W = 150;
 const MINI_H = 200;
@@ -81,6 +89,8 @@ export function CanvasOverlay({ design, catalog, view }: { design: Design; catal
   const minimap = useUiStore((s) => s.minimap);
   const setMinimap = useUiStore((s) => s.setMinimap);
   const setShortcutsOpen = useUiStore((s) => s.setShortcutsOpen);
+  const wheelMode = useUiStore((s) => s.wheelMode);
+  const setWheelMode = useUiStore((s) => s.setWheelMode);
   const btn = 'inline-flex size-8 items-center justify-center rounded-md border border-zinc-300 bg-white/90 text-zinc-700 shadow-sm hover:bg-white dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-300 dark:hover:bg-zinc-800';
   return (
     <>
@@ -99,6 +109,15 @@ export function CanvasOverlay({ design, catalog, view }: { design: Design; catal
       <div className="absolute bottom-3 left-3 z-10 flex gap-1.5" onClick={(e) => e.stopPropagation()}>
         <button type="button" aria-label="Minimap" aria-pressed={minimap} title="Minimap" onClick={() => setMinimap(!minimap)} className={cx(btn, minimap && 'ring-2 ring-blue-500')}>
           <MapIcon className="size-4" />
+        </button>
+        <button
+          type="button"
+          aria-label={`Scroll wheel: ${WHEEL_LABEL[wheelMode]}`}
+          title={`Scroll wheel: ${WHEEL_TITLE[wheelMode]}. Click to change.`}
+          onClick={() => setWheelMode(NEXT_WHEEL[wheelMode])}
+          className={cx(btn, 'w-auto gap-1 px-2 text-xs font-medium')}
+        >
+          <Mouse className="size-4" /> {WHEEL_LABEL[wheelMode]}
         </button>
         <button type="button" aria-label="Keyboard and mouse shortcuts" title="Shortcuts (?)" onClick={() => setShortcutsOpen(true)} className={btn}>
           <Keyboard className="size-4" />

@@ -1,8 +1,8 @@
 /** The "?" popup: every keyboard, mouse, trackpad and touch control in the editor. */
 import { X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { useUiStore } from '../store/uiStore';
-import { Button } from './ui';
+import { useUiStore, type WheelMode } from '../store/uiStore';
+import { Button, Segmented } from './ui';
 
 export const SHORTCUT_GROUPS: { title: string; items: [string, string][] }[] = [
   {
@@ -49,6 +49,8 @@ export const SHORTCUT_GROUPS: { title: string; items: [string, string][] }[] = [
 export function ShortcutsDialog() {
   const open = useUiStore((s) => s.shortcutsOpen);
   const close = () => useUiStore.getState().setShortcutsOpen(false);
+  const wheelMode = useUiStore((s) => s.wheelMode);
+  const setWheelMode = useUiStore((s) => s.setWheelMode);
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const d = ref.current;
@@ -73,6 +75,19 @@ export function ShortcutsDialog() {
             <Button aria-label="Close" onClick={close} className="px-1.5">
               <X className="size-4" />
             </Button>
+          </div>
+          <div className="mb-4 flex flex-wrap items-center gap-2 text-sm">
+            <span className="font-medium">Scroll wheel:</span>
+            <Segmented<WheelMode>
+              label="Scroll wheel"
+              value={wheelMode}
+              onChange={setWheelMode}
+              options={[
+                { value: 'auto', label: 'Auto', title: 'A mouse wheel zooms; two-finger trackpad scrolling pans' },
+                { value: 'zoom', label: 'Always zoom', title: 'Every scroll zooms, trackpads too' },
+                { value: 'pan', label: 'Pan', title: 'Scrolling pans; hold Ctrl to zoom' },
+              ]}
+            />
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
             {SHORTCUT_GROUPS.map((g) => (

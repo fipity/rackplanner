@@ -144,22 +144,32 @@ export type WheelSource = 'mouse' | 'trackpad';
 
 /**
  * Guess whether a wheel event came from a mouse wheel (zooms) or a trackpad
- * two-finger scroll (pans). Browsers don't say, so it goes by the event's
- * shape: mouse wheels move in lines (Firefox) or coarse whole vertical steps;
- * trackpads send small, often fractional or diagonal deltas. Events that
- * follow each other closely keep the first event's verdict, so one trackpad
- * swipe never flips between panning and zooming.
+ * two-finger scroll (pans). Browsers don't say, so it goes by the event:
+ *  - line or page deltas (Firefox mouse wheels) → mouse;
+ *  - any sideways movement → trackpad (a plain wheel has none);
+ *  - the legacy wheelDeltaY, where available, is ±120 per notch for wheels
+ *    and something else for trackpads (unless it's exactly −3 × deltaY,
+ *    which is how Chrome and Safari report trackpad pixels);
+ *  - otherwise a big vertical step (≥ 40 px; fractional is fine, display
+ *    scaling makes notches like 66.67 px) is a wheel, small steps a trackpad.
+ * Events less than `streamGapMs` apart keep the first verdict, so one swipe
+ * never flips between panning and zooming.
  */
 export function wheelSource(
-  e: { deltaX: number; deltaY: number; deltaMode: number },
+  e: { deltaX: number; deltaY: number; deltaMode: number; wheelDeltaY?: number | undefined },
   now: number,
   last: { source: WheelSource; at: number } | null,
   streamGapMs = 120,
 ): WheelSource {
   if (last && now - last.at < streamGapMs) return last.source;
   if (e.deltaMode !== 0) return 'mouse';
-  if (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 50) return 'mouse';
-  return 'trackpad';
+  if (Math.abs(e.deltaX) > 0.5) return 'trackpad';
+  const legacy = e.wheelDeltaY;
+  if (legacy) {
+    if (Math.abs(legacy + 3 * e.deltaY) < 0.5 && Math.abs(e.deltaY) < 40) return 'trackpad';
+    if (legacy % 120 === 0) return 'mouse';
+  }
+  return Math.abs(e.deltaY) >= 40 ? 'mouse' : 'trackpad';
 }
 
 /** Zoom factor for one mouse-wheel step: about 1.2× per notch, whatever the browser's step size. */

@@ -159,7 +159,8 @@ export function RackCanvas() {
       const d = wheelPixels(e, { w: el.clientWidth, h: el.clientHeight });
       const { t } = useViewStore.getState();
       const now = performance.now();
-      const source = wheelSource(e, now, last);
+      const mode = useUiStore.getState().wheelMode;
+      const source: WheelSource = mode === 'zoom' ? 'mouse' : mode === 'pan' ? 'trackpad' : wheelSource(e as WheelEvent & { wheelDeltaY?: number }, now, last);
       last = { source, at: now };
       // Ctrl/Cmd + wheel (and trackpad pinch, which browsers send as Ctrl + wheel) zooms at the cursor.
       if (e.ctrlKey || e.metaKey) setTransform(zoomAt(t, t.k * wheelZoomFactor(d.y), local(e)));

@@ -168,7 +168,12 @@ describe('mouse wheel or trackpad', () => {
     ['Windows mouse notch', ev(0, 120), 'mouse'],
     ['Firefox mouse (lines)', ev(0, 3, 1), 'mouse'],
     ['trackpad, small', ev(0, 4), 'trackpad'],
-    ['trackpad, fractional', ev(0, 61.5), 'trackpad'],
+    ['Chrome mouse at 150% display scaling', ev(0, 66.66667), 'mouse'],
+    ['Firefox mouse in pixel mode', ev(0, 57.6), 'mouse'],
+    ['Linux Chrome mouse', ev(0, 53), 'mouse'],
+    ['mouse with wheelDeltaY', { ...ev(0, 33.3), wheelDeltaY: -120 }, 'mouse'],
+    ['Mac trackpad (wheelDeltaY = −3 × deltaY)', { ...ev(0, 12), wheelDeltaY: -36 }, 'trackpad'],
+    ['trackpad with wheelDeltaY', { ...ev(0, 7.5), wheelDeltaY: -22 }, 'trackpad'],
     ['trackpad, diagonal', ev(12, -70), 'trackpad'],
     ['trackpad, sideways', ev(30, 0), 'trackpad'],
   ] as const)('%s → %s', (_n, e, want) => expect(wheelSource(e, 1000, null)).toBe(want));

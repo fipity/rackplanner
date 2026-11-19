@@ -420,3 +420,35 @@ test('panning a full rack never touches the device drawing (no re-render)', asyn
   const sorted = [...frames].sort((a, b) => a - b);
   console.log(`frames: ${frames.length}, median ${sorted[Math.floor(sorted.length / 2)]?.toFixed(1)} ms, p95 ${sorted[Math.floor(sorted.length * 0.95)]?.toFixed(1)} ms`);
 });
+
+test('a fractional wheel notch (display scaling) zooms; the scroll-wheel setting can force zoom or pan', async ({ page, request }) => {
+  const id = await newDesign(request, 'wheel-mode', {}, []);
+  await open(page, id);
+  const c = await canvasBox(page);
+  await page.mouse.move(Math.round(c.x + c.width / 2), Math.round(c.y + c.height / 2));
+  const pct0 = await zoomPct(page);
+  await page.mouse.wheel(0, -66.66667);
+  await expect.poll(() => zoomPct(page)).toBeGreaterThan(pct0);
+
+  // "Wheel pans": scrolling pans, no zoom.
+  await page.getByRole('button', { name: /^Scroll wheel:/ }).click(); // → always zooms
+  await page.getByRole('button', { name: /^Scroll wheel:/ }).click(); // → pans
+  await expect(page.getByRole('button', { name: 'Scroll wheel: Wheel pans' })).toBeVisible();
+  await page.waitForTimeout(200);
+  let before = await rackBox(page);
+  const pct1 = await zoomPct(page);
+  await page.mouse.wheel(0, 100);
+  await expect.poll(async () => before.y - (await rackBox(page)).y).toBeCloseTo(100, 0);
+  expect(await zoomPct(page)).toBe(pct1);
+
+  // "Always zooms": even small trackpad-like scrolling zooms. Remembered after a reload.
+  await page.getByRole('button', { name: /^Scroll wheel:/ }).click(); // → auto
+  await page.getByRole('button', { name: /^Scroll wheel:/ }).click(); // → always zooms
+  await page.reload();
+  await page.waitForSelector(rack);
+  await expect(page.getByRole('button', { name: 'Scroll wheel: Wheel always zooms' })).toBeVisible();
+  await page.mouse.move(Math.round(c.x + c.width / 2), Math.round(c.y + c.height / 2));
+  const pct2 = await zoomPct(page);
+  for (let i = 0; i < 5; i++) await page.mouse.wheel(0, -8);
+  await expect.poll(() => zoomPct(page)).toBeGreaterThan(pct2);
+});

@@ -211,7 +211,7 @@ The canvas pans and zooms freely, like a map: you can move well past the rack in
 
 Dragging a device near the edge of the canvas scrolls the view so you can drop it further away. The page itself never scrolls or zooms while you're over the canvas; the sidebars scroll as usual. Exports always show the whole rack, whatever the view.
 
-Browsers don't say whether scrolling comes from a mouse wheel or a trackpad, so RackPlanner goes by how it scrolls: coarse vertical steps (a wheel's notches) zoom, and small, smooth or diagonal movements (two fingers on a trackpad) pan. A mouse with very fine-grained smooth scrolling may pan instead of zooming; hold <kbd>Ctrl</kbd> to zoom with it.
+Browsers don't say whether scrolling comes from a mouse wheel or a trackpad, so RackPlanner goes by how it scrolls: a wheel's notches zoom, and small, smooth or sideways movements (two fingers on a trackpad) pan. If it guesses wrong for your mouse, the **scroll wheel** button in the canvas corner (also in the <kbd>?</kbd> popup) switches between *Wheel zooms* (automatic), *Wheel always zooms* (every scroll zooms, trackpads too) and *Wheel pans* (hold <kbd>Ctrl</kbd> to zoom). The choice is remembered.
 
 ## Cables
 
