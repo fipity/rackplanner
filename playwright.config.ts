@@ -19,4 +19,10 @@ export default defineConfig({
     deviceScaleFactor: 1,
   },
   expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: 'disabled' } },
+  projects: [
+    { name: 'chromium', use: { browserName: 'chromium' } },
+    // Pan / zoom also runs in Firefox and at tablet size.
+    { name: 'firefox', use: { browserName: 'firefox' }, testMatch: /pan-zoom\.spec\.ts/ },
+    { name: 'tablet', use: { browserName: 'chromium', viewport: { width: 820, height: 1180 }, hasTouch: true }, testMatch: /pan-zoom\.spec\.ts/ },
+  ],
 });

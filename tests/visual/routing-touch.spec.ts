@@ -48,16 +48,11 @@ test.describe('touch', () => {
   test('two fingers pan the rack without dragging a device', async ({ page, request }) => {
     const id = await openTemplate(page, request, /Homelab 12U/);
     for (let i = 0; i < 6; i++) await page.getByRole('button', { name: /zoom in/i }).click();
-    const scroller = page.locator(rack).locator('xpath=ancestor::div[contains(@class,"overflow-auto")][1]');
-    // Start from the middle of the scroll range so there's room both ways.
-    await scroller.evaluate((el) => {
-      el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
-      el.scrollTop = (el.scrollHeight - el.clientHeight) / 2;
-    });
-    const before = await scroller.evaluate((el) => ({ x: el.scrollLeft, y: el.scrollTop }));
+    const canvas = page.locator('[data-rack-canvas]');
+    const before = (await page.locator(rack).boundingBox())!;
     const placementsBefore = ((await (await request.get(`/api/designs/${id}`)).json()) as { design: { placements: unknown[] } }).design.placements;
 
-    const box = (await scroller.boundingBox())!;
+    const box = (await canvas.boundingBox())!;
     const cx = box.x + box.width / 2;
     const cy = box.y + box.height / 2;
     const cdp = await page.context().newCDPSession(page);
@@ -74,9 +69,11 @@ test.describe('touch', () => {
     // Hold past the long-press delay: still no drag.
     await page.waitForTimeout(300);
     await touch('touchEnd', []);
-    const after = await scroller.evaluate((el) => ({ x: el.scrollLeft, y: el.scrollTop }));
-    expect(after.y - before.y).toBeGreaterThan(150);
-    expect(after.x - before.x).toBeGreaterThan(100);
+    // Fingers moved 160 px left and 200 px up (both together, so no zoom): the rack moved with them.
+    const after = (await page.locator(rack).boundingBox())!;
+    expect(before.y - after.y).toBeGreaterThan(150);
+    expect(before.x - after.x).toBeGreaterThan(100);
+    expect(after.width).toBeCloseTo(before.width, 0);
     await expect(page.locator('[data-dnd-overlay], .dnd-overlay')).toHaveCount(0);
     await page.waitForTimeout(1500); // autosave window
     const placementsAfter = ((await (await request.get(`/api/designs/${id}`)).json()) as { design: { placements: unknown[] } }).design.placements;

@@ -48,16 +48,17 @@ test('holding the right mouse button drags the view around', async ({ page, requ
   await page.goto(`/d/${id}`);
   await page.waitForSelector(rack);
   for (let i = 0; i < 6; i++) await page.getByRole('button', { name: /zoom in/i }).click();
-  const scroller = page.locator(rack).locator('xpath=ancestor::div[contains(@class,"overflow-auto")][1]');
-  const before = await scroller.evaluate((el) => ({ x: el.scrollLeft, y: el.scrollTop }));
-  const box = (await scroller.boundingBox())!;
+  const canvas = page.locator('[data-rack-canvas]');
+  const before = (await page.locator(rack).boundingBox())!;
+  const box = (await canvas.boundingBox())!;
   const cx = box.x + box.width / 2;
   const cy = box.y + box.height / 2;
   await page.mouse.move(cx, cy);
   await page.mouse.down({ button: 'right' });
   await page.mouse.move(cx - 150, cy - 200, { steps: 5 });
   await page.mouse.up({ button: 'right' });
-  const after = await scroller.evaluate((el) => ({ x: el.scrollLeft, y: el.scrollTop }));
-  expect(after.y - before.y).toBeGreaterThan(150);
-  expect(after.x - before.x).toBeGreaterThan(100);
+  const after = (await page.locator(rack).boundingBox())!;
+  // The rack follows the pointer exactly.
+  expect(before.y - after.y).toBeCloseTo(200, 0);
+  expect(before.x - after.x).toBeCloseTo(150, 0);
 });

@@ -2,7 +2,7 @@
  * Drag & drop wiring between dnd-kit and the placement engine.
  *
  * dnd-kit tracks the pointer; we convert its client coordinates into rack
- * SVG millimetres (via the rack <svg>'s screen CTM) and feed them to
+ * SVG millimetres (through the canvas's pan / zoom transform) and feed them to
  * `resolveDrop`, which snaps and validates. The result is stored in
  * `useDragStore` so the canvas can draw a ghost and the tooltip can explain
  * collisions.
@@ -25,6 +25,7 @@ import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
 import { useDragStore } from '../../store/dragStore';
 import { useUiStore } from '../../store/uiStore';
+import { clientToSvg, overCanvas } from '../../store/viewStore';
 import { isOverWall, rackLayout, svgToWallX, svgToXMm, uTopToY, wallXToSvg, xToSvg, yToUTop } from './geometry';
 
 export type DragData = { kind: 'catalog'; partId: string } | { kind: 'placement'; placementId: string };
@@ -48,17 +49,10 @@ function clientPoint(e: Event): { x: number; y: number } | null {
   return null;
 }
 
-function clientToSvg(p: { x: number; y: number }): { x: number; y: number } | null {
-  const svg = rackSvgRef.current;
-  const ctm = svg?.getScreenCTM();
-  if (!svg || !ctm) return null;
-  const pt = new DOMPoint(p.x, p.y).matrixTransform(ctm.inverse());
-  return { x: pt.x, y: pt.y };
-}
-
+/** Over the rack drawing, within the visible canvas (the drawing can extend under the sidebars). */
 function isOverRack(p: { x: number; y: number }): boolean {
   const r = rackSvgRef.current?.getBoundingClientRect();
-  return !!r && p.x >= r.left && p.x <= r.right && p.y >= r.top && p.y <= r.bottom;
+  return !!r && overCanvas(p) && p.x >= r.left && p.x <= r.right && p.y >= r.top && p.y <= r.bottom;
 }
 
 function defaultMounting(part: Part): Mounting {
@@ -110,10 +104,20 @@ export function handleDragStart(e: DragStartEvent): void {
 }
 
 export function handleDragMove(e: DragMoveEvent): void {
+  if (!startPointer) return;
+  updateDrag({ x: startPointer.x + e.delta.x, y: startPointer.y + e.delta.y });
+}
+
+/** Re-resolve the drop at the last pointer position (after the view auto-pans under it). */
+export function refreshDrag(): void {
+  const p = useDragStore.getState().pointer;
+  if (p) updateDrag(p);
+}
+
+function updateDrag(pointer: { x: number; y: number }): void {
   const drag = useDragStore.getState();
   const active = drag.active;
-  if (!active || !startPointer) return;
-  const pointer = { x: startPointer.x + e.delta.x, y: startPointer.y + e.delta.y };
+  if (!active) return;
   const over = isOverRack(pointer);
   const svgPt = over ? clientToSvg(pointer) : null;
   if (!svgPt) {

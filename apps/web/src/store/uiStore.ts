@@ -36,14 +36,10 @@ export type BuilderState = { mode: 'create' | 'edit' | 'copy'; partId?: string }
 export type PrintedDialogState = { mode: 'create'; url?: string } | { mode: 'edit'; partId: string } | null;
 /** A printed mount being removed while it holds devices: ask what to do with them. */
 export type MountRemoval = { placementId: string } | null;
-export type Zoom = 'fit' | number; // number = CSS px per mm
 
 interface UiState {
   selectedId: string | null;
   view: View;
-  zoom: Zoom;
-  /** Last fitted scale, used as the starting point when zooming from "fit". */
-  fitScale: number;
   theme: Theme;
   showIncompatible: boolean;
   /** Cable drawing mode: clicks on ports/devices create cables instead of selecting. */
@@ -64,11 +60,12 @@ interface UiState {
   builder: BuilderState;
   printedDialog: PrintedDialogState;
   mountRemoval: MountRemoval;
+  /** Minimap in the canvas corner (remembered). */
+  minimap: boolean;
+  /** Keyboard / mouse shortcuts popup. */
+  shortcutsOpen: boolean;
   select: (id: string | null) => void;
   setView: (v: View) => void;
-  setZoom: (z: Zoom) => void;
-  setFitScale: (s: number) => void;
-  zoomBy: (factor: number) => void;
   setTheme: (t: Theme) => void;
   setShowIncompatible: (v: boolean) => void;
   setRightTab: (t: 'details' | 'stats') => void;
@@ -84,6 +81,8 @@ interface UiState {
   openBuilder: (b: BuilderState) => void;
   openPrinted: (p: PrintedDialogState) => void;
   setMountRemoval: (m: MountRemoval) => void;
+  setMinimap: (v: boolean) => void;
+  setShortcutsOpen: (v: boolean) => void;
 }
 
 const THEME_KEY = 'rackplanner.theme';
@@ -95,12 +94,11 @@ export function applyTheme(theme: Theme): void {
 
 const savedTheme = readLocal(THEME_KEY);
 const LEDS_KEY = 'rackplanner.leds';
+const MINIMAP_KEY = 'rackplanner.minimap';
 
 export const useUiStore = create<UiState>()((set, get) => ({
   selectedId: null,
   view: 'front',
-  zoom: 'fit',
-  fitScale: 1,
   theme: savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'system',
   showIncompatible: false,
   cableMode: false,
@@ -115,15 +113,10 @@ export const useUiStore = create<UiState>()((set, get) => ({
   builder: null,
   printedDialog: null,
   mountRemoval: null,
+  minimap: readLocal(MINIMAP_KEY) === 'on',
+  shortcutsOpen: false,
   select: (selectedId) => set(selectedId ? { selectedId, selectedCableId: null, rightTab: 'details' } : { selectedId }),
   setView: (view) => set({ view }),
-  setZoom: (zoom) => set({ zoom }),
-  setFitScale: (fitScale) => set({ fitScale }),
-  zoomBy: (factor) => {
-    const { zoom, fitScale } = get();
-    const current = zoom === 'fit' ? fitScale : zoom;
-    set({ zoom: Math.min(8, Math.max(0.3, current * factor)) });
-  },
   setTheme: (theme) => {
     writeLocal(THEME_KEY, theme);
     applyTheme(theme);
@@ -146,4 +139,9 @@ export const useUiStore = create<UiState>()((set, get) => ({
   openBuilder: (builder) => set({ builder }),
   openPrinted: (printedDialog) => set({ printedDialog, ...(printedDialog ? { builder: null } : {}) }),
   setMountRemoval: (mountRemoval) => set({ mountRemoval }),
+  setMinimap: (minimap) => {
+    writeLocal(MINIMAP_KEY, minimap ? 'on' : 'off');
+    set({ minimap });
+  },
+  setShortcutsOpen: (shortcutsOpen) => set({ shortcutsOpen }),
 }));

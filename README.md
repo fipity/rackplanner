@@ -179,12 +179,36 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <registry>/rackplanner
 | Move by 1U | <kbd>↑</kbd> / <kbd>↓</kbd> (shelves take their contents with them) |
 | Delete / duplicate | <kbd>Del</kbd> / <kbd>Ctrl</kbd>+<kbd>D</kbd> |
 | Undo / redo | <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> |
-| Zoom | <kbd>+</kbd> / <kbd>-</kbd>, <kbd>0</kbd> to fit, or <kbd>Ctrl</kbd>+scroll |
-| Pan | Hold the right mouse button and drag; on a tablet, drag with two fingers |
 | Measured power | Select a device and enter watts in *Measured power* |
 | Export / print | **Export** menu in the header |
 
 Changing the rack width, height or depth so that some parts no longer fit asks for confirmation and lists what would be removed. You can undo afterwards.
+
+### Moving around: keyboard and mouse shortcuts
+
+The canvas pans and zooms freely, like a map: you can move well past the rack in every direction (up to a full screen of empty space on each side). If the rack ends up off screen, a **Back to rack** button appears. Each design remembers its zoom and position. Press <kbd>?</kbd> in the editor (or the keyboard button in the canvas corner) for this list.
+
+| Pan | |
+|---|---|
+| Drag empty space | Left mouse button (a click without moving still deselects) |
+| <kbd>Space</kbd> + drag | From anywhere, even over a device (the cursor becomes a hand) |
+| Middle or right mouse button | Drag from anywhere |
+| Mouse wheel / two-finger trackpad scroll | Vertical; trackpads pan in any direction, diagonally too |
+| <kbd>Shift</kbd> + wheel | Horizontal |
+| Arrow keys | Pan when nothing is selected (<kbd>Shift</kbd> for bigger steps). With a device selected, <kbd>↑</kbd> / <kbd>↓</kbd> move it 1U as before |
+| Touch | One finger on empty space pans; two fingers pinch to zoom and pan together |
+
+| Zoom | |
+|---|---|
+| <kbd>Ctrl</kbd> / <kbd>⌘</kbd> + wheel, trackpad pinch | Zoom towards the cursor |
+| <kbd>+</kbd> / <kbd>-</kbd>, toolbar zoom buttons | Zoom around the centre of the view |
+| Zoom % in the toolbar | Click it to type a zoom level, 10% to 800% (100% = 1 px per mm) |
+| <kbd>F</kbd> or <kbd>Shift</kbd>+<kbd>1</kbd> | Fit the whole drawing (rack and wall) to the screen |
+| <kbd>Shift</kbd>+<kbd>2</kbd> | Zoom to the selected device |
+| <kbd>0</kbd> or <kbd>Ctrl</kbd>+<kbd>0</kbd> | Reset to 100%, centred |
+| Minimap | The map button in the canvas corner shows the whole rack with the visible area outlined; click or drag in it to move there. The choice is remembered |
+
+Dragging a device near the edge of the canvas scrolls the view so you can drop it further away. The page itself never scrolls or zooms while you're over the canvas; the sidebars scroll as usual. Exports always show the whole rack, whatever the view.
 
 ## Cables
 

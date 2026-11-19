@@ -11,6 +11,7 @@ import { RightPanel } from '../components/RightPanel';
 import { SaveIndicator } from '../components/SaveIndicator';
 import { ShareButton } from '../components/ShareDialog';
 import { Toolbar } from '../components/Toolbar';
+import { ShortcutsDialog } from '../components/ShortcutsDialog';
 import { Button, cx } from '../components/ui';
 import { ApiError, getDesign } from '../lib/api';
 import { navigate } from '../lib/router';
@@ -21,6 +22,7 @@ import { useDesignStore } from '../store/designStore';
 import { useDragStore } from '../store/dragStore';
 import { useSaveStore } from '../store/saveStore';
 import { useUiStore } from '../store/uiStore';
+import { releaseView, useViewStore } from '../store/viewStore';
 
 function DragFeedback() {
   const { active, resolution, overRack, pointer } = useDragStore();
@@ -50,11 +52,11 @@ function DragPreview() {
   const overRack = useDragStore((s) => s.overRack);
   const part = useCatalogStore((s) => (active ? s.catalog.get(active.partId) : undefined));
   const rackWidth = useDesignStore((s) => s.design.rack.width);
-  const { zoom, fitScale } = useUiStore();
+  const k = useViewStore((s) => s.t.k);
   if (!active || active.kind !== 'catalog' || !part || overRack) return null;
   return (
     <div className="opacity-80 drop-shadow-xl">
-      <PartThumb part={part} rackWidth={rackWidth} scale={(zoom === 'fit' ? fitScale : zoom) * 0.8} />
+      <PartThumb part={part} rackWidth={rackWidth} scale={k * 0.8} />
     </div>
   );
 }
@@ -69,6 +71,8 @@ export function EditorPage({ id }: { id: string }) {
   const [catalogOpen, setCatalogOpen] = useState(false);
   useKeyboardShortcuts();
   useAutosave(state === 'ready' ? id : null);
+  // Save this design's pan / zoom when leaving it.
+  useEffect(() => () => releaseView(), [id]);
 
   useEffect(() => {
     let cancelled = false;
@@ -171,6 +175,7 @@ export function EditorPage({ id }: { id: string }) {
         <DragPreview />
       </DragOverlay>
       <DragFeedback />
+      <ShortcutsDialog />
     </>
   );
 }

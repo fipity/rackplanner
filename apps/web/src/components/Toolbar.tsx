@@ -1,6 +1,8 @@
 import { MAX_RACK_U, MIN_RACK_U, RACK_DEPTH_PRESETS, RACK_FRAME_INFO, RACK_HEIGHT_PRESETS, defaultFrame, framesFor, type Rack, type RackChangeResult, type RackFrame } from '@rackplanner/shared';
 import { ArrowDown01, ArrowUp01, BrickWall, Cable, DoorOpen, Eye, EyeOff, Lightbulb, LightbulbOff, Maximize, Minus, Monitor, Moon, Plus, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
 import { useState } from 'react';
+import { fitToScreen, useViewStore, zoomAround, zoomTo } from '../store/viewStore';
+import { MAX_ZOOM, MIN_ZOOM } from './rack/viewport';
 import { commitRackChange, previewRackChange } from '../lib/actions';
 import { useDesignStore, useHistory } from '../store/designStore';
 import { useUiStore, type Theme } from '../store/uiStore';
@@ -12,7 +14,7 @@ const ALL_HEIGHTS = Array.from({ length: MAX_RACK_U - MIN_RACK_U + 1 }, (_, i) =
 export function Toolbar() {
   const rack = useDesignStore((s) => s.design.rack);
   const { canUndo, canRedo, undo, redo } = useHistory();
-  const { view, setView, zoom, fitScale, zoomBy, setZoom, theme, setTheme, cableMode, setCableMode, showCables, setShowCables, leds, setLeds, plan, setPlan } = useUiStore();
+  const { view, setView, theme, setTheme, cableMode, setCableMode, showCables, setShowCables, leds, setLeds, plan, setPlan } = useUiStore();
   const [pending, setPending] = useState<{ rack: Rack; result: RackChangeResult } | null>(null);
 
   const requestRack = (patch: Partial<Rack>) => {
@@ -28,7 +30,6 @@ export function Toolbar() {
     else commitRackChange(next, result);
   };
 
-  const scale = zoom === 'fit' ? fitScale : zoom;
   const nextTheme: Record<Theme, Theme> = { light: 'dark', dark: 'system', system: 'light' };
   const ThemeIcon = theme === 'light' ? Sun : theme === 'dark' ? Moon : Monitor;
 
@@ -170,14 +171,14 @@ export function Toolbar() {
       </div>
 
       <div className="flex items-center">
-        <Button aria-label="Zoom out" onClick={() => zoomBy(1 / 1.2)} className="px-1.5">
+        <Button aria-label="Zoom out" title="Zoom out (−)" onClick={() => zoomAround(1 / 1.25)} className="px-1.5">
           <ZoomOut className="size-4" />
         </Button>
-        <span className="w-12 text-center text-xs tabular-nums text-zinc-500">{Math.round(scale * 100)}%</span>
-        <Button aria-label="Zoom in" onClick={() => zoomBy(1.2)} className="px-1.5">
+        <ZoomPercent />
+        <Button aria-label="Zoom in" title="Zoom in (+)" onClick={() => zoomAround(1.25)} className="px-1.5">
           <ZoomIn className="size-4" />
         </Button>
-        <Button aria-label="Fit to screen" title="Fit to screen (0)" active={zoom === 'fit'} onClick={() => setZoom('fit')} className="px-1.5">
+        <Button aria-label="Fit to screen" title="Fit to screen (F or Shift+1)" onClick={fitToScreen} className="px-1.5">
           <Maximize className="size-4" />
         </Button>
       </div>
@@ -208,5 +209,41 @@ export function Toolbar() {
         </ConfirmDialog>
       )}
     </div>
+  );
+}
+
+/** Current zoom; click to type a value (10–800%). */
+function ZoomPercent() {
+  const pct = useViewStore((s) => Math.round(s.t.k * 100));
+  const [editing, setEditing] = useState<string | null>(null);
+  const commit = () => {
+    const v = Number(editing?.replace('%', '').trim());
+    if (Number.isFinite(v) && v > 0) zoomTo(Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, v / 100)));
+    setEditing(null);
+  };
+  return editing !== null ? (
+    <input
+      autoFocus
+      aria-label="Zoom percentage"
+      className="h-7 w-14 rounded border border-blue-500 bg-white px-1 text-center text-xs tabular-nums dark:bg-zinc-900"
+      value={editing}
+      onChange={(e) => setEditing(e.target.value)}
+      onFocus={(e) => e.currentTarget.select()}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') commit();
+        else if (e.key === 'Escape') setEditing(null);
+      }}
+    />
+  ) : (
+    <button
+      type="button"
+      aria-label={`Zoom ${pct}%: click to type a zoom level`}
+      title="Click to type a zoom level"
+      onClick={() => setEditing(String(pct))}
+      className="h-7 w-14 rounded text-center text-xs tabular-nums text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+    >
+      {pct}%
+    </button>
   );
 }

@@ -475,16 +475,18 @@ function RackSummary() {
           ['Ctrl+Z / Ctrl+Shift+Z', 'undo / redo'],
           ['C', 'cable mode'],
           ['R', 'turn shelf device on its side'],
-          ['+ / − / 0', 'zoom / fit'],
-          ['Ctrl+scroll', 'zoom'],
-          ['Right-drag', 'pan around'],
-          ['Two-finger drag', 'pan around (touch screens)'],
+          ['Drag empty space / Space+drag', 'pan'],
+          ['Ctrl+scroll / pinch', 'zoom at the cursor'],
+          ['F / 0', 'fit / 100%'],
         ].map(([k, v]) => (
           <div key={k} className="flex justify-between gap-2">
             <kbd className="font-mono text-zinc-700 dark:text-zinc-300">{k}</kbd>
             <span>{v}</span>
           </div>
         ))}
+        <button type="button" className="text-blue-700 hover:underline dark:text-blue-400" onClick={() => useUiStore.getState().setShortcutsOpen(true)}>
+          All shortcuts (?)
+        </button>
       </div>
     </div>
   );
