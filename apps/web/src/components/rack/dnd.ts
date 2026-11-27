@@ -97,7 +97,8 @@ export function handleDragStart(e: DragStartEvent): void {
     kind: 'placement',
     partId: part.id,
     placementId: placement.id,
-    mounting: placement.parentId !== undefined ? defaultMounting(part) : placement.mounting,
+    // Gear seen through the rack from the other face keeps its rails when moved there.
+    mounting: placement.parentId !== undefined && occ.faces.includes(view) ? defaultMounting(part) : placement.mounting,
     grabDx: ptr ? ptr.x - left : partWidthMm(part) / 2,
     grabDy: ptr ? ptr.y - top : (part.heightU * U_MM) / 2,
   });
@@ -142,7 +143,9 @@ function updateDrag(pointer: { x: number; y: number }): void {
     rawBottomU,
     rawXMm,
     mounting: active.mounting,
-    view,
+    // Shelf targets: those on the dragged gear's own face (so gear seen through the
+    // rack can move between the shelves on its side), or this view's for new parts.
+    view: active.mounting === 'full-depth' ? view : active.mounting,
     wall,
   });
   drag.update({ resolution, overRack: true, pointer });

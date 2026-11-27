@@ -84,7 +84,8 @@ function Minimap({ design, catalog, view }: { design: Design; catalog: Catalog; 
   );
 }
 
-export function CanvasOverlay({ design, catalog, view }: { design: Design; catalog: Catalog; view: View }) {
+/** `plan`: over the shelf plans (no minimap; the back button says shelves). */
+export function CanvasOverlay({ design, catalog, view, plan = false }: { design: Design; catalog: Catalog; view: View; plan?: boolean }) {
   const visible = useViewStore((s) => contentVisible(s));
   const minimap = useUiStore((s) => s.minimap);
   const setMinimap = useUiStore((s) => s.setMinimap);
@@ -103,13 +104,13 @@ export function CanvasOverlay({ design, catalog, view }: { design: Design; catal
           }}
           className="absolute top-1/2 left-1/2 z-20 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:bg-blue-500"
         >
-          <LocateFixed className="size-4" /> Back to rack
+          <LocateFixed className="size-4" /> {plan ? 'Back to shelves' : 'Back to rack'}
         </button>
       )}
       <div className="absolute bottom-3 left-3 z-10 flex gap-1.5" onClick={(e) => e.stopPropagation()}>
-        <button type="button" aria-label="Minimap" aria-pressed={minimap} title="Minimap" onClick={() => setMinimap(!minimap)} className={cx(btn, minimap && 'ring-2 ring-blue-500')}>
+        {!plan && <button type="button" aria-label="Minimap" aria-pressed={minimap} title="Minimap" onClick={() => setMinimap(!minimap)} className={cx(btn, minimap && 'ring-2 ring-blue-500')}>
           <MapIcon className="size-4" />
-        </button>
+        </button>}
         <button
           type="button"
           aria-label={`Scroll wheel: ${WHEEL_LABEL[wheelMode]}`}
@@ -123,7 +124,7 @@ export function CanvasOverlay({ design, catalog, view }: { design: Design; catal
           <Keyboard className="size-4" />
         </button>
       </div>
-      {minimap && (
+      {minimap && !plan && (
         <div className="absolute right-3 bottom-3 z-10 max-sm:hidden">
           <Minimap design={design} catalog={catalog} view={view} />
         </div>

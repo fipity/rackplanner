@@ -212,14 +212,28 @@ export function RackView({
       {wall && <WallArea layout={layout} x={wall.x} w={wall.w} view={view} lod={lod} />}
       <RackFrame layout={layout} lod={lod} emptyKey={emptyUs.join(',')} />
 
-      {/* Gear mounted on the other face, seen through the rack. */}
+      {/* Gear mounted on the other face, seen through the rack. Still selectable and draggable. */}
       {otherFace.map(({ p, part, occ }) => {
         const box = boxOf(p, part, occ);
-        return (
-          <g key={`o-${p.id}`} data-oid={p.id} transform={`translate(${box.x} ${box.y})`} opacity={0.78} pointerEvents="none">
+        const drawn = (
+          <g data-oid={p.id} transform={`translate(${box.x} ${box.y})`} opacity={draggingId === p.id ? 0.3 : 0.78}>
             {face(p, part, occ, box)}
             {isReversed(placements, p) && <ReversedBadge facing={occ.facing} w={box.w} h={box.h} ears={box.ears} />}
           </g>
+        );
+        return (
+          <Fragment key={`o-${p.id}`}>
+            {Wrapper ? (
+              <Wrapper placement={p} part={part} box={box} occupancy={occ}>
+                {drawn}
+              </Wrapper>
+            ) : (
+              <g pointerEvents="none">{drawn}</g>
+            )}
+            {(selectedId === p.id || selectedIds?.includes(p.id)) && (
+              <rect x={box.x - 1} y={box.y - 1} width={box.w + 2} height={box.h + 2} rx={1.8} fill="none" stroke="#3b82f6" strokeWidth={1.4} strokeDasharray="4 2" pointerEvents="none" />
+            )}
+          </Fragment>
         );
       })}
 
@@ -384,7 +398,8 @@ export function RackView({
  */
 function ReversedBadge({ facing, w, h, ears }: { facing: View; w: number; h: number; ears: boolean }) {
   const text = facing === 'rear' ? '↺ Rear-facing' : '↺ Front-facing';
-  const fs = Math.min(4.2, Math.max(2.2, h * 0.16));
+  // About 6.5 mm text on 1U gear: readable at 100% (~9 px), not just when zoomed in.
+  const fs = Math.min(6.5, Math.max(3, h * 0.2));
   const bw = Math.min(fs * 6.6, w - (ears ? RAIL * 2 : 0) - 1);
   if (bw < fs * 2) return null;
   const bh = fs * 1.55;

@@ -48,6 +48,9 @@ test.describe('touch', () => {
   test('two fingers pan the rack without dragging a device', async ({ page, request }) => {
     const id = await openTemplate(page, request, /Homelab 12U/);
     for (let i = 0; i < 6; i++) await page.getByRole('button', { name: /zoom in/i }).click();
+    // The canvas writes its transform on the next animation frame: let it land before measuring
+    // (under load the last zoom step could otherwise be missing from "before").
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
     const canvas = page.locator('[data-rack-canvas]');
     const before = (await page.locator(rack).boundingBox())!;
     const placementsBefore = ((await (await request.get(`/api/designs/${id}`)).json()) as { design: { placements: unknown[] } }).design.placements;
@@ -69,6 +72,7 @@ test.describe('touch', () => {
     // Hold past the long-press delay: still no drag.
     await page.waitForTimeout(300);
     await touch('touchEnd', []);
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
     // Fingers moved 160 px left and 200 px up (both together, so no zoom): the rack moved with them.
     const after = (await page.locator(rack).boundingBox())!;
     expect(before.y - after.y).toBeGreaterThan(150);

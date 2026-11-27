@@ -45,7 +45,7 @@ export function useKeyboardShortcuts(): void {
           // A selected device moves (up / down), as before.
           if (e.key === 'ArrowUp') nudgeSelected(1);
           else if (e.key === 'ArrowDown') nudgeSelected(-1);
-        } else if (!ui.selectedCableId && !ui.plan) {
+        } else if (!ui.selectedCableId) {
           const step = e.shiftKey ? PAN_STEP_FAST : PAN_STEP;
           const d = { ArrowUp: [0, step], ArrowDown: [0, -step], ArrowLeft: [step, 0], ArrowRight: [-step, 0] }[e.key];
           if (d) panView(d[0]!, d[1]!);

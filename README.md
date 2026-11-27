@@ -177,7 +177,9 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <registry>/rackplanner
 | Swap view / show through | The ⇆ button next to *Front / Rear / Shelves* swaps views and keeps the selected part in the middle of the screen. The layers button turns *show through* on or off: gear on the other face of the rack, seen through it (on by default) |
 | Lay shelf gear on its side | Select it and press <kbd>T</kbd>, or choose **Orientation: On its side**. It takes less height and more shelf width; its faceplate and ports turn with it, and cables stay connected. Gear that doesn't fit standing up is laid on its side for you: when it's too tall for the room above a shelf (like the nbn HFC NTD), when only that fits under the gear above, or near the top of the rack or wall. This applies when you drag, click to add from the catalog, duplicate or move it between the wall and the rack. Gear that only fits upright is stood back up |
 | Put gear on the wall beside the rack | Turn on the wall with the wall button in the toolbar, then drag desktop gear or wall plates onto it (left of the rack in the front view, right of it in the rear view). Clicking a wall plate in the catalog turns the wall on and puts it there. For a selected desktop device, **Where: In the rack / On the wall** moves it without dragging. Turning the wall off asks before removing what's on it |
-| Select a shelf that has gear on it | Click its ears or tray, or the shelf name in an item's details |
+| Select a shelf that has gear on it | Click its ears or tray, or the shelf name in an item's details. In the **Shelves** tab, click its tray or title |
+| Edit in the Shelves tab | Click a device to select it (<kbd>Shift</kbd> / <kbd>Ctrl</kbd>+click for several); <kbd>R</kbd>, <kbd>T</kbd>, <kbd>Del</kbd> and the details panel work as usual. Drag a device along its shelf or onto another shelf: a dashed outline shows where it lands (red when it doesn't fit). A coloured bar and arrow on each device mark its faceplate edge: green on the front, purple when it's reversed |
+| Work from the rear view | Everything can be selected and moved from either view. Gear on the other face (seen through the rack) gets a dashed selection outline and keeps its rails when you drag it |
 | Draw cables | Press <kbd>C</kbd> (or **Cables** in the toolbar), click a port or device, then the other end. <kbd>Esc</kbd> finishes |
 | Edit / delete a cable | Click it to edit type, colour, ports, length, label; <kbd>Del</kbd> removes it |
 | Partial-width position | Select a 10″ / half-width part (or a shelf item), choose **Left / Centre / Right** |
@@ -215,7 +217,7 @@ The canvas pans and zooms freely, like a map: you can move well past the rack in
 | <kbd>0</kbd> or <kbd>Ctrl</kbd>+<kbd>0</kbd> | Reset to 100%, centred |
 | Minimap | The map button in the canvas corner shows the whole rack with the visible area outlined; click or drag in it to move there. The choice is remembered |
 
-The **Shelves** tab pans and zooms the same way (drag empty space or anywhere on a plan, middle / right drag, <kbd>Space</kbd> + drag, two fingers, mouse wheel / pinch); its view starts at 100% each time you open it.
+The **Shelves** tab pans and zooms the same way (drag empty space or a shelf's tray, middle / right drag, <kbd>Space</kbd> + drag, one or two fingers, mouse wheel / pinch, the toolbar zoom buttons and %, <kbd>F</kbd>, <kbd>0</kbd>, <kbd>Shift</kbd>+<kbd>2</kbd> and the arrow keys). It remembers its own zoom and position per design, separately from the rack view, and shows **Back to shelves** if the plans end up off screen.
 
 Dragging a device near the edge of the canvas scrolls the view so you can drop it further away. The page itself never scrolls or zooms while you're over the canvas; the sidebars scroll as usual. Exports always show the whole rack, whatever the view.
 

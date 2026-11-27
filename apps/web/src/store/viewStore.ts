@@ -36,6 +36,8 @@ interface ViewState {
   interacting: boolean;
   /** Set once the view has been fitted or restored for the current design and size. */
   ready: boolean;
+  /** Where the view starts and where 0 / Ctrl+0 returns to; null = 100% centred on the drawing. */
+  home: ViewTransform | null;
 }
 
 export const useViewStore = create<ViewState>()(() => ({
@@ -46,6 +48,7 @@ export const useViewStore = create<ViewState>()(() => ({
   designId: null,
   interacting: false,
   ready: false,
+  home: null,
 }));
 
 const get = () => useViewStore.getState();
@@ -82,9 +85,10 @@ export function fitToScreen(): void {
   if (s.size.w > 0) setTransform(fitRect(s.content, s.size));
 }
 
-/** 100%, centred on the drawing. */
+/** 100%, centred on the drawing (or the view's home, e.g. the shelf plans' top). */
 export function resetView(): void {
   const s = get();
+  if (s.home) return setTransform(s.home);
   setTransform(centreOn({ x: s.content.x + s.content.w / 2, y: s.content.y + s.content.h / 2 }, 1, s.size));
 }
 
@@ -171,13 +175,19 @@ function readSaved(id: string): SavedView | null {
  * design is shown the saved view is restored (or the rack is fitted); later
  * size changes keep the same centre and zoom.
  */
-export function syncCanvas(designId: string, size: Size, content: Rect, svgOriginX: number): void {
+export function syncCanvas(designId: string, size: Size, content: Rect, svgOriginX: number, opts: { home?: ViewTransform } = {}): void {
   const s = get();
   if (size.w <= 0 || size.h <= 0) return;
   if (s.designId !== designId || !s.ready) {
+    // Switching views (rack ↔ shelf plans): keep where the other one was.
+    if (s.designId && s.ready && s.size.w > 0) {
+      if (saveTimer) clearTimeout(saveTimer);
+      writeLocal(keyOf(s.designId), JSON.stringify(toSaved(s.t, s.size)));
+    }
     const saved = readSaved(designId);
-    useViewStore.setState({ designId, size, content, svgOriginX, ready: true });
-    setTransform(saved ? fromSaved(saved, size) : fitRect(content, size));
+    const home = opts.home ?? null;
+    useViewStore.setState({ designId, size, content, svgOriginX, ready: true, home });
+    setTransform(saved ? fromSaved(saved, size) : (home ?? fitRect(content, size)));
     return;
   }
   // Same design: keep what's in the middle of the screen in the middle.
