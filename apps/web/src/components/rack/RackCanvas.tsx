@@ -10,7 +10,7 @@ import { isReversed, uprightPart, wallWidthMm, type PlacedPart, type Part } from
 import { drawingExtent, rackLayout } from './geometry';
 import { RackView, type PlacementWrapperProps, type RackGhost } from './RackView';
 import { lodForScale } from '../faceplates/Faceplate';
-import { ShelfPlanView } from './ShelfPlanView';
+import { PlanCanvas } from './PlanCanvas';
 import { cx } from '../ui';
 import { canvasRef, clientToSvg, panView, setTransform, syncCanvas, useViewStore } from '../../store/viewStore';
 import { mouseWheelZoomFactor, screenToWorld, wheelPixels, wheelSource, wheelZoomFactor, zoomAt, type Pt, type ViewTransform, type WheelSource } from './viewport';
@@ -277,15 +277,7 @@ export function RackCanvas() {
     useViewStore.setState({ interacting: true });
   };
 
-  if (plan) {
-    return (
-      <div className="relative h-full w-full overflow-auto" onClick={() => select(null)}>
-        <div className="flex min-h-full w-full justify-center">
-          <ShelfPlanView design={design} catalog={catalog} leds={leds} />
-        </div>
-      </div>
-    );
-  }
+  if (plan) return <PlanCanvas design={design} catalog={catalog} leds={leds} />;
 
   return (
     <div

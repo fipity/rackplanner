@@ -215,6 +215,8 @@ The canvas pans and zooms freely, like a map: you can move well past the rack in
 | <kbd>0</kbd> or <kbd>Ctrl</kbd>+<kbd>0</kbd> | Reset to 100%, centred |
 | Minimap | The map button in the canvas corner shows the whole rack with the visible area outlined; click or drag in it to move there. The choice is remembered |
 
+The **Shelves** tab pans and zooms the same way (drag empty space or anywhere on a plan, middle / right drag, <kbd>Space</kbd> + drag, two fingers, mouse wheel / pinch); its view starts at 100% each time you open it.
+
 Dragging a device near the edge of the canvas scrolls the view so you can drop it further away. The page itself never scrolls or zooms while you're over the canvas; the sidebars scroll as usual. Exports always show the whole rack, whatever the view.
 
 Browsers don't say whether scrolling comes from a mouse wheel or a trackpad, so RackPlanner goes by how it scrolls: a wheel's notches zoom, and small, smooth or sideways movements (two fingers on a trackpad) pan. If it guesses wrong for your mouse, the **scroll wheel** button in the canvas corner (also in the <kbd>?</kbd> popup) switches between *Wheel zooms* (automatic), *Wheel always zooms* (every scroll zooms, trackpads too) and *Wheel pans* (hold <kbd>Ctrl</kbd> to zoom). The choice is remembered.
