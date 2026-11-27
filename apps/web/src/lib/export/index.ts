@@ -2,7 +2,7 @@
  * Export actions. Loaded on demand (dynamic import) so jsPDF and the SVG
  * renderer don't weigh down the editor.
  */
-import { bomToCsv, buildBom, buildDesignExport, computeStats, licenceInfo, thumbnailIds, type Catalog, type Design } from '@rackplanner/shared';
+import { bomToCsv, buildBom, facingText, buildDesignExport, computeStats, licenceInfo, thumbnailIds, type Catalog, type Design } from '@rackplanner/shared';
 import { thumbnailBase64 } from '../api';
 import type { View } from '../../components/rack/geometry';
 import { renderSheet, svgToPng } from './render';
@@ -75,13 +75,14 @@ export async function exportPdf(design: Design, catalog: Catalog, opts: ExportOp
     margin: { left: margin, right: margin },
     styles: { fontSize: 8, cellPadding: 1.5 },
     headStyles: { fillColor: [37, 99, 235] },
-    head: [['Qty', 'Brand', 'Model', 'Name', 'U', 'Typ W', 'Max W', 'kg']],
+    head: [['Qty', 'Brand', 'Model', 'Name', 'U', 'Facing', 'Typ W', 'Max W', 'kg']],
     body: rows.map((r) => [
       r.qty,
       r.brand,
       r.model,
       r.name + (r.labels.length ? `\n${r.labels.join(', ')}` : ''),
       r.totalU || r.heightU,
+      facingText(r),
       r.measuredW !== null ? `${r.measuredW} (measured)` : (r.typicalW ?? '—'),
       r.maxW ?? '—',
       r.weightKg !== null ? +(r.weightKg * r.qty).toFixed(2) : '—',

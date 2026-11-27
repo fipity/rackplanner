@@ -7,10 +7,9 @@ export const RAIL = 16; // mounting rail / ear width
 
 export type View = 'front' | 'rear';
 
-/** Which face of a device you see from `view`, given the faces it occupies (rear-mounted gear faces backwards). */
-export function faceSeen(faces: readonly View[], view: View): View {
-  if (faces.length === 2) return view;
-  return faces[0] === view ? 'front' : 'rear';
+/** Which face of a device you see from `view`: its faceplate from the side it faces, else its rear panel. */
+export function faceSeen(facing: View, view: View): View {
+  return facing === view ? 'front' : 'rear';
 }
 
 export interface RackLayout {

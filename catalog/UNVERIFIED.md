@@ -360,6 +360,58 @@ Detailed front/rear/top layouts with `layoutVerified: false`: counts come from t
 | `generic-wall-outlet-schuko-double` Double power point (EU Schuko) | Generic part: typical layout, positions estimated. | none (generic item) |
 | `generic-wall-outlet-nema-duplex` Duplex power outlet (US, NEMA 5-15R) | Generic part: typical layout, positions estimated. | none (generic item) |
 
+## Unconfirmed airflow
+
+Parts with `airflowVerified: false`: rack NAS and NVRs are assumed front to back (drive bays at the front), fanless switches and routers passive. Not yet confirmed from a manufacturer document. Parts with no airflow set are unknown.
+
+| Part | Airflow |
+|---|---|
+| `mikrotik-l009uigs-rm` MikroTik L009UiGS-RM | passive |
+| `mikrotik-rb4011igs-rm` MikroTik RB4011iGS+RM | passive |
+| `mikrotik-rds2216-2xg-4s-4xs-2xq` MikroTik RDS2216-2XG-4S+4XS-2XQ | front-to-back |
+| `mikrotik-css326-24g-2s-rm` MikroTik CSS326-24G-2S+RM | passive |
+| `qnap-ts-1264u-rp` QNAP TS-1264U-RP | front-to-back |
+| `qnap-ts-1273au-rp` QNAP TS-1273AU-RP | front-to-back |
+| `qnap-ts-1673au-rp` QNAP TS-1673AU-RP | front-to-back |
+| `qnap-ts-432pxu` QNAP TS-432PXU | front-to-back |
+| `qnap-ts-432pxu-rp` QNAP TS-432PXU-RP | front-to-back |
+| `qnap-ts-464u` QNAP TS-464U | front-to-back |
+| `qnap-ts-464u-rp` QNAP TS-464U-RP | front-to-back |
+| `qnap-ts-855eu` QNAP TS-855eU | front-to-back |
+| `qnap-ts-864eu` QNAP TS-864eU | front-to-back |
+| `qnap-ts-873aeu` QNAP TS-873AeU | front-to-back |
+| `qnap-ts-873aeu-rp` QNAP TS-873AeU-RP | front-to-back |
+| `qnap-ts-977xu-rp` QNAP TS-977XU-RP | front-to-back |
+| `qnap-ts-h1277axu-rp` QNAP TS-h1277AXU-RP | front-to-back |
+| `qnap-ts-h987xu-rp` QNAP TS-h987XU-RP | front-to-back |
+| `synology-rs1221-plus` Synology RackStation RS1221+ | front-to-back |
+| `synology-rs1221rp-plus` Synology RackStation RS1221RP+ | front-to-back |
+| `synology-rs1226-plus` Synology RackStation RS1226+ | front-to-back |
+| `synology-rs1226rp-plus` Synology RackStation RS1226RP+ | front-to-back |
+| `synology-rs1626xs-plus` Synology RackStation RS1626xs+ | front-to-back |
+| `synology-rs2423-plus` Synology RackStation RS2423+ | front-to-back |
+| `synology-rs2423rp-plus-ii` Synology RackStation RS2423RP+ II | front-to-back |
+| `synology-rs2825rp-plus` Synology RackStation RS2825RP+ | front-to-back |
+| `synology-rs422-plus` Synology RackStation RS422+ | front-to-back |
+| `synology-rs822-plus` Synology RackStation RS822+ | front-to-back |
+| `synology-rs826-plus` Synology RackStation RS826+ | front-to-back |
+| `synology-rs826rp-plus` Synology RackStation RS826RP+ | front-to-back |
+| `cisco-cbs350-24p-4g` Cisco CBS350-24P-4G | passive |
+| `tp-link-sg3428` TP-Link Omada SG3428 | passive |
+| `ubiquiti-usw-24` UniFi Switch 24 | passive |
+| `ubiquiti-usw-aggregation` UniFi Switch Aggregation | passive |
+| `ubiquiti-enas` Enterprise NAS | front-to-back |
+| `ubiquiti-uacc-ese-16` Enterprise Storage Expansion (16-bay) | front-to-back |
+| `ubiquiti-unas-pro` UniFi UNAS Pro | front-to-back |
+| `ubiquiti-unas-pro-4` UniFi UNAS Pro 4 | front-to-back |
+| `ubiquiti-unas-pro-8` UniFi UNAS Pro 8 | front-to-back |
+| `ubiquiti-envr` Enterprise NVR | front-to-back |
+| `ubiquiti-envr-core` Enterprise NVR Core | front-to-back |
+| `ubiquiti-unvr` UniFi Network Video Recorder | front-to-back |
+| `ubiquiti-unvr-g2` UniFi Network Video Recorder G2 | front-to-back |
+| `ubiquiti-unvr-g2-pro` UniFi Network Video Recorder G2 Pro | front-to-back |
+| `ubiquiti-unvr-pro` UniFi Network Video Recorder Pro | front-to-back |
+
 ## Missing values
 
 Parts with `null` depth, weight or power (passive items are only listed for missing depth).

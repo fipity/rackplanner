@@ -4331,6 +4331,9 @@
               "passive"
             ]
           },
+          "airflowVerified": {
+            "type": "boolean"
+          },
           "tags": {
             "default": [],
             "type": "array",

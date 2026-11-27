@@ -403,6 +403,8 @@ export const PartSchema = z
     powerInput: PowerInputSchema.optional(),
     /** Cooling airflow; when omitted it's inferred for servers and UPSs and unknown otherwise. */
     airflow: AirflowSchema.optional(),
+    /** false when the airflow is a best guess not yet confirmed from the maker's documentation. */
+    airflowVerified: z.boolean().optional(),
     tags: z.array(z.string().min(1)).default([]),
     /** 3D-printed parts: where the model comes from, what it holds, filament and print status. */
     printed: PrintedSpecSchema.optional(),
@@ -462,9 +464,14 @@ export const RackSchema = z
     glassDoor: z.boolean().default(false),
     /** Show a wall area beside the rack for wall-mounted gear. */
     wall: z.boolean().optional(),
+    /** The rear is closed off (solid back panel, or the rack stands against a wall). */
+    closedBack: z.boolean().optional(),
   })
   .strict();
 export type Rack = z.infer<typeof RackSchema>;
+
+export const FacingSchema = z.enum(['front', 'rear']);
+export type Facing = z.infer<typeof FacingSchema>;
 
 export const PlacedPartSchema = z
   .object({
@@ -475,6 +482,12 @@ export const PlacedPartSchema = z
     /** Offset from the left rail in the front view, in mm. */
     xMm: z.number().nonnegative(),
     mounting: MountingSchema,
+    /**
+     * Which way the faceplate points: 'front' = towards the front of the rack.
+     * Independent of mounting (which rails / side the part sits on). Missing
+     * means the natural way for its mounting (see facingOf).
+     */
+    facing: FacingSchema.optional(),
     /** Set when this part sits on a shelf placement. */
     parentId: z.string().min(1).optional(),
     /**
@@ -532,19 +545,20 @@ export const CableSchema = z
   .strict();
 export type Cable = z.infer<typeof CableSchema>;
 
-export const DESIGN_SCHEMA_VERSION = 2;
+export const DESIGN_SCHEMA_VERSION = 3;
 
 /**
  * Upgrade older saved designs to the current shape before validation.
  * v1 → v2: racks gain a frame style (19" → 4-post, 10" → generic mini rack).
+ * v2 → v3: placements gain `facing` (rear-rail gear faced the rear before).
  * Unknown input is passed through untouched so zod reports the real error.
  */
 export function migrateDesignData(raw: unknown): unknown {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return raw;
-  const d = renamePorts(raw as Record<string, unknown>);
+  let d = renamePorts(raw as Record<string, unknown>);
   if (d.schemaVersion === 1) {
     const rack = d.rack && typeof d.rack === 'object' ? (d.rack as Record<string, unknown>) : null;
-    return {
+    d = {
       ...d,
       schemaVersion: 2,
       rack: rack
@@ -552,7 +566,27 @@ export function migrateDesignData(raw: unknown): unknown {
         : d.rack,
     };
   }
+  if (d.schemaVersion === 2) d = { ...d, schemaVersion: 3, placements: addFacing(d.placements) };
   return d;
+}
+
+/**
+ * v2 → v3: placements gain an explicit facing. Before v3 a part on the rear
+ * rails always faced the rear (and shelf items faced the way their shelf's
+ * rails did), so that's what they get; everything else faces front.
+ */
+function addFacing(placements: unknown): unknown {
+  if (!Array.isArray(placements)) return placements;
+  const byId = new Map<unknown, Record<string, unknown>>();
+  for (const p of placements) if (p && typeof p === 'object') byId.set((p as { id?: unknown }).id, p as Record<string, unknown>);
+  const natural = (p: Record<string, unknown>, hops = 0): 'front' | 'rear' => {
+    if (p.facing === 'front' || p.facing === 'rear') return p.facing;
+    if (p.wall === true) return 'front';
+    const parent = p.parentId !== undefined ? byId.get(p.parentId) : undefined;
+    if (parent && hops < 5) return natural(parent, hops + 1);
+    return p.mounting === 'rear' ? 'rear' : 'front';
+  };
+  return placements.map((p: unknown) => (p && typeof p === 'object' && !Array.isArray(p) ? { ...(p as object), facing: natural(p as Record<string, unknown>) } : p));
 }
 
 /**

@@ -204,3 +204,27 @@ export function zoomToSelection(): void {
   const r = el ? clientRectToWorld(el.getBoundingClientRect()) : null;
   if (r && r.w > 0 && r.h > 0) zoomToRect(r);
 }
+
+/**
+ * Switch between the front and rear views. With a part selected, it stays
+ * in the middle of the screen at the same zoom (it's mirrored left / right
+ * in the other view; gear on the other face is found by its see-through copy).
+ */
+export function swapView(): void {
+  const ui = useUiStore.getState();
+  ui.setView(ui.view === 'front' ? 'rear' : 'front');
+  const id = ui.selectedId;
+  if (!id) return;
+  // Wait for the other view to render (two frames), then centre on the part.
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      const root = canvasRef.current;
+      const sel = CSS.escape(id);
+      const el = root?.querySelector(`[data-pid="${sel}"]`) ?? root?.querySelector(`[data-oid="${sel}"]`);
+      const r = el ? clientRectToWorld(el.getBoundingClientRect()) : null;
+      if (!r || r.w <= 0 || r.h <= 0) return;
+      const s = get();
+      setTransform(centreOn({ x: r.x + r.w / 2, y: r.y + r.h / 2 }, s.t.k, s.size));
+    }),
+  );
+}

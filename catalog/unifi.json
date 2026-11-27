@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 8,
+  "version": 9,
   "title": "Ubiquiti UniFi",
   "description": "Rack-relevant UniFi gateways, switches, storage, Protect and power gear plus rack accessories. Specs from techspecs.ui.com (fetched 2026-11-02). Max power excludes PoE output where Ubiquiti lists it that way. UniFi publishes max power only, so typicalW is null.",
   "parts": [
@@ -4415,6 +4415,8 @@
         "rj45_1g": 24,
         "sfp": 2
       },
+      "airflow": "passive",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "switch",
@@ -4880,6 +4882,8 @@
       "ports": {
         "sfp_plus": 8
       },
+      "airflow": "passive",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "switch",
@@ -10054,6 +10058,8 @@
           "size": "m2"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nas",
@@ -10150,6 +10156,8 @@
           "size": "3.5"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nas",
@@ -10246,6 +10254,8 @@
           "size": "3.5"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nas",
@@ -10354,6 +10364,8 @@
           "size": "m2"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nas",
@@ -10461,6 +10473,8 @@
           "size": "m2"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nas",
@@ -10653,6 +10667,8 @@
           "size": "3.5"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nvr",
@@ -10749,6 +10765,8 @@
           "size": "3.5"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nvr",
@@ -10845,6 +10863,8 @@
           "size": "3.5"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nvr",
@@ -10948,6 +10968,8 @@
           "size": "3.5"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nvr",
@@ -11051,6 +11073,8 @@
           "size": "3.5"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nvr",
@@ -11154,6 +11178,8 @@
           "size": "3.5"
         }
       ],
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "unifi",
         "nvr",

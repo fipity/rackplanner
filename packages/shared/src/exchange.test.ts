@@ -59,7 +59,7 @@ describe('bill of materials', () => {
   it('writes CSV with escaping and formula-injection protection', () => {
     const csv = bomToCsv(buildBom(design, catalog));
     const lines = csv.trim().split('\r\n');
-    expect(lines[0]).toBe('Brand,Model,Name,Category,Qty,U each,U total,Typical W each,Max W each,Measured W total,Weight kg each,Labels,Spec URL,Model URL (3D print),Designer,Licence');
+    expect(lines[0]).toBe('Brand,Model,Name,Category,Qty,U each,U total,Typical W each,Max W each,Measured W total,Weight kg each,Facing,Labels,Spec URL,Model URL (3D print),Designer,Licence');
     expect(csv).toContain('"Me, Inc"');
     expect(csv).toContain(`"'=cmd()"`);
     expect(lines).toHaveLength(3);

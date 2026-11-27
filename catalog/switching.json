@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 3,
+  "version": 4,
   "title": "Other switching & routing",
   "description": "TP-Link Omada, Cisco CBS350 and Netgear smart switches (official datasheets), older Cisco Catalyst and the Netgear M4250 (reseller figures), and legacy Ubiquiti EdgeMax/UISP gear (techspecs.ui.com).",
   "parts": [
@@ -368,6 +368,8 @@
         "body": "black",
         "accent": "#049fd9"
       },
+      "airflow": "passive",
+      "airflowVerified": false,
       "tags": [
         "cisco",
         "switch",
@@ -407,6 +409,8 @@
         "body": "black",
         "accent": "#049fd9"
       },
+      "airflow": "passive",
+      "airflowVerified": true,
       "tags": [
         "cisco",
         "switch",
@@ -414,7 +418,7 @@
       ],
       "sourceUrl": "https://www.cisco.com/c/en/us/products/collateral/switches/business-350-series-managed-switches/datasheet-c78-744156.html",
       "verified": true,
-      "notes": "Cisco datasheet: 445 × 240 × 44 mm, 2.63 kg, 25.9 W system power (110 V)."
+      "notes": "Cisco datasheet: 445 × 240 × 44 mm, 2.63 kg, 25.9 W system power (110 V). Airflow: fanless, per the fan table in Cisco's CBS350 data sheet."
     },
     {
       "id": "cisco-cbs350-24t-4x",
@@ -801,6 +805,8 @@
         "body": "black",
         "accent": "#4acbd6"
       },
+      "airflow": "passive",
+      "airflowVerified": false,
       "tags": [
         "tp-link",
         "switch",

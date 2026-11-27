@@ -1,9 +1,10 @@
 /**
  * Cooling airflow and heat. A device's airflow is relative to its own front
- * panel; gear mounted on the rear rails faces backwards, so in rack terms its
- * airflow is reversed. Mixing front-to-back and back-to-front gear in one rack
+ * panel; gear that faces the rear of the rack (reversed, or on the rear rails
+ * facing out) blows the other way in rack terms. Mixing front-to-back and back-to-front gear in one rack
  * means one device breathes the other's exhaust.
  */
+import { facingOf } from './facing.js';
 import type { Catalog } from './placement.js';
 import type { Airflow, Design, Part, PlacedPart } from './schemas.js';
 
@@ -30,11 +31,11 @@ export function placementAirflow(p: PlacedPart, part: Part): { airflow: Airflow 
 /** Direction through the rack: 'out-rear' = cold air in at the rack front, hot air out the back. */
 export type RackAirflow = 'out-rear' | 'out-front';
 
-export function rackAirflow(p: PlacedPart, part: Part): RackAirflow | null {
+export function rackAirflow(p: PlacedPart, part: Part, placements: readonly PlacedPart[] = [p]): RackAirflow | null {
   if (p.wall) return null;
   const { airflow } = placementAirflow(p, part);
   if (airflow !== 'front-to-back' && airflow !== 'back-to-front') return null;
-  const reversed = p.mounting === 'rear' && p.parentId === undefined;
+  const reversed = facingOf(placements, p) === 'rear';
   const outRear = (airflow === 'front-to-back') !== reversed;
   return outRear ? 'out-rear' : 'out-front';
 }
@@ -44,7 +45,7 @@ export function airflowGroups(design: Pick<Design, 'placements'>, catalog: Catal
   const out: Record<RackAirflow, string[]> = { 'out-rear': [], 'out-front': [] };
   for (const p of design.placements) {
     const part = catalog.get(p.partId);
-    const dir = part && rackAirflow(p, part);
+    const dir = part && rackAirflow(p, part, design.placements);
     if (dir) out[dir].push(p.id);
   }
   return out;

@@ -13,6 +13,8 @@
  *    U space starting at the shelf's bottom U (overlapping the shelf itself,
  *    which never collides with its own contents), inherit its faces, and their
  *    xMm is relative to the shelf's usable area.
+ *  - Facing (which way the faceplate points) is separate from the faces a
+ *    part occupies: reversing a part never changes the space it takes up.
  */
 import type { Design, Mounting, Part, PlacedPart, Rack } from './schemas.js';
 import { EPS, RACK_OPENING_MM, U_MM, type RackWidth } from './units.js';
@@ -28,6 +30,8 @@ export interface Occupancy {
   x0: number;
   x1: number;
   faces: readonly Face[];
+  /** Which way the faceplate points (see facingOf). */
+  facing: Face;
   depthMm: number | null;
   /** On the wall beside the rack (x is then the distance out from the rack's side). */
   wall?: true;
@@ -107,6 +111,11 @@ export function facesFor(mounting: Mounting): readonly Face[] {
     case 'full-depth':
       return ['front', 'rear'];
   }
+}
+
+/** Facing a part gets by default on these rails: gear on the rear rails faces the rear. */
+export function naturalFacing(mounting: Mounting): Face {
+  return mounting === 'rear' ? 'rear' : 'front';
 }
 
 /** Mounting options a user may choose for a part. Full-depth gear stays full-depth. */
@@ -192,6 +201,7 @@ export function occupancyOf(
       x0,
       x1: x0 + width,
       faces: parentOcc.faces,
+      facing: placement.facing ?? parentOcc.facing,
       depthMm: part.depthMm,
     };
   }
@@ -204,6 +214,7 @@ export function occupancyOf(
       x0: placement.xMm,
       x1: placement.xMm + width,
       faces: ['front', 'rear'],
+      facing: 'front',
       depthMm: part.depthMm,
       wall: true,
     };
@@ -216,6 +227,7 @@ export function occupancyOf(
     x0: placement.xMm,
     x1: placement.xMm + width,
     faces: facesFor(placement.mounting),
+    facing: placement.facing ?? naturalFacing(placement.mounting),
     depthMm: part.depthMm,
   };
 }

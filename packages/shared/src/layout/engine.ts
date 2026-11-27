@@ -479,6 +479,11 @@ export function layoutPortCounts(part: Part): Partial<Record<PortType, number>> 
   return portCountsOn(part, FACE_ORDER);
 }
 
+/** How many ports a face has (front, rear or top), from its layout or the auto layout. */
+export function facePortCount(part: Part, face: FaceName): number {
+  return Object.values(portCountsOn(part, [face])).reduce((a, b) => a + (b ?? 0), 0);
+}
+
 function portCountsOn(part: Part, faces: readonly FaceName[]): Partial<Record<PortType, number>> {
   const counts: Partial<Record<PortType, number>> = {};
   for (const face of faces) {

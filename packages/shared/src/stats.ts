@@ -24,7 +24,9 @@ import {
   tooTallForShelf,
   type Catalog,
 } from './placement.js';
-import { airflowGroups, wattsToBtuH } from './airflow.js';
+import { airflowGroups, placementAirflow, wattsToBtuH } from './airflow.js';
+import { facingOf } from './facing.js';
+import { facePortCount } from './layout/engine.js';
 import { cableProblems } from './cables.js';
 import { powerSupplySummary, type PowerSupplySummary } from './power.js';
 import type { CableType, Design, Part, PlacedPart, PortType } from './schemas.js';
@@ -59,6 +61,8 @@ export type WarningCode =
   | 'plug-pack-socket'
   | 'plug-packs'
   | 'airflow-mixed'
+  | 'airflow-side'
+  | 'ports-face-closed-back'
   | 'mount-fit';
 
 export interface StatsWarning {
@@ -369,9 +373,38 @@ export function computeStats(
     warnings.push({
       code: 'airflow-mixed',
       severity: 'warning',
-      message: `Mixed airflow: ${list(few)} blow${few.length === 1 ? 's' : ''} hot air out of the rack ${fewOut}, where ${list(many)} draw${many.length === 1 ? 's' : ''} cool air in. Turn ${few.length === 1 ? 'it' : 'them'} round, use a reversed-airflow model, or set the airflow in the inspector if it's wrong.`,
+      message: `Mixed airflow: ${list(few)} blow${few.length === 1 ? 's' : ''} hot air out of the rack ${fewOut}, where ${list(many)} draw${many.length === 1 ? 's' : ''} cool air in. Reverse ${few.length === 1 ? 'it' : 'them'} (R), use a reversed-airflow model, or set the airflow in the inspector if it's wrong.`,
       placementIds: few,
     });
+  }
+  const sideways = placements.filter((p) => {
+    const part = !p.wall && catalog.get(p.partId);
+    return part && placementAirflow(p, part).airflow === 'side-to-side';
+  });
+  if (sideways.length && (flow['out-rear'].length || flow['out-front'].length)) {
+    const ids = sideways.map((p) => p.id);
+    warnings.push({
+      code: 'airflow-side',
+      severity: 'info',
+      message: `${list(ids)} breathe${ids.length === 1 ? 's' : ''} side to side while the rest of the rack blows front to back; leave room at the sides or use side-to-front ducting.`,
+      placementIds: ids,
+    });
+  }
+
+  if (rack.closedBack) {
+    const blocked = placements.filter((p) => {
+      const part = !p.wall && catalog.get(p.partId);
+      return part && facingOf(placements, p) === 'rear' && facePortCount(part, 'front') > 0;
+    });
+    if (blocked.length) {
+      const ids = blocked.map((p) => p.id);
+      warnings.push({
+        code: 'ports-face-closed-back',
+        severity: 'warning',
+        message: `${list(ids)} face${ids.length === 1 ? 's' : ''} the rear, but the rack's back is closed off: ${ids.length === 1 ? 'its' : 'their'} ports will be hard to reach. Reverse ${ids.length === 1 ? 'it' : 'them'} (R) or open the back in the rack settings.`,
+        placementIds: ids,
+      });
+    }
   }
 
   const supply = powerSupplySummary(design, catalog);

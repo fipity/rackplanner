@@ -8,6 +8,7 @@ import {
   PORT_TYPE_LABELS,
   U_MM,
   isPrintedMount,
+  isReversed,
   occupancyOf,
   placementFilament,
   overlaps,
@@ -27,7 +28,7 @@ import { FaceplateDefs } from '../faceplates/Defs';
 import { GlassDoor, RackFrame } from './RackFrame';
 import { cableEndPoint, cablePath } from './cableGeometry';
 import { routeCables, type CableRoute } from './cableRoutes';
-import { drawingExtent, placementDeviceBox, rackLayout, shelfTrayMm, wallArea, type DeviceBox, type View } from './geometry';
+import { RAIL, drawingExtent, placementDeviceBox, rackLayout, shelfTrayMm, wallArea, type DeviceBox, type View } from './geometry';
 import { WallArea } from './WallArea';
 
 export interface PlacementWrapperProps {
@@ -51,6 +52,10 @@ export interface RackViewProps {
   /** CSS pixels per mm. Omit to let the SVG scale to its container. */
   scale?: number;
   selectedId?: string | null;
+  /** Other selected placements (multi-select), outlined like the selection. */
+  selectedIds?: readonly string[];
+  /** Draw gear on the other face of the rack, seen through it (default on). */
+  showThrough?: boolean;
   /** Placement currently being dragged (drawn faded). */
   draggingId?: string | null;
   ghost?: RackGhost | null;
@@ -82,6 +87,8 @@ export function RackView({
   view,
   scale,
   selectedId,
+  selectedIds,
+  showThrough = true,
   draggingId,
   ghost,
   Wrapper,
@@ -133,7 +140,7 @@ export function RackView({
 
   const visible = items.filter((i) => i.occ.faces.includes(view));
   const visibleBoxes = onPortClick ? items.filter((i) => i.occ.faces.includes(view)).map(({ p, part, occ }) => boxOf(p, part, occ)) : [];
-  const otherFace = items.filter((i) => !i.occ.faces.includes(view));
+  const otherFace = showThrough ? items.filter((i) => !i.occ.faces.includes(view)) : [];
   // Shelves before their contents so children draw on top.
   const byLayer = (a: (typeof items)[number], b: (typeof items)[number]) => Number(a.p.parentId !== undefined) - Number(b.p.parentId !== undefined);
   visible.sort(byLayer);
@@ -209,8 +216,9 @@ export function RackView({
       {otherFace.map(({ p, part, occ }) => {
         const box = boxOf(p, part, occ);
         return (
-          <g key={`o-${p.id}`} transform={`translate(${box.x} ${box.y})`} opacity={0.78} pointerEvents="none">
+          <g key={`o-${p.id}`} data-oid={p.id} transform={`translate(${box.x} ${box.y})`} opacity={0.78} pointerEvents="none">
             {face(p, part, occ, box)}
+            {isReversed(placements, p) && <ReversedBadge facing={occ.facing} w={box.w} h={box.h} ears={box.ears} />}
           </g>
         );
       })}
@@ -229,6 +237,7 @@ export function RackView({
         const drawn = (
           <g transform={`translate(${box.x} ${box.y})`} opacity={draggingId === p.id ? 0.3 : 1}>
             {face(p, part, occ, box, { label: p.label, color: p.color })}
+            {isReversed(placements, p) && <ReversedBadge facing={occ.facing} w={box.w} h={box.h} ears={box.ears} />}
           </g>
         );
         const collided = ghost && !ghost.ok && ghost.collisionIds.includes(p.id);
@@ -241,7 +250,7 @@ export function RackView({
             ) : (
               drawn
             )}
-            {selectedId === p.id && (
+            {(selectedId === p.id || selectedIds?.includes(p.id)) && (
               <rect
                 x={box.x - 1}
                 y={box.y - 1}
@@ -366,5 +375,26 @@ export function RackView({
       {design.rack.frame === 'cabinet' && design.rack.glassDoor && view === 'front' && <GlassDoor layout={layout} />}
       {ghostNode}
     </svg>
+  );
+}
+
+/**
+ * "↺ Rear-facing" / "↺ Front-facing" tag in the top-right corner of a part
+ * that's turned round from the natural way for its rails. Never mirrored.
+ */
+function ReversedBadge({ facing, w, h, ears }: { facing: View; w: number; h: number; ears: boolean }) {
+  const text = facing === 'rear' ? '↺ Rear-facing' : '↺ Front-facing';
+  const fs = Math.min(4.2, Math.max(2.2, h * 0.16));
+  const bw = Math.min(fs * 6.6, w - (ears ? RAIL * 2 : 0) - 1);
+  if (bw < fs * 2) return null;
+  const bh = fs * 1.55;
+  const x = w - (ears ? RAIL : 0) - bw - 0.8;
+  return (
+    <g data-testid="reversed-badge" pointerEvents="none" aria-hidden="true">
+      <rect x={x} y={0.8} width={bw} height={bh} rx={bh / 2} fill="#7c3aed" fillOpacity={0.92} stroke="#ffffff" strokeOpacity={0.7} strokeWidth={0.25} />
+      <text x={x + bw / 2} y={0.8 + bh / 2} fontSize={fs} fill="#ffffff" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif" fontWeight={600}>
+        {bw < fs * 5.5 ? '↺' : text}
+      </text>
+    </g>
   );
 }

@@ -2,6 +2,10 @@
 import {
   applyRackChange,
   checkPlacement,
+  descendantsOf,
+  displayName,
+  facingOf,
+  reversePlacements,
   findFreeSlot,
   findShelfSlot,
   findWallSlot,
@@ -31,10 +35,49 @@ function selected() {
   return id ? design.placements.find((p) => p.id === id) : undefined;
 }
 
+/** Every selected placement that still exists (multi-select), primary last. */
+export function selectedPlacements(): PlacedPart[] {
+  const { selectedIds, selectedId } = useUiStore.getState();
+  const ids = selectedIds.length ? selectedIds : selectedId ? [selectedId] : [];
+  const { design } = useDesignStore.getState();
+  return ids.map((id) => design.placements.find((p) => p.id === id)).filter((p): p is PlacedPart => !!p);
+}
+
 export function deleteSelected(): void {
-  const p = selected();
-  if (!p) return;
-  requestRemove(p.id);
+  const ps = selectedPlacements();
+  if (ps.length <= 1) {
+    if (ps[0]) requestRemove(ps[0].id);
+    return;
+  }
+  // Several at once: everything selected and whatever stands on it, one undo step.
+  const { design, setPlacements } = useDesignStore.getState();
+  const doomed = new Set(ps.flatMap((p) => [p.id, ...descendantsOf(design.placements, p.id)]));
+  setPlacements(design.placements.filter((p) => !doomed.has(p.id)));
+  useUiStore.getState().select(null);
+  toast(`Removed ${doomed.size} parts`);
+}
+
+/**
+ * Turn the selected part(s) round so they face the other way (R). Shelves and
+ * printed mounts turn with everything on them; one undo step.
+ */
+export function reverseSelected(ids: readonly string[] = selectedPlacements().map((p) => p.id)): void {
+  if (!ids.length) return;
+  const { design, setPlacements } = useDesignStore.getState();
+  const { catalog } = useCatalogStore.getState();
+  const r = reversePlacements(design, ids, catalog);
+  if (!r.flipped.length) {
+    toast('Wall-mounted gear can’t be reversed', 'error');
+    return;
+  }
+  setPlacements(r.placements);
+  const named = ids.map((id) => r.placements.find((p) => p.id === id)).filter((p): p is PlacedPart => !!p && !r.skipped.includes(p.id));
+  if (named.length === 1 && r.flipped.length === 1) {
+    const p = named[0]!;
+    toast(`${displayName(p, catalog.get(p.partId))} now faces the ${facingOf(r.placements, p)}`);
+  } else {
+    toast(`Reversed ${r.flipped.length} part${r.flipped.length === 1 ? '' : 's'}${r.skipped.length ? ` (${r.skipped.length} on the wall left as they were)` : ''}`);
+  }
 }
 
 /**
@@ -103,7 +146,9 @@ export function duplicateSelected(): void {
     toast(`No free space for another ${part.name}`, 'error');
     return;
   }
-  const copy = { ...slot, id: newId('p_') };
+  const copy: PlacedPart = { ...slot, id: newId('p_') };
+  // A reversed part's copy is reversed too.
+  if (!slot.wall) copy.facing = facingOf(design.placements, p);
   if (p.label) copy.label = `${p.label} copy`;
   if (p.notes) copy.notes = p.notes;
   if (p.color) copy.color = p.color;
@@ -128,7 +173,7 @@ export function nudgeSelected(dir: 1 | -1): void {
   }
 }
 
-/** Lay the selected shelf device on its side, or stand it back up (R). */
+/** Lay the selected shelf device on its side, or stand it back up (T). */
 export function turnSelected(): void {
   const p = selected();
   if (!p) return;
@@ -204,7 +249,7 @@ export function moveSelectedToWall(): void {
     toast(`No room on the wall for ${part.name}`, 'error');
     return;
   }
-  updatePlacement(p.id, { partId: slot.partId, bottomU: slot.bottomU, xMm: slot.xMm, mounting: 'front', parentId: undefined, wall: true });
+  updatePlacement(p.id, { partId: slot.partId, bottomU: slot.bottomU, xMm: slot.xMm, mounting: 'front', parentId: undefined, wall: true, facing: undefined });
   if (slot.partId !== p.partId) toast(turnedMessage(slot.partId, true));
 }
 
@@ -222,7 +267,7 @@ export function moveSelectedIntoRack(): void {
     toast(`No room in the rack for ${part.name}`, 'error');
     return;
   }
-  updatePlacement(p.id, { partId: slot.partId, bottomU: slot.bottomU, xMm: slot.xMm, mounting: slot.mounting, parentId: slot.parentId, wall: undefined });
+  updatePlacement(p.id, { partId: slot.partId, bottomU: slot.bottomU, xMm: slot.xMm, mounting: slot.mounting, parentId: slot.parentId, wall: undefined, facing: undefined });
   if (slot.partId !== p.partId) toast(turnedMessage(slot.partId));
   else if (slot.parentId) toast('Placed on shelf');
 }

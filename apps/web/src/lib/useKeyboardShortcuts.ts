@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDesignStore } from '../store/designStore';
 import { useUiStore } from '../store/uiStore';
-import { deleteSelected, duplicateSelected, nudgeSelected, turnSelected } from './actions';
+import { deleteSelected, duplicateSelected, nudgeSelected, reverseSelected, turnSelected } from './actions';
 import { fitToScreen, panView, resetView, zoomAround, zoomToSelection } from '../store/viewStore';
 
 /** Arrow-key pan step (px), and with Shift. */
@@ -61,7 +61,9 @@ export function useKeyboardShortcuts(): void {
       } else if (!mod && key === 'c') {
         const ui = useUiStore.getState();
         ui.setCableMode(!ui.cableMode);
-      } else if (!mod && key === 'r') {
+      } else if (!mod && !e.altKey && key === 'r') {
+        reverseSelected();
+      } else if (!mod && !e.altKey && key === 't') {
         turnSelected();
       } else if (!mod && (e.key === '+' || e.key === '=')) {
         zoomAround(1.25);

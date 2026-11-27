@@ -37,8 +37,14 @@ export type PrintedDialogState = { mode: 'create'; url?: string } | { mode: 'edi
 /** A printed mount being removed while it holds devices: ask what to do with them. */
 export type MountRemoval = { placementId: string } | null;
 
+/** Right-click menu on a placement, at a screen position. */
+export type ContextMenuState = { placementId: string; x: number; y: number } | null;
+
 interface UiState {
+  /** Primary selection (the details panel shows it); the last part clicked. */
   selectedId: string | null;
+  /** Every selected placement, primary included (Shift/Ctrl+click adds more). */
+  selectedIds: string[];
   view: View;
   theme: Theme;
   showIncompatible: boolean;
@@ -66,7 +72,14 @@ interface UiState {
   shortcutsOpen: boolean;
   /** What a plain mouse wheel does: guess per device (wheel zooms, trackpad pans), or always one (remembered). */
   wheelMode: WheelMode;
+  /** Draw gear on the other face of the rack, seen through it (remembered). */
+  showThrough: boolean;
+  contextMenu: ContextMenuState;
   select: (id: string | null) => void;
+  /** Add a placement to the selection, or take it out (Shift/Ctrl+click). */
+  toggleSelect: (id: string) => void;
+  setShowThrough: (v: boolean) => void;
+  setContextMenu: (m: ContextMenuState) => void;
   setView: (v: View) => void;
   setTheme: (t: Theme) => void;
   setShowIncompatible: (v: boolean) => void;
@@ -99,10 +112,12 @@ const savedTheme = readLocal(THEME_KEY);
 const LEDS_KEY = 'rackplanner.leds';
 const MINIMAP_KEY = 'rackplanner.minimap';
 const WHEEL_KEY = 'rackplanner.wheel';
+const THROUGH_KEY = 'rackplanner.showThrough';
 export type WheelMode = 'auto' | 'zoom' | 'pan';
 
 export const useUiStore = create<UiState>()((set, get) => ({
   selectedId: null,
+  selectedIds: [],
   view: 'front',
   theme: savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'system',
   showIncompatible: false,
@@ -121,7 +136,20 @@ export const useUiStore = create<UiState>()((set, get) => ({
   minimap: readLocal(MINIMAP_KEY) === 'on',
   shortcutsOpen: false,
   wheelMode: (['auto', 'zoom', 'pan'] as const).find((m) => m === readLocal(WHEEL_KEY)) ?? 'auto',
-  select: (selectedId) => set(selectedId ? { selectedId, selectedCableId: null, rightTab: 'details' } : { selectedId }),
+  showThrough: readLocal(THROUGH_KEY) !== 'off',
+  contextMenu: null,
+  select: (selectedId) =>
+    set(selectedId ? { selectedId, selectedIds: [selectedId], selectedCableId: null, rightTab: 'details' } : { selectedId, selectedIds: [] }),
+  toggleSelect: (id) => {
+    const cur = get().selectedIds;
+    const selectedIds = cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id];
+    set({ selectedIds, selectedId: selectedIds[selectedIds.length - 1] ?? null, selectedCableId: null, rightTab: 'details' });
+  },
+  setShowThrough: (showThrough) => {
+    writeLocal(THROUGH_KEY, showThrough ? 'on' : 'off');
+    set({ showThrough });
+  },
+  setContextMenu: (contextMenu) => set({ contextMenu }),
   setView: (view) => set({ view }),
   setTheme: (theme) => {
     writeLocal(THEME_KEY, theme);
@@ -132,7 +160,7 @@ export const useUiStore = create<UiState>()((set, get) => ({
   setRightTab: (rightTab) => set({ rightTab }),
   setCableMode: (cableMode) => set({ cableMode, pendingEnd: null, ...(cableMode ? { showCables: true } : {}) }),
   setPendingEnd: (pendingEnd) => set({ pendingEnd }),
-  selectCable: (selectedCableId) => set(selectedCableId ? { selectedCableId, selectedId: null, rightTab: 'details' } : { selectedCableId }),
+  selectCable: (selectedCableId) => set(selectedCableId ? { selectedCableId, selectedId: null, selectedIds: [], rightTab: 'details' } : { selectedCableId }),
   setShowCables: (showCables) => set({ showCables }),
   setLeds: (leds) => {
     writeLocal(LEDS_KEY, leds ? 'on' : 'off');

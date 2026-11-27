@@ -35,7 +35,7 @@ test('shelf gear can be laid on its side and cabled there', async ({ page, reque
 
   await device.click();
   await expect(page.getByRole('button', { name: 'Upright' })).toBeVisible();
-  await page.keyboard.press('r');
+  await page.keyboard.press('t');
   const flat = (await device.boundingBox())!;
   expect(flat.width).toBeGreaterThan(flat.height * 2);
 

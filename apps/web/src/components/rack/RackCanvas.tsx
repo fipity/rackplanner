@@ -6,7 +6,7 @@ import { useDragStore } from '../../store/dragStore';
 import { useUiStore } from '../../store/uiStore';
 import { handleCableEndClick } from '../../lib/cableActions';
 import { rackSvgRef, refreshDrag, type DragData } from './dnd';
-import { uprightPart, wallWidthMm, type PlacedPart, type Part } from '@rackplanner/shared';
+import { isReversed, uprightPart, wallWidthMm, type PlacedPart, type Part } from '@rackplanner/shared';
 import { drawingExtent, rackLayout } from './geometry';
 import { RackView, type PlacementWrapperProps, type RackGhost } from './RackView';
 import { lodForScale } from '../faceplates/Faceplate';
@@ -15,19 +15,22 @@ import { cx } from '../ui';
 import { canvasRef, clientToSvg, panView, setTransform, syncCanvas, useViewStore } from '../../store/viewStore';
 import { mouseWheelZoomFactor, screenToWorld, wheelPixels, wheelSource, wheelZoomFactor, zoomAt, type Pt, type ViewTransform, type WheelSource } from './viewport';
 import { CanvasOverlay } from './CanvasOverlay';
+import { PartContextMenu } from './PartContextMenu';
 
 /** What a screen reader announces for a device: its label or product name, and how it sits. */
-export function placementA11yName(placement: PlacedPart, part: Part): string {
+export function placementA11yName(placement: PlacedPart, part: Part, reversed?: 'front' | 'rear' | null): string {
   const name = placement.label?.trim() || part.name;
-  const how = [uprightPart(part) ? 'on its side' : null, placement.wall ? 'on the wall' : null].filter(Boolean).join(', ');
+  const how = [uprightPart(part) ? 'on its side' : null, placement.wall ? 'on the wall' : null, reversed ? `facing the ${reversed}` : null].filter(Boolean).join(', ');
   return how ? `${name}, ${how}` : name;
 }
 
-function DraggablePlacement({ placement, part, box, children }: PlacementWrapperProps) {
+function DraggablePlacement({ placement, part, box, occupancy, children }: PlacementWrapperProps) {
   const data: DragData = { kind: 'placement', placementId: placement.id };
   const cableMode = useUiStore((s) => s.cableMode);
   const { setNodeRef, listeners, attributes } = useDraggable({ id: `placement:${placement.id}`, data, disabled: cableMode });
   const select = useUiStore((s) => s.select);
+  const toggleSelect = useUiStore((s) => s.toggleSelect);
+  const reversed = useDesignStore((s) => isReversed(s.design.placements, placement));
   return (
     <g
       // dnd-kit types its node ref for HTMLElement, but only uses
@@ -40,12 +43,13 @@ function DraggablePlacement({ placement, part, box, children }: PlacementWrapper
       aria-roledescription={cableMode ? undefined : attributes['aria-roledescription']}
       role="button"
       data-pid={placement.id}
-      aria-label={placementA11yName(placement, part)}
+      aria-label={placementA11yName(placement, part, reversed ? occupancy.facing : null)}
       className={cableMode ? 'cursor-crosshair outline-none' : 'cursor-grab outline-none active:cursor-grabbing'}
       onClick={(e) => {
         e.stopPropagation();
         // In cable mode a click on the device body makes a device-level connection.
         if (cableMode) handleCableEndClick({ placementId: placement.id });
+        else if (e.shiftKey || e.ctrlKey || e.metaKey) toggleSelect(placement.id);
         else select(placement.id);
       }}
     >
@@ -70,13 +74,13 @@ const EDGE = 48;
 const EDGE_SPEED = 16;
 
 type Gesture =
-  | { kind: 'pan'; id: number; last: Pt; moved: boolean; armed: boolean; start: Pt }
+  | { kind: 'pan'; id: number; last: Pt; moved: boolean; armed: boolean; start: Pt; menuFor?: string | undefined }
   | { kind: 'pinch'; a: number; b: number; t0: ViewTransform; d0: number; w0: Pt };
 
 export function RackCanvas() {
   const design = useDesignStore((s) => s.design);
   const catalog = useCatalogStore((s) => s.catalog);
-  const { view, selectedId, select, cableMode, pendingEnd, selectedCableId, showCables, selectCable, leds, plan } = useUiStore();
+  const { view, selectedId, selectedIds, select, cableMode, pendingEnd, selectedCableId, showCables, selectCable, leds, plan, showThrough } = useUiStore();
   const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   const drag = useDragStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -248,8 +252,8 @@ export function RackCanvas() {
     return { x: e.clientX - r.left, y: e.clientY - r.top };
   };
 
-  const startPan = (e: ReactPointerEvent, armed: boolean) => {
-    gesture.current = { kind: 'pan', id: e.pointerId, last: localPoint(e), start: localPoint(e), moved: false, armed };
+  const startPan = (e: ReactPointerEvent, armed: boolean, menuFor?: string) => {
+    gesture.current = { kind: 'pan', id: e.pointerId, last: localPoint(e), start: localPoint(e), moved: false, armed, menuFor };
     if (armed) {
       containerRef.current?.setPointerCapture(e.pointerId);
       setPanning(true);
@@ -325,10 +329,12 @@ export function RackCanvas() {
           return;
         }
         // Middle or right button, or Space + left: pan from anywhere, even over a device.
+        // A right-click on a device that doesn't move opens its menu instead (see pointer up).
         if (e.button === 1 || e.button === 2 || (e.button === 0 && spaceHeld)) {
           e.preventDefault();
           e.stopPropagation();
-          startPan(e, true);
+          const pid = e.button === 2 && !cableMode && e.target instanceof Element ? e.target.closest('[data-pid]')?.getAttribute('data-pid') : null;
+          startPan(e, true, pid ?? undefined);
           return;
         }
         // Left button on empty space: pan once it moves (a click still deselects).
@@ -350,7 +356,7 @@ export function RackCanvas() {
         }
         if (g?.kind !== 'pan' || g.id !== e.pointerId) return;
         const p = localPoint(e);
-        if (!g.armed) {
+        if (!g.armed || (g.menuFor && !g.moved)) {
           if (Math.hypot(p.x - g.start.x, p.y - g.start.y) < PAN_SLOP) return;
           g.armed = true;
           containerRef.current?.setPointerCapture(e.pointerId);
@@ -366,7 +372,15 @@ export function RackCanvas() {
         if (e.pointerType === 'touch') touches.current.delete(e.pointerId);
         const g = gesture.current;
         if (g?.kind === 'pinch' && touches.current.size < 2) endGesture();
-        else if (g?.kind === 'pan' && g.id === e.pointerId) endGesture();
+        else if (g?.kind === 'pan' && g.id === e.pointerId) {
+          endGesture();
+          if (g.menuFor && !g.moved && e.button === 2) {
+            // Right-click without dragging: select the part (unless it's in the selection already) and open its menu.
+            const ui = useUiStore.getState();
+            if (!ui.selectedIds.includes(g.menuFor)) ui.select(g.menuFor);
+            ui.setContextMenu({ placementId: g.menuFor, x: e.clientX, y: e.clientY });
+          }
+        }
       }}
       onPointerCancelCapture={(e) => {
         if (e.pointerType === 'touch') touches.current.delete(e.pointerId);
@@ -388,6 +402,8 @@ export function RackCanvas() {
           view={view}
           scale={1}
           selectedId={selectedId}
+          selectedIds={selectedIds}
+          showThrough={showThrough}
           draggingId={drag.active?.placementId ?? null}
           ghost={ghost}
           Wrapper={DraggablePlacement}
@@ -410,6 +426,7 @@ export function RackCanvas() {
         </div>
       )}
       <CanvasOverlay design={design} catalog={catalog} view={view} />
+      <PartContextMenu />
     </div>
   );
 }

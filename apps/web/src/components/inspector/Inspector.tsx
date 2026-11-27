@@ -18,6 +18,11 @@ import {
   type Alignment,
   formatURange,
   occupancyOf,
+  canReverse,
+  facingOf,
+  isReversed,
+  naturalFacing,
+  otherFace,
   type Mounting,
   type Part,
   type PlacedPart,
@@ -25,9 +30,9 @@ import {
   turnedPart,
   uprightPart,
 } from '@rackplanner/shared';
-import { Copy, ExternalLink, Pencil, Trash2, Wand2 } from 'lucide-react';
+import { Copy, ExternalLink, Pencil, RotateCcw, Trash2, Wand2 } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
-import { deleteSelected, duplicateSelected, moveSelectedIntoRack, moveSelectedToWall, turnSelected } from '../../lib/actions';
+import { deleteSelected, duplicateSelected, moveSelectedIntoRack, moveSelectedToWall, reverseSelected, turnSelected } from '../../lib/actions';
 import { toast } from '../../lib/toast';
 import { useCatalogStore } from '../../store/catalogStore';
 import { useDesignStore } from '../../store/designStore';
@@ -182,9 +187,9 @@ function DeviceCables({ placementId }: { placementId: string }) {
 /** Cooling airflow: catalog (or typical) direction, or your own setting. */
 function AirflowField({ placement, part }: { placement: PlacedPart; part: Part }) {
   const updatePlacement = useDesignStore((s) => s.updatePlacement);
+  const facesRear = useDesignStore((s) => facingOf(s.design.placements, placement) === 'rear');
   const { airflow, source } = placementAirflow({ ...placement, airflow: undefined }, part);
   const auto = airflow ? `${source === 'typical' ? 'Typical' : 'Catalog'}: ${AIRFLOW_LABELS[airflow].toLowerCase()}` : 'Unknown';
-  const reversed = placement.mounting === 'rear' && placement.parentId === undefined;
   return (
     <Field label="Airflow">
       <select
@@ -201,9 +206,68 @@ function AirflowField({ placement, part }: { placement: PlacedPart; part: Part }
         ))}
       </select>
       <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-        Relative to the device's front panel.{reversed ? ' Mounted on the rear rails, so it blows the other way through the rack.' : ''}
+        Relative to the device's front panel.{facesRear ? ' It faces the rear, so it blows the other way through the rack.' : ''}
+        {!placement.airflow && part.airflow && part.airflowVerified === false ? ' The catalog value is unconfirmed.' : ''}
       </p>
     </Field>
+  );
+}
+
+/** Which way the part faces: its faceplate towards the front or the rear of the rack. */
+function FacingField({ placement }: { placement: PlacedPart }) {
+  const design = useDesignStore((s) => s.design);
+  const catalog = useCatalogStore((s) => s.catalog);
+  const facing = facingOf(design.placements, placement);
+  const reversed = isReversed(design.placements, placement);
+  const parent = placement.parentId ? design.placements.find((p) => p.id === placement.parentId) : undefined;
+  const inMount = isPrintedMount(parent && catalog.get(parent.partId));
+  const kids = design.placements.filter((p) => p.parentId === placement.id).length;
+  return (
+    <Field label="Facing">
+      <Button
+        aria-pressed={reversed}
+        active={reversed}
+        className="w-full border border-zinc-300 dark:border-zinc-700"
+        title="Reverse (R): turn it round so its faceplate points the other way"
+        onClick={() => reverseSelected([placement.id])}
+      >
+        <RotateCcw className="size-4" /> {facing === 'front' ? 'Reverse (face rear)' : 'Reverse (face front)'}
+      </Button>
+      <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+        Faces the {facing}: its {facing === 'front' ? 'ports show in the front view and its back panel in the rear view' : 'ports show in the rear view and its back panel in the front view'}.
+        {inMount ? ' Turns round with its mount.' : kids ? ` Everything on it (${kids}) turns round with it.` : ''}
+      </p>
+    </Field>
+  );
+}
+
+/** Several parts selected (Shift/Ctrl+click): what can be done to all of them. */
+function MultiInspector({ ids }: { ids: string[] }) {
+  const design = useDesignStore((s) => s.design);
+  const catalog = useCatalogStore((s) => s.catalog);
+  const ps = ids.map((id) => design.placements.find((p) => p.id === id)).filter((p): p is PlacedPart => !!p);
+  const reversible = ps.filter(canReverse);
+  return (
+    <div className="space-y-4">
+      <div className="font-semibold">{ps.length} parts selected</div>
+      <ul className="space-y-0.5 text-sm">
+        {ps.map((p) => (
+          <li key={p.id} className="flex justify-between gap-2">
+            <span className="truncate">{displayName(p, catalog.get(p.partId))}</span>
+            <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">{p.wall ? 'on the wall' : `faces ${facingOf(design.placements, p)}`}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="flex gap-2">
+        <Button onClick={() => reverseSelected()} disabled={!reversible.length} title="Reverse (R)" className="flex-1 border border-zinc-300 dark:border-zinc-700">
+          <RotateCcw className="size-4" /> Reverse all
+        </Button>
+        <Button variant="danger" onClick={deleteSelected} title="Delete (Del)" className="flex-1 border border-red-200 dark:border-red-900">
+          <Trash2 className="size-4" /> Delete all
+        </Button>
+      </div>
+      <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Shift- or Ctrl-click a part to add it to the selection or take it out.</p>
+    </div>
   );
 }
 
@@ -263,7 +327,9 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
       toast(check.problems[0]?.message ?? 'Cannot change mounting', 'error');
       return;
     }
-    updatePlacement(placement.id, { mounting: m });
+    // Moving to the other rails keeps it facing out from them (or keeps it reversed).
+    const facing = isReversed(design.placements, placement) ? otherFace(naturalFacing(m)) : naturalFacing(m);
+    updatePlacement(placement.id, { mounting: m, facing });
   };
 
   return (
@@ -365,7 +431,7 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
                 key={String(side)}
                 active={side === (upright !== undefined)}
                 className="border border-zinc-300 dark:border-zinc-700"
-                title="Turn (R)"
+                title="Turn (T)"
                 onClick={() => side !== (upright !== undefined) && turnSelected()}
               >
                 {side ? 'On its side' : 'Upright'}
@@ -405,6 +471,8 @@ function PlacementInspector({ placement, part }: { placement: PlacedPart; part: 
           </select>
         </Field>
       )}
+
+      {canReverse(placement) && <FacingField placement={placement} />}
 
       <MeasuredPower placement={placement} part={part} />
 
@@ -474,7 +542,9 @@ function RackSummary() {
           ['Ctrl+D', 'duplicate'],
           ['Ctrl+Z / Ctrl+Shift+Z', 'undo / redo'],
           ['C', 'cable mode'],
-          ['R', 'turn shelf device on its side'],
+          ['R', 'reverse (face the other way)'],
+          ['T', 'turn shelf device on its side'],
+          ['Shift / Ctrl + click', 'select several'],
           ['Drag empty space / Space+drag', 'pan'],
           ['Mouse wheel / pinch', 'zoom at the cursor'],
           ['F / 0', 'fit / 100%'],
@@ -494,10 +564,12 @@ function RackSummary() {
 
 export function Inspector() {
   const selectedId = useUiStore((s) => s.selectedId);
+  const selectedIds = useUiStore((s) => s.selectedIds);
   const selectedCableId = useUiStore((s) => s.selectedCableId);
   const cable = useDesignStore((s) => (selectedCableId ? s.design.cables.find((c) => c.id === selectedCableId) : undefined));
   const placement = useDesignStore((s) => s.design.placements.find((p) => p.id === selectedId));
   const part = useCatalogStore((s) => (placement ? s.catalog.get(placement.partId) : undefined));
   if (cable) return <CableInspector key={cable.id} cable={cable} />;
+  if (selectedIds.length > 1) return <MultiInspector ids={selectedIds} />;
   return placement && part ? <PlacementInspector key={placement.id} placement={placement} part={part} /> : <RackSummary />;
 }

@@ -1,4 +1,4 @@
-import { PORT_TYPE_LABELS, buildBom, computeStats, licenceInfo, type Catalog, type Design, type PortType } from '@rackplanner/shared';
+import { PORT_TYPE_LABELS, buildBom, computeStats, facingText, licenceInfo, type Catalog, type Design, type PortType } from '@rackplanner/shared';
 import { ArrowLeft, Lightbulb, LightbulbOff, Printer } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { RackView } from '../components/rack/RackView';
@@ -97,7 +97,7 @@ export function PrintSheet({ design, catalog, stamp }: { design: Design; catalog
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="border-b-2 border-zinc-300 text-left">
-                {['Qty', 'Brand', 'Model', 'Name / labels', 'U', 'Typ W', 'Max W', 'kg'].map((h) => (
+                {['Qty', 'Brand', 'Model', 'Name / labels', 'U', 'Facing', 'Typ W', 'Max W', 'kg'].map((h) => (
                   <th key={h} className="px-1.5 py-1 font-semibold">
                     {h}
                   </th>
@@ -132,6 +132,7 @@ export function PrintSheet({ design, catalog, stamp }: { design: Design; catalog
                     )}
                   </td>
                   <td className="px-1.5 py-1 tabular-nums">{r.totalU || r.heightU}</td>
+                  <td className="px-1.5 py-1">{facingText(r)}</td>
                   <td className="px-1.5 py-1 tabular-nums">{r.measuredW !== null ? `${r.measuredW}*` : (r.typicalW ?? '—')}</td>
                   <td className="px-1.5 py-1 tabular-nums">{r.maxW ?? '—'}</td>
                   <td className="px-1.5 py-1 tabular-nums">{r.weightKg !== null ? +(r.weightKg * r.qty).toFixed(2) : '—'}</td>

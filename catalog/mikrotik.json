@@ -1,6 +1,6 @@
 {
   "$schema": "./schema.json",
-  "version": 1,
+  "version": 2,
   "title": "MikroTik",
   "description": "CRS/CSS switches, CCR/RB routers and RDS storage. Specs from mikrotik.com product pages (fetched 2026-11-02).",
   "parts": [
@@ -175,6 +175,8 @@
         "body": "black",
         "accent": "#d4202c"
       },
+      "airflow": "passive",
+      "airflowVerified": false,
       "tags": [
         "mikrotik",
         "gateway",
@@ -247,6 +249,8 @@
         "body": "black",
         "accent": "#d4202c"
       },
+      "airflow": "passive",
+      "airflowVerified": false,
       "tags": [
         "mikrotik",
         "gateway",
@@ -287,6 +291,8 @@
         "body": "black",
         "accent": "#d4202c"
       },
+      "airflow": "front-to-back",
+      "airflowVerified": false,
       "tags": [
         "mikrotik",
         "nas"
@@ -440,6 +446,8 @@
         "body": "black",
         "accent": "#d4202c"
       },
+      "airflow": "passive",
+      "airflowVerified": true,
       "tags": [
         "mikrotik",
         "switch"
@@ -448,7 +456,7 @@
       "heightU": 1,
       "width": "19in",
       "depthMm": 144,
-      "notes": "Weight not published by MikroTik.",
+      "notes": "Weight not published by MikroTik. Airflow: passive (no fans), per MikroTik's product comparison (\"Cooling type: Passive\").",
       "verified": true
     },
     {
@@ -815,6 +823,8 @@
         "body": "black",
         "accent": "#d4202c"
       },
+      "airflow": "passive",
+      "airflowVerified": false,
       "tags": [
         "mikrotik",
         "switch"

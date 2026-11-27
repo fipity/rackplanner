@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createDesign } from '@rackplanner/shared';
+import { DESIGN_SCHEMA_VERSION, createDesign } from '@rackplanner/shared';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { openDb, type Db } from './db/index.js';
 import { deleteDesign, getDesign, listDesigns } from './designsRepo.js';
@@ -52,7 +52,7 @@ describe('stored v1 designs', () => {
     // Write the raw v1 JSON the way an older version stored it.
     db.insert(designs).values({ id: 'old', name: 'Old rack', data: v1 as never, revision: 3, createdAt: v1.createdAt, updatedAt: v1.updatedAt }).run();
     const got = getDesign(db, 'old');
-    expect(got.design.schemaVersion).toBe(2);
+    expect(got.design.schemaVersion).toBe(DESIGN_SCHEMA_VERSION);
     expect(got.design.rack.frame).toBe('mini-10in');
     expect(got.revision).toBe(3);
   });

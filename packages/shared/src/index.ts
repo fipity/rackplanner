@@ -15,3 +15,4 @@ export * from './layout/presets.js';
 export { autoFaceLayout } from './layout/auto.js';
 export * from './airflow.js';
 export * from './printed/index.js';
+export * from './facing.js';

@@ -1,7 +1,7 @@
 import { MAX_RACK_U, MIN_RACK_U, RACK_DEPTH_PRESETS, RACK_FRAME_INFO, RACK_HEIGHT_PRESETS, defaultFrame, framesFor, type Rack, type RackChangeResult, type RackFrame } from '@rackplanner/shared';
-import { ArrowDown01, ArrowUp01, BrickWall, Cable, DoorOpen, Eye, EyeOff, Lightbulb, LightbulbOff, Maximize, Minus, Monitor, Moon, Plus, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
+import { ArrowDown01, ArrowLeftRight, ArrowUp01, BrickWall, Layers, PanelRightClose, Cable, DoorOpen, Eye, EyeOff, Lightbulb, LightbulbOff, Maximize, Minus, Monitor, Moon, Plus, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from 'lucide-react';
 import { useState } from 'react';
-import { fitToScreen, useViewStore, zoomAround, zoomTo } from '../store/viewStore';
+import { fitToScreen, swapView, useViewStore, zoomAround, zoomTo } from '../store/viewStore';
 import { MAX_ZOOM, MIN_ZOOM } from './rack/viewport';
 import { commitRackChange, previewRackChange } from '../lib/actions';
 import { useDesignStore, useHistory } from '../store/designStore';
@@ -14,7 +14,7 @@ const ALL_HEIGHTS = Array.from({ length: MAX_RACK_U - MIN_RACK_U + 1 }, (_, i) =
 export function Toolbar() {
   const rack = useDesignStore((s) => s.design.rack);
   const { canUndo, canRedo, undo, redo } = useHistory();
-  const { view, setView, theme, setTheme, cableMode, setCableMode, showCables, setShowCables, leds, setLeds, plan, setPlan } = useUiStore();
+  const { view, setView, theme, setTheme, cableMode, setCableMode, showCables, setShowCables, leds, setLeds, plan, setPlan, showThrough, setShowThrough } = useUiStore();
   const [pending, setPending] = useState<{ rack: Rack; result: RackChangeResult } | null>(null);
 
   const requestRack = (patch: Partial<Rack>) => {
@@ -72,6 +72,16 @@ export function Toolbar() {
         className="px-1.5"
       >
         <BrickWall className="size-4" />
+      </Button>
+      <Button
+        aria-label="Closed back"
+        aria-pressed={!!rack.closedBack}
+        title={rack.closedBack ? 'The back is closed off (click to open it)' : 'Mark the back as closed off: solid rear panel, or the rack stands against a wall'}
+        active={!!rack.closedBack}
+        onClick={() => requestRack({ closedBack: !rack.closedBack })}
+        className="px-1.5"
+      >
+        <PanelRightClose className="size-4" />
       </Button>
 
       <div className="flex items-center gap-1">
@@ -140,6 +150,22 @@ export function Toolbar() {
           { value: 'top', label: 'Shelves' },
         ]}
       />
+      <div className="flex items-center gap-0.5">
+        <Button aria-label="Swap view" title="Swap between the front and rear views, keeping the selected part in the middle" onClick={swapView} disabled={plan} className="px-1.5">
+          <ArrowLeftRight className="size-4" />
+        </Button>
+        <Button
+          aria-label="Show through"
+          aria-pressed={showThrough}
+          active={showThrough}
+          title={showThrough ? 'Showing gear on the other side of the rack, seen through it (click to hide it)' : 'Show gear on the other side of the rack, seen through it, to line things up'}
+          onClick={() => setShowThrough(!showThrough)}
+          disabled={plan}
+          className="px-1.5"
+        >
+          <Layers className="size-4" />
+        </Button>
+      </div>
       <Button aria-label={leds ? 'Turn status LEDs off' : 'Turn status LEDs on'} aria-pressed={leds} title={leds ? 'LEDs on (click for print style)' : 'LEDs off (print style)'} onClick={() => setLeds(!leds)} className="px-1.5">
         {leds ? <Lightbulb className="size-4" /> : <LightbulbOff className="size-4" />}
       </Button>

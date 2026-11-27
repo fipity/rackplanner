@@ -41,6 +41,19 @@ out += ['## Unverified faceplate layouts', '',
         'Detailed front/rear/top layouts with `layoutVerified: false`: counts come from the sources, but the face or position of some items '
         'could not be confirmed from a manufacturer spec sheet or drawing.', '', '| Part | What is not confirmed | Sources |', '|---|---|---|']
 out += lay + ['']
+# Airflow values that are best guesses.
+air = []
+for f in sorted(glob.glob(os.path.join(CAT, '*.json'))):
+    if f.endswith('schema.json'):
+        continue
+    for p in json.load(open(f))['parts']:
+        if p.get('airflow') and p.get('airflowVerified') is False:
+            air.append(f"| `{p['id']}` {p['name']} | {p['airflow']} |")
+out += ['## Unconfirmed airflow', '',
+        'Parts with `airflowVerified: false`: rack NAS and NVRs are assumed front to back (drive bays at the front), fanless '
+        'switches and routers passive. Not yet confirmed from a manufacturer document. Parts with no airflow set are unknown.', '',
+        '| Part | Airflow |', '|---|---|']
+out += air + ['']
 out += ['## Missing values', '', 'Parts with `null` depth, weight or power (passive items are only listed for missing depth).', '',
         '| File | Part | Missing |', '|---|---|---|']
 out += [f'| {f} | `{i}` | {g} |' for f, i, g in missing]

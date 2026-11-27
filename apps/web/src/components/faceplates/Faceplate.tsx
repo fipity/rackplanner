@@ -348,7 +348,7 @@ export function wallFace(part: Part): View {
 
 /** Face of a placement seen from `view`. */
 export function faceFor(occ: Occupancy, part: Part, view: View): View {
-  return occ.wall ? wallFace(part) : faceSeen(occ.faces, view);
+  return occ.wall ? wallFace(part) : faceSeen(occ.facing, view);
 }
 
 export function portPositions(part: Part, w: number, h: number, ears: boolean, view: View): PortSlot[] {

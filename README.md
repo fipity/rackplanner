@@ -13,6 +13,7 @@ Runs as a single Docker container with a SQLite database, or as a [desktop app f
 - **Rack frames:** 2-post, 4-post, enclosed cabinet (with glass door) and 10″ mini racks including the **DeskPi RackMate T1 / T2**, with rails, EIA hole spacing (square cage-nut holes, or round tapped #10-32 holes on the RackMate rails) and free-slot hints.
 - **Shelf plans:** a top-down view of every shelf showing how devices fit side by side, with overhangs flagged.
 - **Placement:** drag and drop with U snapping, collision checks, front / rear / full-depth mounting, partial-width gear and desktop gear on shelves. Warns when something is too wide, deep or tall for its shelf.
+- **Reverse parts (face the rear):** turn any part round so its faceplate points at the back of the rack (a switch with its ports at the back, a patch panel at the rear). The rear view then shows its ports and the front view its back panel; it keeps its U, depth and position. Shelves and 3D-printed mounts turn with what's on them. Works on several selected parts at once, from the details panel, the right-click menu or <kbd>R</kbd>.
 - **Wall area:** an optional wall beside the rack for wall-mounted gear: nbn connection boxes, modems, and data, TV, phone, fibre and power wall plates (AU/NZ single, double and USB power points, UK, EU Schuko and US outlets), cabled to the rack like anything else. The power points count towards the outlets the rack's gear needs.
 - **Power sources:** USB-C, DC adapters, plug-packs and IEC inlets per device, checked against the outlets your power boards provide.
 - **Cables:** colour-coded port-to-port patch cables, with tooltips on every port ("Port 17 — 1 GbE (PoE+)").
@@ -170,7 +171,11 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <registry>/rackplanner
 | Add a part | Drag it from the catalog into the rack, or click it to drop it in the first free slot |
 | Move | Drag a placed part (red = blocked, with the reason shown next to the cursor) |
 | Put desktop gear on a shelf | Drag it onto a shelf, or just click it in the catalog: it goes onto a shelf with room. It stands on the tray and snaps beside items already there |
-| Lay shelf gear on its side | Select it and press **R**, or choose **Orientation: On its side**. It takes less height and more shelf width; its faceplate and ports turn with it, and cables stay connected. Gear that doesn't fit standing up is laid on its side for you: when it's too tall for the room above a shelf (like the nbn HFC NTD), when only that fits under the gear above, or near the top of the rack or wall. This applies when you drag, click to add from the catalog, duplicate or move it between the wall and the rack. Gear that only fits upright is stood back up |
+| Reverse a part (face the rear) | Select it and press <kbd>R</kbd>, click **Reverse (face rear)** under *Facing* in its details, or right-click it and choose **Reverse (face rear)**. Its faceplate (ports, LEDs, display) now points at the back of the rack: the rear view shows it, the front view shows its rear panel (a plain generated one when the catalog has no rear layout), and a small **↺ Rear-facing** badge marks it in both views. It stays at the same U, takes the same depth from the same side and keeps its left / right position in rack terms. *Mounting* is separate: it says which rails the part sits on; *Facing* says which way it points. Gear on the rear rails faces the rear by default (as before), so reversing it makes it face the front (**↺ Front-facing**). Reversing a shelf turns everything on it round too (each item in place), and items on a shelf can also be reversed on their own; a 3D-printed mount and the device in it always turn together. Reversing also reverses the part's airflow. Undo with <kbd>Ctrl</kbd>+<kbd>Z</kbd> |
+| Select several parts | <kbd>Shift</kbd>+click or <kbd>Ctrl</kbd>+click to add a part to the selection (or take it out). <kbd>R</kbd> and <kbd>Del</kbd> then act on all of them, as one undo step |
+| Part menu | Right-click a part (without dragging; a right-drag still pans) for **Reverse**, **Turn on its side**, **Duplicate** and **Remove** |
+| Swap view / show through | The ⇆ button next to *Front / Rear / Shelves* swaps views and keeps the selected part in the middle of the screen. The layers button turns *show through* on or off: gear on the other face of the rack, seen through it (on by default) |
+| Lay shelf gear on its side | Select it and press <kbd>T</kbd>, or choose **Orientation: On its side**. It takes less height and more shelf width; its faceplate and ports turn with it, and cables stay connected. Gear that doesn't fit standing up is laid on its side for you: when it's too tall for the room above a shelf (like the nbn HFC NTD), when only that fits under the gear above, or near the top of the rack or wall. This applies when you drag, click to add from the catalog, duplicate or move it between the wall and the rack. Gear that only fits upright is stood back up |
 | Put gear on the wall beside the rack | Turn on the wall with the wall button in the toolbar, then drag desktop gear or wall plates onto it (left of the rack in the front view, right of it in the rear view). Clicking a wall plate in the catalog turns the wall on and puts it there. For a selected desktop device, **Where: In the rack / On the wall** moves it without dragging. Turning the wall off asks before removing what's on it |
 | Select a shelf that has gear on it | Click its ears or tray, or the shelf name in an item's details |
 | Draw cables | Press <kbd>C</kbd> (or **Cables** in the toolbar), click a port or device, then the other end. <kbd>Esc</kbd> finishes |
@@ -178,6 +183,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <registry>/rackplanner
 | Partial-width position | Select a 10″ / half-width part (or a shelf item), choose **Left / Centre / Right** |
 | Move by 1U | <kbd>↑</kbd> / <kbd>↓</kbd> (shelves take their contents with them) |
 | Delete / duplicate | <kbd>Del</kbd> / <kbd>Ctrl</kbd>+<kbd>D</kbd> |
+| Reverse / turn on its side | <kbd>R</kbd> / <kbd>T</kbd> (<kbd>T</kbd> was <kbd>R</kbd> before reversing existed) |
 | Undo / redo | <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> |
 | Measured power | Select a device and enter watts in *Measured power* |
 | Export / print | **Export** menu in the header |
@@ -223,7 +229,7 @@ Cables between the front and the rear (or to a device on the other face) are dra
 
 ## Designs
 
-The home screen lists your designs with live thumbnails. Create a new one by picking a width, a height preset and an optional depth, or start from a **template**: a 10″ mini rack, an nbn + UniFi starter in a DeskPi RackMate T1, a 12U 19″ homelab, or a 9U network cabinet. Rename, duplicate or delete designs from each card's menu, and **Import** a design exported as JSON. JSON exports include any custom parts the design uses, so they move cleanly between RackPlanner installs.
+The home screen lists your designs with live thumbnails. Create a new one by picking a width, a height preset and an optional depth, or start from a **template**: a 10″ mini rack, an nbn + UniFi starter in a DeskPi RackMate T1, a 12U 19″ homelab, or a 9U network cabinet. Rename, duplicate or delete designs from each card's menu, and **Import** a design exported as JSON. JSON exports include any custom parts the design uses, so they move cleanly between RackPlanner installs. Each placed part's `facing` (`"front"` or `"rear"`) is kept. Designs and JSON files from before facing existed (schema v2) are upgraded when opened or imported: parts face front, except gear on the rear rails (and what sits on a rear shelf), which faces the rear as it always looked.
 
 ### Sharing
 
@@ -241,19 +247,19 @@ The **Stats** tab, next to the device details, updates live:
 - **PoE:** total PoE budget of the switches and gateways in the rack, compared with your expected PoE load.
 - **Weight** and **port counts** by type.
 - **Cables:** count by type and total length.
-- **Warnings:** devices deeper than the rack, gear deeper than its shelf, desktop gear not on a shelf, collisions or bad widths (e.g. after an import), parts missing from the catalog, UPS or PoE overload, cable problems, mixed airflow (one device blowing hot air out of the rack face where another draws cool air in), and devices with no power data. Click a warning to select the device.
+- **Warnings:** reversed parts whose ports face a closed back (mark it with the **Closed back** button in the toolbar for a cabinet with a solid back panel or a rack against a wall), devices deeper than the rack, gear deeper than its shelf, desktop gear not on a shelf, collisions or bad widths (e.g. after an import), parts missing from the catalog, UPS or PoE overload, cable problems, mixed airflow (one device blowing hot air out of the rack face where another draws cool air in), and devices with no power data. Click a warning to select the device.
 
 ### Airflow
 
-Rack servers and UPSs are assumed to breathe front to back; other gear has no airflow unless its catalog entry sets one (`airflow`: `front-to-back`, `back-to-front`, `side-to-side` or `passive`). Set your own in the inspector's **Airflow** field. Airflow is relative to the device's front panel, so gear mounted on the rear rails blows the other way through the rack.
+Rack servers and UPSs are assumed to breathe front to back; other gear has no airflow unless its catalog entry sets one (`airflow`: `front-to-back`, `back-to-front`, `side-to-side` or `passive`, with `airflowVerified: false` when it's a best guess rather than from the maker's documents; see `catalog/UNVERIFIED.md`). Rack NAS and NVRs, and the common fanless switches and routers, have one filled in. Set your own in the inspector's **Airflow** field. Airflow is relative to the device's front panel, so a part that faces the rear (reversed, or on the rear rails) blows the other way through the rack. Gear breathing side to side in a rack that otherwise runs front to back gets a note.
 
 ## Exports
 
 | Format | Contents |
 |---|---|
 | PNG / SVG | Front, rear, or both side by side, with title. SVG is fully vector |
-| PDF | Page 1: front + rear views (landscape for short racks). Page 2: parts list, 3D-printed parts (model URL, designer, licence), summary and warnings |
-| CSV | Bill of materials: brand, model, quantity, U, power, weight, labels, spec URL, model URL / designer / licence for 3D-printed parts, plus cables by type and length |
+| PDF | Page 1: front + rear views (landscape for short racks). Page 2: parts list (with a Facing column), 3D-printed parts (model URL, designer, licence), summary and warnings |
+| CSV | Bill of materials: brand, model, quantity, U, power, weight, facing (front / rear, or e.g. "2 front, 1 rear"), labels, spec URL, model URL / designer / licence for 3D-printed parts, plus cables by type and length |
 | JSON | Full design plus the custom parts it uses (re-importable), with 3D-printed parts' cached pictures unless you pick *JSON without 3D-print thumbnails* |
 | Parts to print | 3D-printed parts with picture, filament, status, model link, designer and licence. Printable, or CSV / Markdown |
 | Printable view | Light layout with both views, stats and the parts list. Print from the browser |

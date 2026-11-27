@@ -8,6 +8,7 @@ import { DesignSchema, PartSchema, type Design, type Part } from './schemas.js';
 import { CABLE_TYPE_LABELS } from './cables.js';
 import { placementPower } from './stats.js';
 import { uprightId } from './turn.js';
+import { facingOf } from './facing.js';
 import { ThumbnailIdSchema } from './printed/schema.js';
 
 export const EXPORT_FORMAT = 'rackplanner-design';
@@ -86,6 +87,8 @@ export interface BomRow {
   measuredW: number | null;
   weightKg: number | null;
   labels: string[];
+  /** How many of them face the front / rear of the rack (cables: none). */
+  facing: { front: number; rear: number };
   sourceUrl: string | null;
   missing: boolean;
   /** 3D-printed parts: where the model is, who designed it, and its licence. */
@@ -115,6 +118,7 @@ export function buildBom(design: Pick<Design, 'placements'> & { cables?: Design[
         measuredW: null,
         weightKg: part?.weightKg ?? null,
         labels: [],
+        facing: { front: 0, rear: 0 },
         sourceUrl: part?.sourceUrl ?? null,
         missing: !part,
       };
@@ -125,6 +129,7 @@ export function buildBom(design: Pick<Design, 'placements'> & { cables?: Design[
       rows.set(key, row);
     }
     row.qty++;
+    row.facing[facingOf(design.placements, p)]++;
     row.totalU += placed && p.parentId === undefined ? placed.heightU : 0;
     if (p.label) row.labels.push(p.label);
     if (part) {
@@ -143,7 +148,7 @@ export function buildBom(design: Pick<Design, 'placements'> & { cables?: Design[
     if (!row) {
       row = {
         partId: `cable:${key}`, brand: 'Cable', model: `${CABLE_TYPE_LABELS[c.type]} ${len}`, name: `${CABLE_TYPE_LABELS[c.type]} patch cable, ${len}`,
-        category: 'cable', qty: 0, heightU: 0, totalU: 0, typicalW: null, maxW: null, measuredW: null, weightKg: null, labels: [], sourceUrl: null, missing: false,
+        category: 'cable', qty: 0, heightU: 0, totalU: 0, typicalW: null, maxW: null, measuredW: null, weightKg: null, labels: [], facing: { front: 0, rear: 0 }, sourceUrl: null, missing: false,
       };
       cableRows.set(key, row);
     }
@@ -151,6 +156,15 @@ export function buildBom(design: Pick<Design, 'placements'> & { cables?: Design[
     if (c.label) row.labels.push(c.label);
   }
   return [...devices, ...[...cableRows.values()].sort((a, b) => a.model.localeCompare(b.model, undefined, { numeric: true }))];
+}
+
+/** "Front", "Rear", or "2 front, 1 rear" for a BOM row; empty for cables. */
+export function facingText(r: Pick<BomRow, 'facing'>): string {
+  const { front, rear } = r.facing;
+  if (!front && !rear) return '';
+  if (!rear) return 'Front';
+  if (!front) return 'Rear';
+  return `${front} front, ${rear} rear`;
 }
 
 const BOM_COLUMNS: [string, (r: BomRow) => string | number | null][] = [
@@ -165,6 +179,7 @@ const BOM_COLUMNS: [string, (r: BomRow) => string | number | null][] = [
   ['Max W each', (r) => r.maxW],
   ['Measured W total', (r) => r.measuredW],
   ['Weight kg each', (r) => r.weightKg],
+  ['Facing', (r) => facingText(r)],
   ['Labels', (r) => r.labels.join('; ')],
   ['Spec URL', (r) => r.sourceUrl],
   ['Model URL (3D print)', (r) => r.printed?.url ?? null],

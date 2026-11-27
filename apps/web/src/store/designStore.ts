@@ -1,4 +1,4 @@
-import { DEFAULT_RACK, DESIGN_SCHEMA_VERSION, newId, type Cable, type Design, type PlacedPart, type Rack } from '@rackplanner/shared';
+import { DEFAULT_RACK, DESIGN_SCHEMA_VERSION, newId, withFacing, type Cable, type Design, type PlacedPart, type Rack } from '@rackplanner/shared';
 import { temporal } from 'zundo';
 import { create } from 'zustand';
 import { useStore } from 'zustand';
@@ -77,27 +77,27 @@ export const useDesignStore = create<DesignState>()(
           const cables = s.design.cables.filter((c) => ids.has(c.a.placementId) && ids.has(c.b.placementId));
           return { design: touch({ ...s.design, rack, placements: syncShelfChildren(placements), cables }) };
         }),
-      addPlacement: (p) => set((s) => ({ design: touch({ ...s.design, placements: [...s.design.placements, p] }) })),
-      addPlacements: (ps) => set((s) => ({ design: touch({ ...s.design, placements: syncShelfChildren([...s.design.placements, ...ps]) }) })),
+      addPlacement: (p) => set((s) => ({ design: touch({ ...s.design, placements: withFacing([...s.design.placements, p]) }) })),
+      addPlacements: (ps) => set((s) => ({ design: touch({ ...s.design, placements: withFacing(syncShelfChildren([...s.design.placements, ...ps])) }) })),
       setPlacements: (placements) =>
         set((s) => {
           const ids = new Set(placements.map((p) => p.id));
           const cables = s.design.cables.filter((c) => ids.has(c.a.placementId) && ids.has(c.b.placementId));
-          return { design: touch({ ...s.design, placements: syncShelfChildren(placements), cables }) };
+          return { design: touch({ ...s.design, placements: withFacing(syncShelfChildren(placements)), cables }) };
         }),
       updatePlacement: (id, patch) =>
         set((s) => ({
           design: touch({
             ...s.design,
-            placements: syncShelfChildren(s.design.placements.map((p) => {
+            placements: withFacing(syncShelfChildren(s.design.placements.map((p) => {
               if (p.id !== id) return p;
               const next: PlacedPart = { ...p, ...patch };
               // Optional fields set to undefined are removed so the design stays schema-clean.
-              for (const k of ['label', 'notes', 'color', 'parentId', 'measuredW', 'wall', 'airflow', 'print'] as const) {
+              for (const k of ['label', 'notes', 'color', 'parentId', 'measuredW', 'wall', 'airflow', 'print', 'facing'] as const) {
                 if (k in patch && patch[k] === undefined) delete next[k];
               }
               return next;
-            })),
+            }))),
           }),
         })),
       removePlacement: (id) =>
